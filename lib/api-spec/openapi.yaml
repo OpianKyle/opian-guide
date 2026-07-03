@@ -1,22 +1,32 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: OPIAN Financial Advisor Sales Portal API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: dashboard
+    description: Dashboard overview
+  - name: fna
+    description: Financial Needs Analysis
+  - name: policies
+    description: Client policies
+  - name: appointments
+    description: Advisor appointments
+  - name: documents
+    description: Document management
+  - name: advisors
+    description: Financial advisors
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +34,211 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /dashboard/summary:
+    get:
+      operationId: getDashboardSummary
+      tags: [dashboard]
+      summary: Dashboard summary stats
+      responses:
+        "200":
+          description: Dashboard summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardSummary"
+
+  /fna:
+    get:
+      operationId: listFnaSubmissions
+      tags: [fna]
+      summary: List FNA submissions
+      responses:
+        "200":
+          description: List of FNA submissions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FnaSubmission"
+    post:
+      operationId: createFnaSubmission
+      tags: [fna]
+      summary: Submit a new FNA
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FnaInput"
+      responses:
+        "201":
+          description: FNA submitted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FnaSubmission"
+
+  /fna/{id}:
+    get:
+      operationId: getFnaSubmission
+      tags: [fna]
+      summary: Get a single FNA submission
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: FNA submission
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FnaSubmission"
+        "404":
+          description: Not found
+    patch:
+      operationId: updateFnaStatus
+      tags: [fna]
+      summary: Update FNA status
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FnaStatusUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FnaSubmission"
+
+  /policies:
+    get:
+      operationId: listPolicies
+      tags: [policies]
+      summary: List client policies
+      responses:
+        "200":
+          description: List of policies
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Policy"
+
+  /appointments:
+    get:
+      operationId: listAppointments
+      tags: [appointments]
+      summary: List appointments
+      responses:
+        "200":
+          description: List of appointments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Appointment"
+    post:
+      operationId: createAppointment
+      tags: [appointments]
+      summary: Book an appointment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AppointmentInput"
+      responses:
+        "201":
+          description: Appointment booked
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Appointment"
+
+  /documents:
+    get:
+      operationId: listDocuments
+      tags: [documents]
+      summary: List documents
+      responses:
+        "200":
+          description: List of documents
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Document"
+    post:
+      operationId: uploadDocument
+      tags: [documents]
+      summary: Upload a document record
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DocumentInput"
+      responses:
+        "201":
+          description: Document uploaded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Document"
+
+  /advisors:
+    get:
+      operationId: listAdvisors
+      tags: [advisors]
+      summary: List financial advisors
+      responses:
+        "200":
+          description: List of advisors
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Advisor"
+
+  /advisors/{id}:
+    get:
+      operationId: getAdvisor
+      tags: [advisors]
+      summary: Get a specific advisor
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Advisor details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Advisor"
+        "404":
+          description: Not found
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +249,356 @@ components:
       required:
         - status
 
+    DashboardSummary:
+      type: object
+      properties:
+        activePolicies:
+          type: integer
+        upcomingAppointments:
+          type: integer
+        totalDocuments:
+          type: integer
+        accountStatus:
+          type: string
+        pendingFnaCount:
+          type: integer
+        recentActivity:
+          type: array
+          items:
+            $ref: "#/components/schemas/ActivityItem"
+      required:
+        - activePolicies
+        - upcomingAppointments
+        - totalDocuments
+        - accountStatus
+        - pendingFnaCount
+        - recentActivity
+
+    ActivityItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        type:
+          type: string
+        description:
+          type: string
+        timestamp:
+          type: string
+      required:
+        - id
+        - type
+        - description
+        - timestamp
+
+    FnaSubmission:
+      type: object
+      properties:
+        id:
+          type: integer
+        clientName:
+          type: string
+        clientEmail:
+          type: string
+        clientPhone:
+          type: string
+        dateOfBirth:
+          type: string
+        idNumber:
+          type: string
+        maritalStatus:
+          type: string
+        dependants:
+          type: integer
+        employmentStatus:
+          type: string
+        monthlyIncome:
+          type: number
+        monthlyExpenses:
+          type: number
+        totalAssets:
+          type: number
+        totalLiabilities:
+          type: number
+        hasLifeCover:
+          type: boolean
+        hasDisabilityCover:
+          type: boolean
+        hasRetirementFund:
+          type: boolean
+        hasInvestments:
+          type: boolean
+        riskTolerance:
+          type: string
+        financialGoals:
+          type: string
+        notes:
+          type: ["string", "null"]
+        status:
+          type: string
+        advisorId:
+          type: ["integer", "null"]
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+      required:
+        - id
+        - clientName
+        - clientEmail
+        - clientPhone
+        - dateOfBirth
+        - idNumber
+        - maritalStatus
+        - dependants
+        - employmentStatus
+        - monthlyIncome
+        - monthlyExpenses
+        - totalAssets
+        - totalLiabilities
+        - hasLifeCover
+        - hasDisabilityCover
+        - hasRetirementFund
+        - hasInvestments
+        - riskTolerance
+        - financialGoals
+        - status
+        - createdAt
+        - updatedAt
+
+    FnaInput:
+      type: object
+      properties:
+        clientName:
+          type: string
+        clientEmail:
+          type: string
+        clientPhone:
+          type: string
+        dateOfBirth:
+          type: string
+        idNumber:
+          type: string
+        maritalStatus:
+          type: string
+        dependants:
+          type: integer
+        employmentStatus:
+          type: string
+        monthlyIncome:
+          type: number
+        monthlyExpenses:
+          type: number
+        totalAssets:
+          type: number
+        totalLiabilities:
+          type: number
+        hasLifeCover:
+          type: boolean
+        hasDisabilityCover:
+          type: boolean
+        hasRetirementFund:
+          type: boolean
+        hasInvestments:
+          type: boolean
+        riskTolerance:
+          type: string
+        financialGoals:
+          type: string
+        notes:
+          type: string
+        advisorId:
+          type: integer
+      required:
+        - clientName
+        - clientEmail
+        - clientPhone
+        - dateOfBirth
+        - idNumber
+        - maritalStatus
+        - dependants
+        - employmentStatus
+        - monthlyIncome
+        - monthlyExpenses
+        - totalAssets
+        - totalLiabilities
+        - hasLifeCover
+        - hasDisabilityCover
+        - hasRetirementFund
+        - hasInvestments
+        - riskTolerance
+        - financialGoals
+
+    FnaStatusUpdate:
+      type: object
+      properties:
+        status:
+          type: string
+        notes:
+          type: string
+      required:
+        - status
+
+    Policy:
+      type: object
+      properties:
+        id:
+          type: integer
+        policyNumber:
+          type: string
+        type:
+          type: string
+        clientName:
+          type: string
+        coverAmount:
+          type: number
+        premium:
+          type: number
+        status:
+          type: string
+        startDate:
+          type: string
+        renewalDate:
+          type: ["string", "null"]
+      required:
+        - id
+        - policyNumber
+        - type
+        - clientName
+        - coverAmount
+        - premium
+        - status
+        - startDate
+
+    Appointment:
+      type: object
+      properties:
+        id:
+          type: integer
+        clientName:
+          type: string
+        clientEmail:
+          type: string
+        advisorId:
+          type: integer
+        advisorName:
+          type: string
+        date:
+          type: string
+        time:
+          type: string
+        type:
+          type: string
+        status:
+          type: string
+        notes:
+          type: ["string", "null"]
+      required:
+        - id
+        - clientName
+        - clientEmail
+        - advisorId
+        - advisorName
+        - date
+        - time
+        - type
+        - status
+
+    AppointmentInput:
+      type: object
+      properties:
+        clientName:
+          type: string
+        clientEmail:
+          type: string
+        advisorId:
+          type: integer
+        date:
+          type: string
+        time:
+          type: string
+        type:
+          type: string
+        notes:
+          type: string
+      required:
+        - clientName
+        - clientEmail
+        - advisorId
+        - date
+        - time
+        - type
+
+    Document:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        type:
+          type: string
+        clientName:
+          type: string
+        uploadedAt:
+          type: string
+        size:
+          type: string
+        status:
+          type: string
+      required:
+        - id
+        - name
+        - type
+        - clientName
+        - uploadedAt
+        - size
+        - status
+
+    DocumentInput:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        clientName:
+          type: string
+        size:
+          type: string
+      required:
+        - name
+        - type
+        - clientName
+        - size
+
+    Advisor:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        title:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        initials:
+          type: string
+        specializations:
+          type: array
+          items:
+            type: string
+        clientCount:
+          type: integer
+      required:
+        - id
+        - name
+        - title
+        - email
+        - phone
+        - initials
+        - specializations
+        - clientCount

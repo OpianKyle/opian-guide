@@ -1,0 +1,27 @@
+kind = "web"
+previewPath = "/"
+title = "OPIAN Advisor Portal"
+version = "1.0.0"
+id = "artifacts/opian-portal"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 19167
+
+[services.development]
+run = "pnpm --filter @workspace/opian-portal run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/opian-portal", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/opian-portal/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "19167"
+BASE_PATH = "/"
