@@ -14,20 +14,38 @@ import {
 
 const router: IRouter = Router();
 
-router.get("/fna", async (req, res): Promise<void> => {
-  const rows = await db.select().from(fnaTable).orderBy(desc(fnaTable.createdAt));
-  const mapped = rows.map((r) => ({
+function mapRow(r: typeof fnaTable.$inferSelect) {
+  return {
     ...r,
-    monthlyIncome: Number(r.monthlyIncome),
+    grossMonthlyIncome: Number(r.grossMonthlyIncome),
+    netMonthlyIncome: Number(r.netMonthlyIncome),
+    spouseIncome: Number(r.spouseIncome),
     monthlyExpenses: Number(r.monthlyExpenses),
-    totalAssets: Number(r.totalAssets),
-    totalLiabilities: Number(r.totalLiabilities),
+    homeLoans: Number(r.homeLoans),
+    vehicleFinance: Number(r.vehicleFinance),
+    personalLoans: Number(r.personalLoans),
+    creditCards: Number(r.creditCards),
+    otherDebts: Number(r.otherDebts),
+    savings: Number(r.savings),
+    investments: Number(r.investments),
+    retirementFunds: Number(r.retirementFunds),
+    propertyValue: Number(r.propertyValue),
+    existingLifeCover: Number(r.existingLifeCover),
+    existingDisabilityCover: Number(r.existingDisabilityCover),
+    existingDreadDiseaseCover: Number(r.existingDreadDiseaseCover),
+    monthlyRetirementIncome: Number(r.monthlyRetirementIncome),
+    currentRetirementSavings: Number(r.currentRetirementSavings),
+    monthlyInvestmentBudget: Number(r.monthlyInvestmentBudget),
     notes: r.notes ?? null,
     advisorId: r.advisorId ?? null,
     createdAt: r.createdAt.toISOString(),
     updatedAt: r.updatedAt.toISOString(),
-  }));
-  res.json(ListFnaSubmissionsResponse.parse(mapped));
+  };
+}
+
+router.get("/fna", async (req, res): Promise<void> => {
+  const rows = await db.select().from(fnaTable).orderBy(desc(fnaTable.createdAt));
+  res.json(ListFnaSubmissionsResponse.parse(rows.map(mapRow)));
 });
 
 router.post("/fna", async (req, res): Promise<void> => {
@@ -37,31 +55,53 @@ router.post("/fna", async (req, res): Promise<void> => {
     return;
   }
 
+  const d = parsed.data;
   const [row] = await db
     .insert(fnaTable)
     .values({
-      ...parsed.data,
-      monthlyIncome: String(parsed.data.monthlyIncome),
-      monthlyExpenses: String(parsed.data.monthlyExpenses),
-      totalAssets: String(parsed.data.totalAssets),
-      totalLiabilities: String(parsed.data.totalLiabilities),
+      firstName: d.firstName,
+      lastName: d.lastName,
+      email: d.email,
+      phone: d.phone,
+      dob: d.dob,
+      gender: d.gender,
+      smoker: d.smoker,
+      maritalStatus: d.maritalStatus,
+      dependants: d.dependants,
+      currentAge: d.currentAge,
+      grossMonthlyIncome: String(d.grossMonthlyIncome),
+      netMonthlyIncome: String(d.netMonthlyIncome),
+      spouseIncome: String(d.spouseIncome),
+      employmentType: d.employmentType,
+      occupation: d.occupation,
+      hasGroupBenefits: d.hasGroupBenefits,
+      monthlyExpenses: String(d.monthlyExpenses),
+      homeLoans: String(d.homeLoans),
+      vehicleFinance: String(d.vehicleFinance),
+      personalLoans: String(d.personalLoans),
+      creditCards: String(d.creditCards),
+      otherDebts: String(d.otherDebts),
+      savings: String(d.savings),
+      investments: String(d.investments),
+      retirementFunds: String(d.retirementFunds),
+      propertyValue: String(d.propertyValue),
+      existingLifeCover: String(d.existingLifeCover),
+      existingDisabilityCover: String(d.existingDisabilityCover),
+      existingDreadDiseaseCover: String(d.existingDreadDiseaseCover),
+      targetRetirementAge: d.targetRetirementAge,
+      monthlyRetirementIncome: String(d.monthlyRetirementIncome),
+      currentRetirementSavings: String(d.currentRetirementSavings),
+      monthlyInvestmentBudget: String(d.monthlyInvestmentBudget),
+      investmentGoal: d.investmentGoal,
+      riskProfile: d.riskProfile,
+      investmentHorizon: d.investmentHorizon,
+      priorities: d.priorities,
+      notes: d.notes,
       status: "pending",
     })
     .returning();
 
-  res.status(201).json(
-    CreateFnaSubmissionResponse.parse({
-      ...row,
-      monthlyIncome: Number(row.monthlyIncome),
-      monthlyExpenses: Number(row.monthlyExpenses),
-      totalAssets: Number(row.totalAssets),
-      totalLiabilities: Number(row.totalLiabilities),
-      notes: row.notes ?? null,
-      advisorId: row.advisorId ?? null,
-      createdAt: row.createdAt.toISOString(),
-      updatedAt: row.updatedAt.toISOString(),
-    })
-  );
+  res.status(201).json(CreateFnaSubmissionResponse.parse(mapRow(row)));
 });
 
 router.get("/fna/:id", async (req, res): Promise<void> => {
@@ -82,19 +122,7 @@ router.get("/fna/:id", async (req, res): Promise<void> => {
     return;
   }
 
-  res.json(
-    GetFnaSubmissionResponse.parse({
-      ...row,
-      monthlyIncome: Number(row.monthlyIncome),
-      monthlyExpenses: Number(row.monthlyExpenses),
-      totalAssets: Number(row.totalAssets),
-      totalLiabilities: Number(row.totalLiabilities),
-      notes: row.notes ?? null,
-      advisorId: row.advisorId ?? null,
-      createdAt: row.createdAt.toISOString(),
-      updatedAt: row.updatedAt.toISOString(),
-    })
-  );
+  res.json(GetFnaSubmissionResponse.parse(mapRow(row)));
 });
 
 router.patch("/fna/:id", async (req, res): Promise<void> => {
@@ -122,19 +150,7 @@ router.patch("/fna/:id", async (req, res): Promise<void> => {
     return;
   }
 
-  res.json(
-    UpdateFnaStatusResponse.parse({
-      ...row,
-      monthlyIncome: Number(row.monthlyIncome),
-      monthlyExpenses: Number(row.monthlyExpenses),
-      totalAssets: Number(row.totalAssets),
-      totalLiabilities: Number(row.totalLiabilities),
-      notes: row.notes ?? null,
-      advisorId: row.advisorId ?? null,
-      createdAt: row.createdAt.toISOString(),
-      updatedAt: row.updatedAt.toISOString(),
-    })
-  );
+  res.json(UpdateFnaStatusResponse.parse(mapRow(row)));
 });
 
 export default router;

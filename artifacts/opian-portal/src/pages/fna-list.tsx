@@ -92,12 +92,12 @@ export default function FnaList() {
                 submissions?.map((sub) => (
                   <TableRow key={sub.id} className="hover:bg-muted/30 transition-colors">
                     <TableCell className="font-medium text-foreground">
-                      {sub.clientName}
-                      <span className="block text-xs text-muted-foreground font-normal">{sub.clientEmail}</span>
+                      {sub.firstName} {sub.lastName}
+                      <span className="block text-xs text-muted-foreground font-normal">{sub.email}</span>
                     </TableCell>
-                    <TableCell className="text-sm">{sub.idNumber}</TableCell>
+                    <TableCell className="text-sm">{sub.phone}</TableCell>
                     <TableCell className="text-sm">{format(new Date(sub.createdAt), 'dd MMM yyyy')}</TableCell>
-                    <TableCell className="text-sm">{sub.riskTolerance}</TableCell>
+                    <TableCell className="text-sm capitalize">{sub.riskProfile}</TableCell>
                     <TableCell>{getStatusBadge(sub.status)}</TableCell>
                     <TableCell className="text-right">
                       <DropdownMenu>

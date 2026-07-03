@@ -296,41 +296,79 @@ components:
       properties:
         id:
           type: integer
-        clientName:
+        firstName:
           type: string
-        clientEmail:
+        lastName:
           type: string
-        clientPhone:
+        email:
           type: string
-        dateOfBirth:
+        phone:
           type: string
-        idNumber:
+        dob:
+          type: string
+        gender:
+          type: string
+        smoker:
           type: string
         maritalStatus:
           type: string
         dependants:
           type: integer
-        employmentStatus:
-          type: string
-        monthlyIncome:
+        currentAge:
+          type: integer
+        grossMonthlyIncome:
           type: number
+        netMonthlyIncome:
+          type: number
+        spouseIncome:
+          type: number
+        employmentType:
+          type: string
+        occupation:
+          type: string
+        hasGroupBenefits:
+          type: string
         monthlyExpenses:
           type: number
-        totalAssets:
+        homeLoans:
           type: number
-        totalLiabilities:
+        vehicleFinance:
           type: number
-        hasLifeCover:
-          type: boolean
-        hasDisabilityCover:
-          type: boolean
-        hasRetirementFund:
-          type: boolean
-        hasInvestments:
-          type: boolean
-        riskTolerance:
+        personalLoans:
+          type: number
+        creditCards:
+          type: number
+        otherDebts:
+          type: number
+        savings:
+          type: number
+        investments:
+          type: number
+        retirementFunds:
+          type: number
+        propertyValue:
+          type: number
+        existingLifeCover:
+          type: number
+        existingDisabilityCover:
+          type: number
+        existingDreadDiseaseCover:
+          type: number
+        targetRetirementAge:
+          type: integer
+        monthlyRetirementIncome:
+          type: number
+        currentRetirementSavings:
+          type: number
+        monthlyInvestmentBudget:
+          type: number
+        investmentGoal:
           type: string
-        financialGoals:
+        riskProfile:
+          type: string
+        investmentHorizon:
+          type: integer
+        priorities:
           type: string
         notes:
           type: ["string", "null"]
@@ -344,24 +382,43 @@ components:
           type: string
       required:
         - id
-        - clientName
-        - clientEmail
-        - clientPhone
-        - dateOfBirth
-        - idNumber
+        - firstName
+        - lastName
+        - email
+        - phone
+        - dob
+        - gender
+        - smoker
         - maritalStatus
         - dependants
-        - employmentStatus
-        - monthlyIncome
+        - currentAge
+        - grossMonthlyIncome
+        - netMonthlyIncome
+        - spouseIncome
+        - employmentType
+        - occupation
+        - hasGroupBenefits
         - monthlyExpenses
-        - totalAssets
-        - totalLiabilities
-        - hasLifeCover
-        - hasDisabilityCover
-        - hasRetirementFund
-        - hasInvestments
-        - riskTolerance
-        - financialGoals
+        - homeLoans
+        - vehicleFinance
+        - personalLoans
+        - creditCards
+        - otherDebts
+        - savings
+        - investments
+        - retirementFunds
+        - propertyValue
+        - existingLifeCover
+        - existingDisabilityCover
+        - existingDreadDiseaseCover
+        - targetRetirementAge
+        - monthlyRetirementIncome
+        - currentRetirementSavings
+        - monthlyInvestmentBudget
+        - investmentGoal
+        - riskProfile
+        - investmentHorizon
+        - priorities
         - status
         - createdAt
         - updatedAt
@@ -369,65 +426,122 @@ components:
     FnaInput:
       type: object
       properties:
-        clientName:
+        firstName:
           type: string
-        clientEmail:
+        lastName:
           type: string
-        clientPhone:
+        email:
           type: string
-        dateOfBirth:
+        phone:
           type: string
-        idNumber:
+        dob:
+          type: string
+        gender:
+          type: string
+        smoker:
           type: string
         maritalStatus:
           type: string
         dependants:
           type: integer
-        employmentStatus:
-          type: string
-        monthlyIncome:
+        currentAge:
+          type: integer
+        grossMonthlyIncome:
           type: number
+        netMonthlyIncome:
+          type: number
+        spouseIncome:
+          type: number
+        employmentType:
+          type: string
+        occupation:
+          type: string
+        hasGroupBenefits:
+          type: string
         monthlyExpenses:
           type: number
-        totalAssets:
+        homeLoans:
           type: number
-        totalLiabilities:
+        vehicleFinance:
           type: number
-        hasLifeCover:
-          type: boolean
-        hasDisabilityCover:
-          type: boolean
-        hasRetirementFund:
-          type: boolean
-        hasInvestments:
-          type: boolean
-        riskTolerance:
+        personalLoans:
+          type: number
+        creditCards:
+          type: number
+        otherDebts:
+          type: number
+        savings:
+          type: number
+        investments:
+          type: number
+        retirementFunds:
+          type: number
+        propertyValue:
+          type: number
+        existingLifeCover:
+          type: number
+        existingDisabilityCover:
+          type: number
+        existingDreadDiseaseCover:
+          type: number
+        targetRetirementAge:
+          type: integer
+        monthlyRetirementIncome:
+          type: number
+        currentRetirementSavings:
+          type: number
+        monthlyInvestmentBudget:
+          type: number
+        investmentGoal:
           type: string
-        financialGoals:
+        riskProfile:
+          type: string
+        investmentHorizon:
+          type: integer
+        priorities:
           type: string
         notes:
           type: string
         advisorId:
           type: integer
       required:
-        - clientName
-        - clientEmail
-        - clientPhone
-        - dateOfBirth
-        - idNumber
+        - firstName
+        - lastName
+        - email
+        - phone
+        - dob
+        - gender
+        - smoker
         - maritalStatus
         - dependants
-        - employmentStatus
-        - monthlyIncome
+        - currentAge
+        - grossMonthlyIncome
+        - netMonthlyIncome
+        - spouseIncome
+        - employmentType
+        - occupation
+        - hasGroupBenefits
         - monthlyExpenses
-        - totalAssets
-        - totalLiabilities
-        - hasLifeCover
-        - hasDisabilityCover
-        - hasRetirementFund
-        - hasInvestments
-        - riskTolerance
-        - financialGoals
+        - homeLoans
+        - vehicleFinance
+        - personalLoans
+        - creditCards
+        - otherDebts
+        - savings
+        - investments
+        - retirementFunds
+        - propertyValue
+        - existingLifeCover
+        - existingDisabilityCover
+        - existingDreadDiseaseCover
+        - targetRetirementAge
+        - monthlyRetirementIncome
+        - currentRetirementSavings
+        - monthlyInvestmentBudget
+        - investmentGoal
+        - riskProfile
+        - investmentHorizon
+        - priorities
 
     FnaStatusUpdate:
       type: object
