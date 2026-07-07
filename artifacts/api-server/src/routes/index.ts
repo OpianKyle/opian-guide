@@ -6,9 +6,11 @@ import policiesRouter from "./policies";
 import appointmentsRouter from "./appointments";
 import documentsRouter from "./documents";
 import dashboardRouter from "./dashboard";
+import authRouter from "./auth";
 
 const router: IRouter = Router();
 
+router.use(authRouter);
 router.use(healthRouter);
 router.use(dashboardRouter);
 router.use(advisorsRouter);

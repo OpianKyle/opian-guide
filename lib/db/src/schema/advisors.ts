@@ -11,6 +11,7 @@ export const advisorsTable = pgTable("advisors", {
   initials: text("initials").notNull(),
   specializations: text("specializations").array().notNull().default([]),
   clientCount: integer("client_count").notNull().default(0),
+  passwordHash: text("password_hash"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
