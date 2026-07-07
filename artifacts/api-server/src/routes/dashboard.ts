@@ -23,7 +23,7 @@ router.get("/dashboard/summary", async (req, res): Promise<void> => {
     ...pendingFna.slice(0, 2).map((f) => ({
       id: f.id + 1000,
       type: "fna",
-      description: `FNA submitted for ${f.clientName}`,
+      description: `FNA submitted for ${f.firstName} ${f.lastName}`,
       timestamp: f.createdAt.toISOString(),
     })),
   ];

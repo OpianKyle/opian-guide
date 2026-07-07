@@ -1,6 +1,6 @@
 import { Router, type IRouter } from "express";
 import { db, documentsTable } from "@workspace/db";
-import { desc } from "drizzle-orm";
+import { eq, desc } from "drizzle-orm";
 import {
   ListDocumentsResponse,
   UploadDocumentBody,
@@ -28,10 +28,16 @@ router.post("/documents", async (req, res): Promise<void> => {
     return;
   }
 
-  const [row] = await db
+  // MySQL doesn't support .returning() — insert then re-fetch by ID
+  const inserted = await db
     .insert(documentsTable)
     .values({ ...parsed.data, status: "stored" })
-    .returning();
+    .$returningId();
+
+  const [row] = await db
+    .select()
+    .from(documentsTable)
+    .where(eq(documentsTable.id, inserted[0].id));
 
   res.status(201).json(
     UploadDocumentResponse.parse({ ...row, uploadedAt: row.uploadedAt.toISOString() })

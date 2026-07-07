@@ -24,7 +24,7 @@ const SignupSchema = z.object({
 // ─── GET /api/auth/session ────────────────────────────────────────────────────
 
 router.get("/auth/session", (req, res): void => {
-  const session = req.session as Record<string, unknown>;
+  const session = req.session as unknown as Record<string, unknown>;
   if (!session["userId"]) {
     res.json({ user: null });
     return;
@@ -68,7 +68,7 @@ router.post("/auth/login", async (req, res): Promise<void> => {
         return;
       }
 
-      const session = req.session as Record<string, unknown>;
+      const session = req.session as unknown as Record<string, unknown>;
       session["userId"] = advisor.id;
       session["userName"] = advisor.name;
       session["userEmail"] = advisor.email;
@@ -94,7 +94,7 @@ router.post("/auth/login", async (req, res): Promise<void> => {
         return;
       }
 
-      const session = req.session as Record<string, unknown>;
+      const session = req.session as unknown as Record<string, unknown>;
       session["userId"] = user.id;
       session["userName"] = user.name;
       session["userEmail"] = user.email;
@@ -124,7 +124,7 @@ router.post("/auth/signup", async (req, res): Promise<void> => {
 
   try {
     if (role === "advisor") {
-      // Check if advisor with this email already has an account
+      // Check if advisor with this email exists (admin-provisioned)
       const [existing] = await db
         .select()
         .from(advisorsTable)
@@ -140,18 +140,23 @@ router.post("/auth/signup", async (req, res): Promise<void> => {
         return;
       }
 
-      const [updated] = await db
+      // MySQL doesn't support .returning() — update then re-fetch
+      await db
         .update(advisorsTable)
         .set({ passwordHash })
-        .where(eq(advisorsTable.email, email))
-        .returning();
+        .where(eq(advisorsTable.email, email));
+
+      const [updated] = await db
+        .select()
+        .from(advisorsTable)
+        .where(eq(advisorsTable.email, email));
 
       if (!updated) {
         res.status(500).json({ error: "Failed to create account" });
         return;
       }
 
-      const session = req.session as Record<string, unknown>;
+      const session = req.session as unknown as Record<string, unknown>;
       session["userId"] = updated.id;
       session["userName"] = updated.name;
       session["userEmail"] = updated.email;
@@ -172,17 +177,20 @@ router.post("/auth/signup", async (req, res): Promise<void> => {
         return;
       }
 
+      // MySQL doesn't support .returning() — insert then re-fetch by email
+      await db.insert(usersTable).values({ name, email, passwordHash });
+
       const [newUser] = await db
-        .insert(usersTable)
-        .values({ name, email, passwordHash })
-        .returning();
+        .select()
+        .from(usersTable)
+        .where(eq(usersTable.email, email));
 
       if (!newUser) {
         res.status(500).json({ error: "Failed to create account" });
         return;
       }
 
-      const session = req.session as Record<string, unknown>;
+      const session = req.session as unknown as Record<string, unknown>;
       session["userId"] = newUser.id;
       session["userName"] = newUser.name;
       session["userEmail"] = newUser.email;

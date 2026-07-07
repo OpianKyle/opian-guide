@@ -1,0 +1,1 @@
+- [MySQL migration](mysql-migration.md) — xneelo MySQL via mysql2+drizzle mysql-core; no .returning(); mysql2 must be direct dep in both lib/db and api-server; tsc --build lib/db after schema changes.

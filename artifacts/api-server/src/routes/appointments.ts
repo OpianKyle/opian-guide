@@ -35,17 +35,21 @@ router.post("/appointments", async (req, res): Promise<void> => {
     return;
   }
 
-  const advisorName = advisor.name;
-
-  const [row] = await db
+  // MySQL doesn't support .returning() — insert then re-fetch by ID
+  const inserted = await db
     .insert(appointmentsTable)
     .values({
       ...parsed.data,
-      advisorName,
+      advisorName: advisor.name,
       notes: parsed.data.notes ?? null,
       status: "scheduled",
     })
-    .returning();
+    .$returningId();
+
+  const [row] = await db
+    .select()
+    .from(appointmentsTable)
+    .where(eq(appointmentsTable.id, inserted[0].id));
 
   res.status(201).json(
     CreateAppointmentResponse.parse({ ...row, notes: row.notes ?? null })

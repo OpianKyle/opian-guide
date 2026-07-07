@@ -56,7 +56,9 @@ router.post("/fna", async (req, res): Promise<void> => {
   }
 
   const d = parsed.data;
-  const [row] = await db
+
+  // MySQL doesn't support .returning() — insert then re-fetch by ID
+  const inserted = await db
     .insert(fnaTable)
     .values({
       firstName: d.firstName,
@@ -99,7 +101,12 @@ router.post("/fna", async (req, res): Promise<void> => {
       notes: d.notes,
       status: "pending",
     })
-    .returning();
+    .$returningId();
+
+  const [row] = await db
+    .select()
+    .from(fnaTable)
+    .where(eq(fnaTable.id, inserted[0].id));
 
   res.status(201).json(CreateFnaSubmissionResponse.parse(mapRow(row)));
 });
@@ -139,11 +146,16 @@ router.patch("/fna/:id", async (req, res): Promise<void> => {
     return;
   }
 
-  const [row] = await db
+  // MySQL doesn't support .returning() — update then re-fetch by ID
+  await db
     .update(fnaTable)
     .set({ status: body.data.status, notes: body.data.notes, updatedAt: new Date() })
-    .where(eq(fnaTable.id, params.data.id))
-    .returning();
+    .where(eq(fnaTable.id, params.data.id));
+
+  const [row] = await db
+    .select()
+    .from(fnaTable)
+    .where(eq(fnaTable.id, params.data.id));
 
   if (!row) {
     res.status(404).json({ error: "FNA not found" });

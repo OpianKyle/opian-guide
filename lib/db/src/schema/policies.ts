@@ -1,17 +1,17 @@
-import { pgTable, serial, text, numeric, timestamp } from "drizzle-orm/pg-core";
+import { mysqlTable, int, varchar, text, decimal, timestamp } from "drizzle-orm/mysql-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
 
-export const policiesTable = pgTable("policies", {
-  id: serial("id").primaryKey(),
-  policyNumber: text("policy_number").notNull(),
-  type: text("type").notNull(),
-  clientName: text("client_name").notNull(),
-  coverAmount: numeric("cover_amount", { precision: 15, scale: 2 }).notNull(),
-  premium: numeric("premium", { precision: 15, scale: 2 }).notNull(),
-  status: text("status").notNull().default("active"),
-  startDate: text("start_date").notNull(),
-  renewalDate: text("renewal_date"),
+export const policiesTable = mysqlTable("policies", {
+  id: int("id").autoincrement().primaryKey(),
+  policyNumber: varchar("policy_number", { length: 100 }).notNull(),
+  type: varchar("type", { length: 100 }).notNull(),
+  clientName: varchar("client_name", { length: 255 }).notNull(),
+  coverAmount: decimal("cover_amount", { precision: 15, scale: 2 }).notNull(),
+  premium: decimal("premium", { precision: 15, scale: 2 }).notNull(),
+  status: varchar("status", { length: 50 }).notNull().default("active"),
+  startDate: varchar("start_date", { length: 20 }).notNull(),
+  renewalDate: varchar("renewal_date", { length: 20 }),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 

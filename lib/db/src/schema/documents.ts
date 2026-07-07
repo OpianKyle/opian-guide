@@ -1,14 +1,14 @@
-import { pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
+import { mysqlTable, int, varchar, text, timestamp } from "drizzle-orm/mysql-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
 
-export const documentsTable = pgTable("documents", {
-  id: serial("id").primaryKey(),
-  name: text("name").notNull(),
-  type: text("type").notNull(),
-  clientName: text("client_name").notNull(),
-  size: text("size").notNull(),
-  status: text("status").notNull().default("stored"),
+export const documentsTable = mysqlTable("documents", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  type: varchar("type", { length: 100 }).notNull(),
+  clientName: varchar("client_name", { length: 255 }).notNull(),
+  size: varchar("size", { length: 50 }).notNull(),
+  status: varchar("status", { length: 50 }).notNull().default("stored"),
   uploadedAt: timestamp("uploaded_at").notNull().defaultNow(),
 });
 
