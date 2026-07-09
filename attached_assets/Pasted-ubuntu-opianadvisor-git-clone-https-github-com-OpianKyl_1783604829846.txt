@@ -1,0 +1,47 @@
+ubuntu@opianadvisor:~$ git clone https://github.com/OpianKyle/opian-guide.git
+Cloning into 'opian-guide'...
+remote: Enumerating objects: 405, done.
+remote: Counting objects: 100% (405/405), done.
+remote: Compressing objects: 100% (230/230), done.
+remote: Total 405 (delta 170), reused 394 (delta 159), pack-reused 0 (from 0)
+Receiving objects: 100% (405/405), 347.75 KiB | 20.46 MiB/s, done.
+Resolving deltas: 100% (170/170), done.
+ubuntu@opianadvisor:~$ cd opian-guide
+ubuntu@opianadvisor:~/opian-guide$ pnpm install
+pnpm --filter @workspace/opian-portal run build   # builds the React frontend
+pnpm --filter @workspace/api-server run build     # builds the API
+pm2 start /var/www/opian/artifacts/api-server/dist/index.mjs --name api-server
+pm2 startup && pm2 save
+Command 'pnpm' not found, did you mean:
+  command 'npm' from deb npm (8.5.1~ds-1)
+Try: sudo apt install <deb name>
+Command 'pnpm' not found, did you mean:
+  command 'npm' from deb npm (8.5.1~ds-1)
+Try: sudo apt install <deb name>
+Command 'pnpm' not found, did you mean:
+  command 'npm' from deb npm (8.5.1~ds-1)
+Try: sudo apt install <deb name>
+Command 'pm2' not found, did you mean:
+  command 'tpm2' from deb tpm2-tools (5.2-1build1)
+  command 'pmc' from deb linuxptp (3.1.1-3)
+  command 'pom2' from deb libpod-pom-perl (2.01-3)
+  command 'pmw' from deb pmw (1:4.50-1)
+  command 'pmi' from deb powermanagement-interface (0.3.21)
+  command 'pmg' from deb python3-pymatgen (2022.0.17+dfsg1-1build1)
+  command 'pm' from deb powerman (2.3.5-1build2)
+  command 'pms' from deb pms (0.42-1build4)
+  command 'wm2' from deb wm2 (4+svn20090216-4build1)
+  command 'gm2' from deb gm2 (4:11.2.0-1ubuntu1)
+Try: sudo apt install <deb name>
+Command 'pm2' not found, did you mean:
+  command 'pmi' from deb powermanagement-interface (0.3.21)
+  command 'tpm2' from deb tpm2-tools (5.2-1build1)
+  command 'wm2' from deb wm2 (4+svn20090216-4build1)
+  command 'gm2' from deb gm2 (4:11.2.0-1ubuntu1)
+  command 'pom2' from deb libpod-pom-perl (2.01-3)
+  command 'pmc' from deb linuxptp (3.1.1-3)
+  command 'pms' from deb pms (0.42-1build4)
+  command 'pm' from deb powerman (2.3.5-1build2)
+  command 'pmw' from deb pmw (1:4.50-1)
+  command 'pmg' from deb python3-pymatgen (2022.0.17+dfsg1-1build1)
+Try: sudo apt install <deb name>
