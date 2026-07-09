@@ -1,3 +1,4 @@
+import "dotenv/config"; // loads .env file when present (ignored if not found)
 import app from "./app";
 import { logger } from "./lib/logger";
 
