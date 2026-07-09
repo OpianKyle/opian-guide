@@ -1,5 +1,6 @@
 import { Link, useLocation } from "wouter";
-import { LayoutDashboard, FileText, ClipboardList, CalendarDays, FolderOpen, Contact, Settings, ShieldCheck, LogOut } from "lucide-react";
+import { LayoutDashboard, FileText, ClipboardList, CalendarDays, FolderOpen, Contact, Settings, LogOut } from "lucide-react";
+import opianLogo from "@/assets/opian-logo.png";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useAuth } from "@/contexts/auth";
 
@@ -41,12 +42,8 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     <div className="flex min-h-[100dvh] w-full bg-background font-sans">
       {/* Sidebar */}
       <aside className="fixed left-0 top-0 bottom-0 w-[240px] bg-sidebar flex flex-col z-20">
-        <div className="h-20 flex flex-col items-center justify-center border-b border-white/10">
-          <div className="flex items-center gap-2 text-white mb-1">
-            <ShieldCheck className="h-6 w-6 text-sidebar-primary" />
-            <span className="font-serif text-xl font-bold tracking-wider">OPIAN</span>
-          </div>
-          <span className="text-sidebar-primary text-xs font-semibold tracking-[0.2em]">NFS GROUP</span>
+        <div className="h-20 flex items-center justify-center border-b border-white/10 px-4">
+          <img src={opianLogo} alt="OPIAN Financial Services Group" className="h-10 w-auto" />
         </div>
 
         {/* Role badge */}

@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { motion } from "framer-motion";
 import { ChevronRight, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import opianLogo from "@/assets/opian-logo.png";
 
 // ─── Animation helpers ────────────────────────────────────────────────────────
 
@@ -14,20 +15,6 @@ const fadeUp = {
     transition: { delay: i * 0.08, duration: 0.6, ease: [0.22, 1, 0.36, 1] },
   }),
 };
-
-// ─── Logo SVG (matches OPIAN circular badge) ─────────────────────────────────
-
-function OpianLogo({ size = 40 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="20" cy="20" r="19" stroke="#C9A52A" strokeWidth="1.5" />
-      <circle cx="20" cy="20" r="14" stroke="#C9A52A" strokeWidth="0.8" opacity="0.4" />
-      {/* Shield */}
-      <path d="M20 8 L28 12 L28 20 Q28 26 20 30 Q12 26 12 20 L12 12 Z" fill="none" stroke="#4ade80" strokeWidth="1.5" strokeLinejoin="round" />
-      <path d="M16 20 L19 23 L24 17" stroke="#4ade80" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
 
 // ─── Nav ─────────────────────────────────────────────────────────────────────
 
@@ -60,14 +47,8 @@ function Nav() {
     >
       <div className="max-w-7xl mx-auto px-6 h-18 flex items-center justify-between py-4">
         {/* Logo */}
-        <button onClick={() => scrollTo("home")} className="flex items-center gap-3">
-          <OpianLogo size={38} />
-          <div className="leading-none text-left">
-            <div className="font-serif font-bold text-white text-lg tracking-widest">OPIAN</div>
-            <div className="text-[9px] text-[#C9A52A] font-semibold tracking-[0.2em] uppercase">
-              Financial Services Group
-            </div>
-          </div>
+        <button onClick={() => scrollTo("home")} className="flex items-center">
+          <img src={opianLogo} alt="OPIAN Financial Services Group" className="h-10 w-auto" />
         </button>
 
         {/* Desktop nav */}
@@ -574,14 +555,8 @@ export default function Landing() {
       {/* ── Footer ─────────────────────────────────────────────────── */}
       <footer className="bg-[#070e1c] border-t border-white/8 py-8 px-6">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <OpianLogo size={30} />
-            <div className="leading-none">
-              <div className="font-serif text-sm font-bold text-white tracking-wider">OPIAN</div>
-              <div className="text-[8px] text-[#C9A52A] font-semibold tracking-[0.15em] uppercase">
-                Financial Services Group
-              </div>
-            </div>
+          <div className="flex items-center">
+            <img src={opianLogo} alt="OPIAN Financial Services Group" className="h-8 w-auto" />
           </div>
           <p className="text-white/25 text-xs text-center">
             © {new Date().getFullYear()} Opian Financial Services Group. Authorised Financial Services Provider (FSP No. XXXXX).

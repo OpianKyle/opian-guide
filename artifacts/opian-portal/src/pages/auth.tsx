@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useSearch } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
-import { ShieldCheck, User, Briefcase, Eye, EyeOff, ArrowLeft, Loader2 } from "lucide-react";
+import { User, Briefcase, Eye, EyeOff, ArrowLeft, Loader2 } from "lucide-react";
+import opianLogo from "@/assets/opian-logo.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -97,11 +98,7 @@ export default function Auth() {
         >
           {/* Logo */}
           <div className="flex flex-col items-center mb-8">
-            <div className="w-14 h-14 rounded-2xl bg-primary/15 border border-primary/25 flex items-center justify-center mb-4">
-              <ShieldCheck className="h-7 w-7 text-primary" />
-            </div>
-            <span className="font-serif text-2xl font-bold text-white tracking-wider">OPIAN</span>
-            <span className="text-primary text-[11px] font-semibold tracking-[0.25em] uppercase">NFS Group</span>
+            <img src={opianLogo} alt="OPIAN Financial Services Group" className="h-16 w-auto" />
           </div>
 
           <div className="bg-white/5 border border-white/10 rounded-2xl p-8 backdrop-blur-sm shadow-xl shadow-black/20">
