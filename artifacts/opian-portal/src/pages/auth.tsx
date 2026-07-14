@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useLocation, useSearch } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { User, Briefcase, Eye, EyeOff, ArrowLeft, Loader2 } from "lucide-react";
-import opianLogo from "@/assets/opian-logo.png";
+import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -41,7 +41,7 @@ export default function Auth() {
     setIsSubmitting(true);
 
     try {
-      if (mode === "login") {
+      if (mode === "login" || role === "advisor") {
         await login(role, email, password);
       } else {
         await signup(role, name, email, password);
@@ -98,7 +98,7 @@ export default function Auth() {
         >
           {/* Logo */}
           <div className="flex flex-col items-center mb-8">
-            <img src={opianLogo} alt="OPIAN Financial Services Group" className="h-16 w-auto" />
+            <Logo textClassName="text-xl" markClassName="h-11 w-11" />
           </div>
 
           <div className="bg-white/5 border border-white/10 rounded-2xl p-8 backdrop-blur-sm shadow-xl shadow-black/20">
@@ -109,7 +109,7 @@ export default function Auth() {
             <p className="text-white/40 text-sm text-center mb-6">
               {mode === "login"
                 ? "Sign in to access your portal"
-                : "Join the OPIAN portal today"}
+                : "Join MyIFAPortal today"}
             </p>
 
             {/* Role toggle */}
@@ -117,7 +117,7 @@ export default function Auth() {
               {(["client", "advisor"] as UserRole[]).map((r) => (
                 <button
                   key={r}
-                  onClick={() => { setRole(r); setError(null); }}
+                  onClick={() => { setRole(r); setError(null); if (r === "advisor") setMode("login"); }}
                   className={`flex-1 flex items-center justify-center gap-2 rounded-lg py-2.5 text-sm font-medium transition-all duration-200 ${
                     role === r
                       ? "bg-primary text-white shadow-sm"
@@ -144,9 +144,7 @@ export default function Auth() {
                 className="text-white/35 text-xs text-center mb-6 leading-snug"
               >
                 {role === "advisor"
-                  ? mode === "signup"
-                    ? "Your email must match an existing OPIAN advisor account."
-                    : "Sign in with your advisor credentials."
+                  ? "Sign in with your advisor credentials."
                   : mode === "signup"
                   ? "Create a client account to access your policies and appointments."
                   : "Sign in to view your policies and appointments."}
@@ -156,7 +154,7 @@ export default function Auth() {
             {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-4">
               <AnimatePresence>
-                {mode === "signup" && (
+                {mode === "signup" && role !== "advisor" && (
                   <motion.div
                     key="name-field"
                     initial={{ opacity: 0, height: 0 }}
@@ -242,18 +240,20 @@ export default function Auth() {
               </Button>
             </form>
 
-            {/* Toggle login/signup */}
-            <div className="mt-5 text-center">
-              <span className="text-white/30 text-sm">
-                {mode === "login" ? "Don't have an account? " : "Already have an account? "}
-              </span>
-              <button
-                onClick={toggleMode}
-                className="text-primary hover:text-primary/80 text-sm font-medium transition-colors"
-              >
-                {mode === "login" ? "Sign up" : "Sign in"}
-              </button>
-            </div>
+            {/* Toggle login/signup — clients only; there is a single advisor account */}
+            {role !== "advisor" && (
+              <div className="mt-5 text-center">
+                <span className="text-white/30 text-sm">
+                  {mode === "login" ? "Don't have an account? " : "Already have an account? "}
+                </span>
+                <button
+                  onClick={toggleMode}
+                  className="text-primary hover:text-primary/80 text-sm font-medium transition-colors"
+                >
+                  {mode === "login" ? "Sign up" : "Sign in"}
+                </button>
+              </div>
+            )}
           </div>
         </motion.div>
       </div>

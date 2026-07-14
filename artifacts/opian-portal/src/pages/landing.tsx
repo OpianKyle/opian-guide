@@ -3,7 +3,7 @@ import { Link } from "wouter";
 import { motion } from "framer-motion";
 import { ChevronRight, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import opianLogo from "@/assets/opian-logo.png";
+import { Logo } from "@/components/logo";
 
 // ─── Animation helpers ────────────────────────────────────────────────────────
 
@@ -48,7 +48,7 @@ function Nav() {
       <div className="max-w-7xl mx-auto px-6 h-18 flex items-center justify-between py-4">
         {/* Logo */}
         <button onClick={() => scrollTo("home")} className="flex items-center">
-          <img src={opianLogo} alt="OPIAN Financial Services Group" className="h-10 w-auto" />
+          <Logo />
         </button>
 
         {/* Desktop nav */}
@@ -259,7 +259,7 @@ export default function Landing() {
             custom={2}
             className="text-white/55 text-lg md:text-xl leading-relaxed max-w-2xl mx-auto mb-10"
           >
-            Opian Financial Services Group provides expert long-term assurance, estate planning,
+            MyIFAPortal provides expert long-term assurance, estate planning,
             and wealth protection strategies tailored for discerning South Africans.
           </motion.p>
 
@@ -396,7 +396,7 @@ export default function Landing() {
             className="text-center mb-16"
           >
             <h2 className="font-serif text-3xl md:text-4xl font-bold text-white mb-4">
-              Why Choose Opian?
+              Why Choose MyIFAPortal?
             </h2>
             <p className="text-white/45 max-w-xl mx-auto text-base">
               We combine deep expertise with genuine care to deliver financial solutions that stand
@@ -488,7 +488,7 @@ export default function Landing() {
               </div>
               <blockquote className="relative z-10">
                 <p className="text-white/75 text-lg leading-relaxed italic mb-8">
-                  Lance and the Opian team transformed my financial outlook. Their estate planning
+                  Lance and the MyIFAPortal team transformed my financial outlook. Their estate planning
                   advice gave me complete peace of mind about my family's future.
                 </p>
                 <footer className="flex items-center justify-center gap-3">
@@ -556,10 +556,10 @@ export default function Landing() {
       <footer className="bg-[#070e1c] border-t border-white/8 py-8 px-6">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center">
-            <img src={opianLogo} alt="OPIAN Financial Services Group" className="h-8 w-auto" />
+            <Logo className="scale-90" />
           </div>
           <p className="text-white/25 text-xs text-center">
-            © {new Date().getFullYear()} Opian Financial Services Group. Authorised Financial Services Provider (FSP No. XXXXX).
+            © {new Date().getFullYear()} MyIFAPortal. Authorised Financial Services Provider (FSP No. XXXXX).
             All rights reserved.
           </p>
           <div className="flex items-center gap-4">

@@ -1,6 +1,6 @@
-# OPIAN Advisor Sales Portal
+# MyIFAPortal — Advisor Sales Portal
 
-A professional internal portal for OPIAN NFS Group financial advisors to manage clients, submit Financial Needs Analysis (FNA) forms, track policies, book appointments, and access documents.
+A professional internal portal for MyIFAPortal financial advisers to manage clients, submit Financial Needs Analysis (FNA) forms, track policies, book appointments, and access documents. There is a single advisor account (Lance Heynes); advisor sign-up is disabled — only client self-signup is available.
 
 ## Run & Operate
 
@@ -36,7 +36,7 @@ A professional internal portal for OPIAN NFS Group financial advisors to manage 
 
 - OpenAPI-first: all API contracts defined in `openapi.yaml`, Orval generates React Query hooks and Zod schemas
 - Multi-step FNA form with step-level validation before advancing to next section
-- Navy (#1B2A4A) + Gold (#C9A52A) + Cream (#F5F0E8) design system matching OPIAN brand identity
+- Navy (#1B2A4A) + Gold (#C9A52A) + Cream (#F5F0E8) design system matching MyIFAPortal brand identity
 - Numeric fields from PostgreSQL `numeric` type are cast to `Number()` before Zod parsing in route handlers
 
 ## Product

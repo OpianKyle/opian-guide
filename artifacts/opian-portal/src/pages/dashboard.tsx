@@ -97,7 +97,7 @@ export default function Dashboard() {
                 LH
               </div>
               <div>
-                <p className="text-sm text-sidebar-foreground/80">Opian NFS Group</p>
+                <p className="text-sm text-sidebar-foreground/80">MyIFAPortal</p>
                 <p className="text-xs text-sidebar-foreground/60">Sandton, South Africa</p>
               </div>
             </div>

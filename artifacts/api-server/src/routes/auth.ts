@@ -14,8 +14,10 @@ const LoginSchema = z.object({
   password: z.string().min(1),
 });
 
+// Advisor accounts are provisioned directly (there is a single advisor);
+// self-service signup is client-only.
 const SignupSchema = z.object({
-  role: z.enum(["advisor", "client"]),
+  role: z.literal("client"),
   name: z.string().min(1),
   email: z.string().email(),
   password: z.string().min(8, "Password must be at least 8 characters"),
@@ -119,87 +121,43 @@ router.post("/auth/signup", async (req, res): Promise<void> => {
     return;
   }
 
-  const { role, name, email, password } = parsed.data;
+  const { name, email, password } = parsed.data;
   const passwordHash = await bcrypt.hash(password, 12);
 
   try {
-    if (role === "advisor") {
-      // Check if advisor with this email exists (admin-provisioned)
-      const [existing] = await db
-        .select()
-        .from(advisorsTable)
-        .where(eq(advisorsTable.email, email));
+    // Client signup — check for duplicate email
+    const [existing] = await db
+      .select()
+      .from(usersTable)
+      .where(eq(usersTable.email, email));
 
-      if (!existing) {
-        res.status(404).json({ error: "No advisor account found for this email. Contact your administrator." });
-        return;
-      }
-
-      if (existing.passwordHash) {
-        res.status(409).json({ error: "An account with this email already exists" });
-        return;
-      }
-
-      // MySQL doesn't support .returning() — update then re-fetch
-      await db
-        .update(advisorsTable)
-        .set({ passwordHash })
-        .where(eq(advisorsTable.email, email));
-
-      const [updated] = await db
-        .select()
-        .from(advisorsTable)
-        .where(eq(advisorsTable.email, email));
-
-      if (!updated) {
-        res.status(500).json({ error: "Failed to create account" });
-        return;
-      }
-
-      const session = req.session as unknown as Record<string, unknown>;
-      session["userId"] = updated.id;
-      session["userName"] = updated.name;
-      session["userEmail"] = updated.email;
-      session["userRole"] = "advisor";
-
-      res.status(201).json({
-        user: { id: updated.id, name: updated.name, email: updated.email, role: "advisor" },
-      });
-    } else {
-      // Client signup — check for duplicate email
-      const [existing] = await db
-        .select()
-        .from(usersTable)
-        .where(eq(usersTable.email, email));
-
-      if (existing) {
-        res.status(409).json({ error: "An account with this email already exists" });
-        return;
-      }
-
-      // MySQL doesn't support .returning() — insert then re-fetch by email
-      await db.insert(usersTable).values({ name, email, passwordHash });
-
-      const [newUser] = await db
-        .select()
-        .from(usersTable)
-        .where(eq(usersTable.email, email));
-
-      if (!newUser) {
-        res.status(500).json({ error: "Failed to create account" });
-        return;
-      }
-
-      const session = req.session as unknown as Record<string, unknown>;
-      session["userId"] = newUser.id;
-      session["userName"] = newUser.name;
-      session["userEmail"] = newUser.email;
-      session["userRole"] = "client";
-
-      res.status(201).json({
-        user: { id: newUser.id, name: newUser.name, email: newUser.email, role: "client" },
-      });
+    if (existing) {
+      res.status(409).json({ error: "An account with this email already exists" });
+      return;
     }
+
+    // MySQL doesn't support .returning() — insert then re-fetch by email
+    await db.insert(usersTable).values({ name, email, passwordHash });
+
+    const [newUser] = await db
+      .select()
+      .from(usersTable)
+      .where(eq(usersTable.email, email));
+
+    if (!newUser) {
+      res.status(500).json({ error: "Failed to create account" });
+      return;
+    }
+
+    const session = req.session as unknown as Record<string, unknown>;
+    session["userId"] = newUser.id;
+    session["userName"] = newUser.name;
+    session["userEmail"] = newUser.email;
+    session["userRole"] = "client";
+
+    res.status(201).json({
+      user: { id: newUser.id, name: newUser.name, email: newUser.email, role: "client" },
+    });
   } catch (err) {
     req.log.error({ err }, "Signup error");
     res.status(500).json({ error: "Internal server error" });

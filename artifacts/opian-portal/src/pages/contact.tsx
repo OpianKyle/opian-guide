@@ -65,7 +65,7 @@ export default function Contact() {
                   </div>
                   <div className="flex items-center gap-3 text-sm text-sidebar-foreground/80">
                     <Building className="h-4 w-4 text-sidebar-primary" />
-                    <span>Opian NFS Group</span>
+                    <span>MyIFAPortal</span>
                   </div>
                   <div className="flex items-center gap-3 text-sm text-sidebar-foreground/80">
                     <MapPin className="h-4 w-4 text-sidebar-primary" />

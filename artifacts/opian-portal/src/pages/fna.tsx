@@ -799,7 +799,7 @@ export default function FnaForm() {
                   {createMutation.isPending ? "Submitting..." : "Submit Financial Needs Analysis"}
                 </button>
                 <p className="text-xs text-[#718096] text-center mt-3">
-                  By submitting, you authorise OPIAN NFS Group to contact this client regarding their financial needs.
+                  By submitting, you authorise MyIFAPortal to contact this client regarding their financial needs.
                 </p>
               </div>
             </div>
