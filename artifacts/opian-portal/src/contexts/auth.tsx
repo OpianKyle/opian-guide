@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
 
 export type UserRole = "advisor" | "client";
+export type AdminRole = "super_admin" | "admin";
 
 export interface AuthUser {
   id: number;
@@ -9,12 +10,22 @@ export interface AuthUser {
   role: UserRole;
 }
 
+export interface AdminUser {
+  id: number;
+  name: string;
+  email: string;
+  role: AdminRole;
+}
+
 interface AuthContextValue {
   user: AuthUser | null;
+  adminUser: AdminUser | null;
   isLoading: boolean;
   login: (role: UserRole, email: string, password: string) => Promise<void>;
   signup: (role: UserRole, name: string, email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  adminLogin: (email: string, password: string) => Promise<void>;
+  adminLogout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -36,13 +47,19 @@ async function apiFetch(path: string, init?: RequestInit) {
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
+  const [adminUser, setAdminUser] = useState<AdminUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Check existing session on mount
+  // Check both sessions on mount
   useEffect(() => {
-    apiFetch("/auth/session")
-      .then((data) => setUser(data.user ?? null))
-      .catch(() => setUser(null))
+    Promise.all([
+      apiFetch("/auth/session").catch(() => null),
+      apiFetch("/admin/auth/session").catch(() => null),
+    ])
+      .then(([userData, adminData]) => {
+        setUser(userData?.user ?? null);
+        setAdminUser(adminData?.admin ?? null);
+      })
       .finally(() => setIsLoading(false));
   }, []);
 
@@ -67,8 +84,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(null);
   }, []);
 
+  const adminLogin = useCallback(async (email: string, password: string) => {
+    const data = await apiFetch("/admin/auth/login", {
+      method: "POST",
+      body: JSON.stringify({ email, password }),
+    });
+    setAdminUser(data.admin);
+  }, []);
+
+  const adminLogout = useCallback(async () => {
+    await apiFetch("/admin/auth/logout", { method: "POST" });
+    setAdminUser(null);
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, signup, logout }}>
+    <AuthContext.Provider value={{ user, adminUser, isLoading, login, signup, logout, adminLogin, adminLogout }}>
       {children}
     </AuthContext.Provider>
   );

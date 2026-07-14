@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useSearch } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
-import { User, Briefcase, Eye, EyeOff, ArrowLeft, Loader2 } from "lucide-react";
+import { User, Briefcase, ShieldCheck, Eye, EyeOff, ArrowLeft, Loader2 } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,17 +9,17 @@ import { Label } from "@/components/ui/label";
 import { useAuth, type UserRole } from "@/contexts/auth";
 
 type Mode = "login" | "signup";
+type Tab = UserRole | "admin";
 
 export default function Auth() {
-  const { user, login, signup, isLoading: authLoading } = useAuth();
+  const { user, adminUser, login, signup, adminLogin, isLoading: authLoading } = useAuth();
   const [, setLocation] = useLocation();
   const search = useSearch();
 
-  // Parse ?role= from query string
   const params = new URLSearchParams(search);
-  const initialRole = (params.get("role") === "advisor" ? "advisor" : "client") as UserRole;
+  const initialTab = (params.get("role") === "advisor" ? "advisor" : params.get("role") === "admin" ? "admin" : "client") as Tab;
 
-  const [role, setRole] = useState<UserRole>(initialRole);
+  const [tab, setTab] = useState<Tab>(initialTab);
   const [mode, setMode] = useState<Mode>("login");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -30,10 +30,20 @@ export default function Auth() {
 
   // Redirect if already logged in
   useEffect(() => {
-    if (!authLoading && user) {
-      setLocation("/dashboard");
+    if (!authLoading) {
+      if (adminUser) setLocation("/admin/dashboard");
+      else if (user) setLocation("/dashboard");
     }
-  }, [user, authLoading, setLocation]);
+  }, [user, adminUser, authLoading, setLocation]);
+
+  const handleTabChange = (t: Tab) => {
+    setTab(t);
+    setError(null);
+    setName("");
+    setEmail("");
+    setPassword("");
+    if (t !== "client") setMode("login");
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,12 +51,16 @@ export default function Auth() {
     setIsSubmitting(true);
 
     try {
-      if (mode === "login" || role === "advisor") {
-        await login(role, email, password);
+      if (tab === "admin") {
+        await adminLogin(email, password);
+        setLocation("/admin/dashboard");
+      } else if (mode === "login" || tab === "advisor") {
+        await login(tab as UserRole, email, password);
+        setLocation("/dashboard");
       } else {
-        await signup(role, name, email, password);
+        await signup(tab as UserRole, name, email, password);
+        setLocation("/dashboard");
       }
-      setLocation("/dashboard");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
     } finally {
@@ -61,6 +75,21 @@ export default function Auth() {
     setEmail("");
     setPassword("");
   };
+
+  const tabs: { id: Tab; label: string; icon: React.ReactNode }[] = [
+    { id: "client", label: "Client", icon: <User className="h-4 w-4" /> },
+    { id: "advisor", label: "Advisor", icon: <Briefcase className="h-4 w-4" /> },
+    { id: "admin", label: "Admin", icon: <ShieldCheck className="h-4 w-4" /> },
+  ];
+
+  const hintText =
+    tab === "admin"
+      ? "Sign in with your admin credentials to access the management portal."
+      : tab === "advisor"
+      ? "Sign in with your advisor credentials."
+      : mode === "signup"
+      ? "Create a client account to access your policies and appointments."
+      : "Sign in to view your policies and appointments.";
 
   return (
     <div className="min-h-screen bg-sidebar flex flex-col font-sans">
@@ -107,54 +136,44 @@ export default function Auth() {
               {mode === "login" ? "Welcome back" : "Create your account"}
             </h1>
             <p className="text-white/40 text-sm text-center mb-6">
-              {mode === "login"
-                ? "Sign in to access your portal"
-                : "Join MyIFAPortal today"}
+              {mode === "login" ? "Sign in to access your portal" : "Join MyIFAPortal today"}
             </p>
 
-            {/* Role toggle */}
+            {/* Tab toggle */}
             <div className="flex rounded-xl border border-white/10 p-1 mb-6 gap-1">
-              {(["client", "advisor"] as UserRole[]).map((r) => (
+              {tabs.map((t) => (
                 <button
-                  key={r}
-                  onClick={() => { setRole(r); setError(null); if (r === "advisor") setMode("login"); }}
+                  key={t.id}
+                  onClick={() => handleTabChange(t.id)}
                   className={`flex-1 flex items-center justify-center gap-2 rounded-lg py-2.5 text-sm font-medium transition-all duration-200 ${
-                    role === r
+                    tab === t.id
                       ? "bg-primary text-white shadow-sm"
                       : "text-white/40 hover:text-white/70"
                   }`}
                 >
-                  {r === "client" ? (
-                    <User className="h-4 w-4" />
-                  ) : (
-                    <Briefcase className="h-4 w-4" />
-                  )}
-                  {r === "client" ? "Client" : "Advisor"}
+                  {t.icon}
+                  {t.label}
                 </button>
               ))}
             </div>
 
-            {/* Role hint */}
+            {/* Hint */}
             <AnimatePresence mode="wait">
               <motion.p
-                key={role}
+                key={tab + mode}
                 initial={{ opacity: 0, y: -4 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 4 }}
                 className="text-white/35 text-xs text-center mb-6 leading-snug"
               >
-                {role === "advisor"
-                  ? "Sign in with your advisor credentials."
-                  : mode === "signup"
-                  ? "Create a client account to access your policies and appointments."
-                  : "Sign in to view your policies and appointments."}
+                {hintText}
               </motion.p>
             </AnimatePresence>
 
             {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-4">
               <AnimatePresence>
-                {mode === "signup" && role !== "advisor" && (
+                {mode === "signup" && tab === "client" && (
                   <motion.div
                     key="name-field"
                     initial={{ opacity: 0, height: 0 }}
@@ -211,7 +230,7 @@ export default function Auth() {
                 </div>
               </div>
 
-              {/* Error message */}
+              {/* Error */}
               <AnimatePresence>
                 {error && (
                   <motion.div
@@ -240,8 +259,8 @@ export default function Auth() {
               </Button>
             </form>
 
-            {/* Toggle login/signup — clients only; there is a single advisor account */}
-            {role !== "advisor" && (
+            {/* Toggle login/signup — clients only */}
+            {tab === "client" && (
               <div className="mt-5 text-center">
                 <span className="text-white/30 text-sm">
                   {mode === "login" ? "Don't have an account? " : "Already have an account? "}
