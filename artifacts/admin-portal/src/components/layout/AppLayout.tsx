@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { useAdminGetSession, useAdminLogout } from "@workspace/api-client-react";
 import { 
@@ -19,17 +19,20 @@ export function AppLayout({ children }: { children: ReactNode }) {
   const { data: session, isLoading } = useAdminGetSession();
   const logout = useAdminLogout();
 
-  if (isLoading) {
+  // Redirect to login when session is resolved and there's no admin — never
+  // call setLocation during render; put it in an effect instead.
+  useEffect(() => {
+    if (!isLoading && !session?.admin) {
+      setLocation("/login");
+    }
+  }, [isLoading, session, setLocation]);
+
+  if (isLoading || !session?.admin) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
       </div>
     );
-  }
-
-  if (!session?.admin) {
-    setLocation("/login");
-    return null;
   }
 
   const handleLogout = () => {
