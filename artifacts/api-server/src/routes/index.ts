@@ -7,6 +7,7 @@ import appointmentsRouter from "./appointments";
 import documentsRouter from "./documents";
 import dashboardRouter from "./dashboard";
 import authRouter from "./auth";
+import adminRouter from "./admin/index";
 
 const router: IRouter = Router();
 
@@ -18,5 +19,6 @@ router.use(fnaRouter);
 router.use(policiesRouter);
 router.use(appointmentsRouter);
 router.use(documentsRouter);
+router.use(adminRouter);
 
 export default router;

@@ -133,6 +133,28 @@ export interface Policy {
   renewalDate?: string | null;
 }
 
+export interface PolicyInput {
+  policyNumber: string;
+  type: string;
+  clientName: string;
+  coverAmount: number;
+  premium: number;
+  status: string;
+  startDate: string;
+  renewalDate?: string;
+}
+
+export interface PolicyUpdate {
+  policyNumber?: string;
+  type?: string;
+  clientName?: string;
+  coverAmount?: number;
+  premium?: number;
+  status?: string;
+  startDate?: string;
+  renewalDate?: string;
+}
+
 export interface Appointment {
   id: number;
   clientName: string;
@@ -157,6 +179,17 @@ export interface AppointmentInput {
   notes?: string;
 }
 
+export interface AppointmentUpdate {
+  clientName?: string;
+  clientEmail?: string;
+  advisorId?: number;
+  date?: string;
+  time?: string;
+  type?: string;
+  status?: string;
+  notes?: string;
+}
+
 export interface Document {
   id: number;
   name: string;
@@ -174,6 +207,11 @@ export interface DocumentInput {
   size: string;
 }
 
+export interface DocumentUpdate {
+  status?: string;
+  name?: string;
+}
+
 export interface Advisor {
   id: number;
   name: string;
@@ -183,5 +221,106 @@ export interface Advisor {
   initials: string;
   specializations: string[];
   clientCount: number;
+}
+
+/**
+ * @nullable
+ */
+export type AdminSessionAdmin = {
+  id?: number;
+  name?: string;
+  email?: string;
+  role?: string;
+} | null;
+
+export interface AdminSession {
+  /** @nullable */
+  admin: AdminSessionAdmin;
+}
+
+export interface AdminLoginInput {
+  email: string;
+  password: string;
+}
+
+export interface AdminDashboard {
+  totalAdvisors: number;
+  totalClients: number;
+  totalFnaSubmissions: number;
+  pendingFna: number;
+  totalPolicies: number;
+  totalAppointments: number;
+  totalDocuments: number;
+  recentFna: FnaSubmission[];
+  recentAppointments: Appointment[];
+}
+
+export interface AdminAdvisor {
+  id: number;
+  name: string;
+  title: string;
+  email: string;
+  phone: string;
+  initials: string;
+  specializations: string[];
+  clientCount: number;
+  createdAt: string;
+}
+
+export interface AdminAdvisorInput {
+  name: string;
+  title: string;
+  email: string;
+  phone: string;
+  initials: string;
+  specializations: string[];
+  password: string;
+}
+
+export interface AdminAdvisorUpdate {
+  name?: string;
+  title?: string;
+  email?: string;
+  phone?: string;
+  initials?: string;
+  specializations?: string[];
+  clientCount?: number;
+  password?: string;
+}
+
+export interface AdminUser {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+  createdAt: string;
+}
+
+export interface AdminUserInput {
+  name: string;
+  email: string;
+  password: string;
+  role: string;
+}
+
+export interface AdminUserUpdate {
+  name?: string;
+  email?: string;
+  role?: string;
+  password?: string;
+}
+
+export interface AdminFnaUpdate {
+  status: string;
+  /** @nullable */
+  advisorId?: number | null;
+  notes?: string;
+}
+
+export interface Client {
+  id: number;
+  name: string;
+  email: string;
+  createdAt: string;
 }
 

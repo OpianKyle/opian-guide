@@ -423,3 +423,712 @@ export const GetAdvisorResponse = zod.object({
 })
 
 
+/**
+ * @summary Get current admin session
+ */
+export const AdminGetSessionResponse = zod.object({
+  "admin": zod.object({
+  "id": zod.number().optional(),
+  "name": zod.string().optional(),
+  "email": zod.string().optional(),
+  "role": zod.string().optional()
+}).nullable()
+})
+
+
+/**
+ * @summary Admin login
+ */
+export const AdminLoginBody = zod.object({
+  "email": zod.string(),
+  "password": zod.string()
+})
+
+export const AdminLoginResponse = zod.object({
+  "admin": zod.object({
+  "id": zod.number().optional(),
+  "name": zod.string().optional(),
+  "email": zod.string().optional(),
+  "role": zod.string().optional()
+}).nullable()
+})
+
+
+/**
+ * @summary Admin logout
+ */
+export const AdminLogoutResponse = zod.unknown()
+
+
+/**
+ * @summary Platform-wide admin dashboard stats
+ */
+export const AdminGetDashboardResponse = zod.object({
+  "totalAdvisors": zod.number(),
+  "totalClients": zod.number(),
+  "totalFnaSubmissions": zod.number(),
+  "pendingFna": zod.number(),
+  "totalPolicies": zod.number(),
+  "totalAppointments": zod.number(),
+  "totalDocuments": zod.number(),
+  "recentFna": zod.array(zod.object({
+  "id": zod.number(),
+  "firstName": zod.string(),
+  "lastName": zod.string(),
+  "email": zod.string(),
+  "phone": zod.string(),
+  "dob": zod.string(),
+  "gender": zod.string(),
+  "smoker": zod.string(),
+  "maritalStatus": zod.string(),
+  "dependants": zod.number(),
+  "currentAge": zod.number(),
+  "grossMonthlyIncome": zod.number(),
+  "netMonthlyIncome": zod.number(),
+  "spouseIncome": zod.number(),
+  "employmentType": zod.string(),
+  "occupation": zod.string(),
+  "hasGroupBenefits": zod.string(),
+  "monthlyExpenses": zod.number(),
+  "homeLoans": zod.number(),
+  "vehicleFinance": zod.number(),
+  "personalLoans": zod.number(),
+  "creditCards": zod.number(),
+  "otherDebts": zod.number(),
+  "savings": zod.number(),
+  "investments": zod.number(),
+  "retirementFunds": zod.number(),
+  "propertyValue": zod.number(),
+  "existingLifeCover": zod.number(),
+  "existingDisabilityCover": zod.number(),
+  "existingDreadDiseaseCover": zod.number(),
+  "targetRetirementAge": zod.number(),
+  "monthlyRetirementIncome": zod.number(),
+  "currentRetirementSavings": zod.number(),
+  "monthlyInvestmentBudget": zod.number(),
+  "investmentGoal": zod.string(),
+  "riskProfile": zod.string(),
+  "investmentHorizon": zod.number(),
+  "priorities": zod.string(),
+  "notes": zod.string().nullish(),
+  "status": zod.string(),
+  "advisorId": zod.number().nullish(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+})),
+  "recentAppointments": zod.array(zod.object({
+  "id": zod.number(),
+  "clientName": zod.string(),
+  "clientEmail": zod.string(),
+  "advisorId": zod.number(),
+  "advisorName": zod.string(),
+  "date": zod.string(),
+  "time": zod.string(),
+  "type": zod.string(),
+  "status": zod.string(),
+  "notes": zod.string().nullish()
+}))
+})
+
+
+/**
+ * @summary List all advisors
+ */
+export const AdminListAdvisorsResponseItem = zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "title": zod.string(),
+  "email": zod.string(),
+  "phone": zod.string(),
+  "initials": zod.string(),
+  "specializations": zod.array(zod.string()),
+  "clientCount": zod.number(),
+  "createdAt": zod.string()
+})
+export const AdminListAdvisorsResponse = zod.array(AdminListAdvisorsResponseItem)
+
+
+/**
+ * @summary Create a new advisor
+ */
+export const AdminCreateAdvisorBody = zod.object({
+  "name": zod.string(),
+  "title": zod.string(),
+  "email": zod.string(),
+  "phone": zod.string(),
+  "initials": zod.string(),
+  "specializations": zod.array(zod.string()),
+  "password": zod.string()
+})
+
+export const AdminCreateAdvisorResponse = zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "title": zod.string(),
+  "email": zod.string(),
+  "phone": zod.string(),
+  "initials": zod.string(),
+  "specializations": zod.array(zod.string()),
+  "clientCount": zod.number(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Get advisor details
+ */
+export const AdminGetAdvisorParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const AdminGetAdvisorResponse = zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "title": zod.string(),
+  "email": zod.string(),
+  "phone": zod.string(),
+  "initials": zod.string(),
+  "specializations": zod.array(zod.string()),
+  "clientCount": zod.number(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update advisor
+ */
+export const AdminUpdateAdvisorParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const AdminUpdateAdvisorBody = zod.object({
+  "name": zod.string().optional(),
+  "title": zod.string().optional(),
+  "email": zod.string().optional(),
+  "phone": zod.string().optional(),
+  "initials": zod.string().optional(),
+  "specializations": zod.array(zod.string()).optional(),
+  "clientCount": zod.number().optional(),
+  "password": zod.string().optional()
+})
+
+export const AdminUpdateAdvisorResponse = zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "title": zod.string(),
+  "email": zod.string(),
+  "phone": zod.string(),
+  "initials": zod.string(),
+  "specializations": zod.array(zod.string()),
+  "clientCount": zod.number(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Delete advisor
+ */
+export const AdminDeleteAdvisorParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const AdminDeleteAdvisorResponse = zod.void()
+
+
+/**
+ * @summary List admin users (super_admin only)
+ */
+export const AdminListAdminsResponseItem = zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "email": zod.string(),
+  "role": zod.string(),
+  "createdAt": zod.string()
+})
+export const AdminListAdminsResponse = zod.array(AdminListAdminsResponseItem)
+
+
+/**
+ * @summary Create admin user (super_admin only)
+ */
+export const AdminCreateAdminBody = zod.object({
+  "name": zod.string(),
+  "email": zod.string(),
+  "password": zod.string(),
+  "role": zod.string()
+})
+
+export const AdminCreateAdminResponse = zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "email": zod.string(),
+  "role": zod.string(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update admin user (super_admin only)
+ */
+export const AdminUpdateAdminParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const AdminUpdateAdminBody = zod.object({
+  "name": zod.string().optional(),
+  "email": zod.string().optional(),
+  "role": zod.string().optional(),
+  "password": zod.string().optional()
+})
+
+export const AdminUpdateAdminResponse = zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "email": zod.string(),
+  "role": zod.string(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Delete admin user (super_admin only)
+ */
+export const AdminDeleteAdminParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const AdminDeleteAdminResponse = zod.void()
+
+
+/**
+ * @summary List all FNA submissions
+ */
+export const AdminListFnaResponseItem = zod.object({
+  "id": zod.number(),
+  "firstName": zod.string(),
+  "lastName": zod.string(),
+  "email": zod.string(),
+  "phone": zod.string(),
+  "dob": zod.string(),
+  "gender": zod.string(),
+  "smoker": zod.string(),
+  "maritalStatus": zod.string(),
+  "dependants": zod.number(),
+  "currentAge": zod.number(),
+  "grossMonthlyIncome": zod.number(),
+  "netMonthlyIncome": zod.number(),
+  "spouseIncome": zod.number(),
+  "employmentType": zod.string(),
+  "occupation": zod.string(),
+  "hasGroupBenefits": zod.string(),
+  "monthlyExpenses": zod.number(),
+  "homeLoans": zod.number(),
+  "vehicleFinance": zod.number(),
+  "personalLoans": zod.number(),
+  "creditCards": zod.number(),
+  "otherDebts": zod.number(),
+  "savings": zod.number(),
+  "investments": zod.number(),
+  "retirementFunds": zod.number(),
+  "propertyValue": zod.number(),
+  "existingLifeCover": zod.number(),
+  "existingDisabilityCover": zod.number(),
+  "existingDreadDiseaseCover": zod.number(),
+  "targetRetirementAge": zod.number(),
+  "monthlyRetirementIncome": zod.number(),
+  "currentRetirementSavings": zod.number(),
+  "monthlyInvestmentBudget": zod.number(),
+  "investmentGoal": zod.string(),
+  "riskProfile": zod.string(),
+  "investmentHorizon": zod.number(),
+  "priorities": zod.string(),
+  "notes": zod.string().nullish(),
+  "status": zod.string(),
+  "advisorId": zod.number().nullish(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+})
+export const AdminListFnaResponse = zod.array(AdminListFnaResponseItem)
+
+
+/**
+ * @summary Get FNA submission details
+ */
+export const AdminGetFnaParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const AdminGetFnaResponse = zod.object({
+  "id": zod.number(),
+  "firstName": zod.string(),
+  "lastName": zod.string(),
+  "email": zod.string(),
+  "phone": zod.string(),
+  "dob": zod.string(),
+  "gender": zod.string(),
+  "smoker": zod.string(),
+  "maritalStatus": zod.string(),
+  "dependants": zod.number(),
+  "currentAge": zod.number(),
+  "grossMonthlyIncome": zod.number(),
+  "netMonthlyIncome": zod.number(),
+  "spouseIncome": zod.number(),
+  "employmentType": zod.string(),
+  "occupation": zod.string(),
+  "hasGroupBenefits": zod.string(),
+  "monthlyExpenses": zod.number(),
+  "homeLoans": zod.number(),
+  "vehicleFinance": zod.number(),
+  "personalLoans": zod.number(),
+  "creditCards": zod.number(),
+  "otherDebts": zod.number(),
+  "savings": zod.number(),
+  "investments": zod.number(),
+  "retirementFunds": zod.number(),
+  "propertyValue": zod.number(),
+  "existingLifeCover": zod.number(),
+  "existingDisabilityCover": zod.number(),
+  "existingDreadDiseaseCover": zod.number(),
+  "targetRetirementAge": zod.number(),
+  "monthlyRetirementIncome": zod.number(),
+  "currentRetirementSavings": zod.number(),
+  "monthlyInvestmentBudget": zod.number(),
+  "investmentGoal": zod.string(),
+  "riskProfile": zod.string(),
+  "investmentHorizon": zod.number(),
+  "priorities": zod.string(),
+  "notes": zod.string().nullish(),
+  "status": zod.string(),
+  "advisorId": zod.number().nullish(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+})
+
+
+/**
+ * @summary Update FNA (status, advisor assignment, notes)
+ */
+export const AdminUpdateFnaParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const AdminUpdateFnaBody = zod.object({
+  "status": zod.string(),
+  "advisorId": zod.number().nullish(),
+  "notes": zod.string().optional()
+})
+
+export const AdminUpdateFnaResponse = zod.object({
+  "id": zod.number(),
+  "firstName": zod.string(),
+  "lastName": zod.string(),
+  "email": zod.string(),
+  "phone": zod.string(),
+  "dob": zod.string(),
+  "gender": zod.string(),
+  "smoker": zod.string(),
+  "maritalStatus": zod.string(),
+  "dependants": zod.number(),
+  "currentAge": zod.number(),
+  "grossMonthlyIncome": zod.number(),
+  "netMonthlyIncome": zod.number(),
+  "spouseIncome": zod.number(),
+  "employmentType": zod.string(),
+  "occupation": zod.string(),
+  "hasGroupBenefits": zod.string(),
+  "monthlyExpenses": zod.number(),
+  "homeLoans": zod.number(),
+  "vehicleFinance": zod.number(),
+  "personalLoans": zod.number(),
+  "creditCards": zod.number(),
+  "otherDebts": zod.number(),
+  "savings": zod.number(),
+  "investments": zod.number(),
+  "retirementFunds": zod.number(),
+  "propertyValue": zod.number(),
+  "existingLifeCover": zod.number(),
+  "existingDisabilityCover": zod.number(),
+  "existingDreadDiseaseCover": zod.number(),
+  "targetRetirementAge": zod.number(),
+  "monthlyRetirementIncome": zod.number(),
+  "currentRetirementSavings": zod.number(),
+  "monthlyInvestmentBudget": zod.number(),
+  "investmentGoal": zod.string(),
+  "riskProfile": zod.string(),
+  "investmentHorizon": zod.number(),
+  "priorities": zod.string(),
+  "notes": zod.string().nullish(),
+  "status": zod.string(),
+  "advisorId": zod.number().nullish(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+})
+
+
+/**
+ * @summary Delete FNA submission
+ */
+export const AdminDeleteFnaParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const AdminDeleteFnaResponse = zod.void()
+
+
+/**
+ * @summary List all appointments
+ */
+export const AdminListAppointmentsResponseItem = zod.object({
+  "id": zod.number(),
+  "clientName": zod.string(),
+  "clientEmail": zod.string(),
+  "advisorId": zod.number(),
+  "advisorName": zod.string(),
+  "date": zod.string(),
+  "time": zod.string(),
+  "type": zod.string(),
+  "status": zod.string(),
+  "notes": zod.string().nullish()
+})
+export const AdminListAppointmentsResponse = zod.array(AdminListAppointmentsResponseItem)
+
+
+/**
+ * @summary Create appointment
+ */
+export const AdminCreateAppointmentBody = zod.object({
+  "clientName": zod.string(),
+  "clientEmail": zod.string(),
+  "advisorId": zod.number(),
+  "date": zod.string(),
+  "time": zod.string(),
+  "type": zod.string(),
+  "notes": zod.string().optional()
+})
+
+export const AdminCreateAppointmentResponse = zod.object({
+  "id": zod.number(),
+  "clientName": zod.string(),
+  "clientEmail": zod.string(),
+  "advisorId": zod.number(),
+  "advisorName": zod.string(),
+  "date": zod.string(),
+  "time": zod.string(),
+  "type": zod.string(),
+  "status": zod.string(),
+  "notes": zod.string().nullish()
+})
+
+
+/**
+ * @summary Update appointment
+ */
+export const AdminUpdateAppointmentParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const AdminUpdateAppointmentBody = zod.object({
+  "clientName": zod.string().optional(),
+  "clientEmail": zod.string().optional(),
+  "advisorId": zod.number().optional(),
+  "date": zod.string().optional(),
+  "time": zod.string().optional(),
+  "type": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const AdminUpdateAppointmentResponse = zod.object({
+  "id": zod.number(),
+  "clientName": zod.string(),
+  "clientEmail": zod.string(),
+  "advisorId": zod.number(),
+  "advisorName": zod.string(),
+  "date": zod.string(),
+  "time": zod.string(),
+  "type": zod.string(),
+  "status": zod.string(),
+  "notes": zod.string().nullish()
+})
+
+
+/**
+ * @summary Delete appointment
+ */
+export const AdminDeleteAppointmentParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const AdminDeleteAppointmentResponse = zod.void()
+
+
+/**
+ * @summary List all policies
+ */
+export const AdminListPoliciesResponseItem = zod.object({
+  "id": zod.number(),
+  "policyNumber": zod.string(),
+  "type": zod.string(),
+  "clientName": zod.string(),
+  "coverAmount": zod.number(),
+  "premium": zod.number(),
+  "status": zod.string(),
+  "startDate": zod.string(),
+  "renewalDate": zod.string().nullish()
+})
+export const AdminListPoliciesResponse = zod.array(AdminListPoliciesResponseItem)
+
+
+/**
+ * @summary Create policy
+ */
+export const AdminCreatePolicyBody = zod.object({
+  "policyNumber": zod.string(),
+  "type": zod.string(),
+  "clientName": zod.string(),
+  "coverAmount": zod.number(),
+  "premium": zod.number(),
+  "status": zod.string(),
+  "startDate": zod.string(),
+  "renewalDate": zod.string().optional()
+})
+
+export const AdminCreatePolicyResponse = zod.object({
+  "id": zod.number(),
+  "policyNumber": zod.string(),
+  "type": zod.string(),
+  "clientName": zod.string(),
+  "coverAmount": zod.number(),
+  "premium": zod.number(),
+  "status": zod.string(),
+  "startDate": zod.string(),
+  "renewalDate": zod.string().nullish()
+})
+
+
+/**
+ * @summary Update policy
+ */
+export const AdminUpdatePolicyParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const AdminUpdatePolicyBody = zod.object({
+  "policyNumber": zod.string().optional(),
+  "type": zod.string().optional(),
+  "clientName": zod.string().optional(),
+  "coverAmount": zod.number().optional(),
+  "premium": zod.number().optional(),
+  "status": zod.string().optional(),
+  "startDate": zod.string().optional(),
+  "renewalDate": zod.string().optional()
+})
+
+export const AdminUpdatePolicyResponse = zod.object({
+  "id": zod.number(),
+  "policyNumber": zod.string(),
+  "type": zod.string(),
+  "clientName": zod.string(),
+  "coverAmount": zod.number(),
+  "premium": zod.number(),
+  "status": zod.string(),
+  "startDate": zod.string(),
+  "renewalDate": zod.string().nullish()
+})
+
+
+/**
+ * @summary Delete policy
+ */
+export const AdminDeletePolicyParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const AdminDeletePolicyResponse = zod.void()
+
+
+/**
+ * @summary List all documents
+ */
+export const AdminListDocumentsResponseItem = zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "type": zod.string(),
+  "clientName": zod.string(),
+  "uploadedAt": zod.string(),
+  "size": zod.string(),
+  "status": zod.string()
+})
+export const AdminListDocumentsResponse = zod.array(AdminListDocumentsResponseItem)
+
+
+/**
+ * @summary Update document status
+ */
+export const AdminUpdateDocumentParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const AdminUpdateDocumentBody = zod.object({
+  "status": zod.string().optional(),
+  "name": zod.string().optional()
+})
+
+export const AdminUpdateDocumentResponse = zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "type": zod.string(),
+  "clientName": zod.string(),
+  "uploadedAt": zod.string(),
+  "size": zod.string(),
+  "status": zod.string()
+})
+
+
+/**
+ * @summary Delete document
+ */
+export const AdminDeleteDocumentParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const AdminDeleteDocumentResponse = zod.void()
+
+
+/**
+ * @summary List all clients
+ */
+export const AdminListClientsResponseItem = zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "email": zod.string(),
+  "createdAt": zod.string()
+})
+export const AdminListClientsResponse = zod.array(AdminListClientsResponseItem)
+
+
+/**
+ * @summary Get client details
+ */
+export const AdminGetClientParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const AdminGetClientResponse = zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "email": zod.string(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Delete client
+ */
+export const AdminDeleteClientParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const AdminDeleteClientResponse = zod.void()
+
+

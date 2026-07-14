@@ -21,6 +21,24 @@ tags:
     description: Document management
   - name: advisors
     description: Financial advisors
+  - name: admin-auth
+    description: Admin authentication
+  - name: admin-dashboard
+    description: Admin dashboard
+  - name: admin-advisors
+    description: Admin advisor management
+  - name: admin-admins
+    description: Admin user management (super_admin only)
+  - name: admin-fna
+    description: Admin FNA management
+  - name: admin-appointments
+    description: Admin appointment management
+  - name: admin-policies
+    description: Admin policy management
+  - name: admin-documents
+    description: Admin document management
+  - name: admin-clients
+    description: Admin client management
 paths:
   /healthz:
     get:
@@ -238,6 +256,553 @@ paths:
                 $ref: "#/components/schemas/Advisor"
         "404":
           description: Not found
+
+  # ─── Admin Auth ───────────────────────────────────────────────────────────────
+
+  /admin/auth/session:
+    get:
+      operationId: adminGetSession
+      tags: [admin-auth]
+      summary: Get current admin session
+      responses:
+        "200":
+          description: Session info
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminSession"
+
+  /admin/auth/login:
+    post:
+      operationId: adminLogin
+      tags: [admin-auth]
+      summary: Admin login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdminLoginInput"
+      responses:
+        "200":
+          description: Logged in
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminSession"
+        "401":
+          description: Invalid credentials
+
+  /admin/auth/logout:
+    post:
+      operationId: adminLogout
+      tags: [admin-auth]
+      summary: Admin logout
+      responses:
+        "200":
+          description: Logged out
+
+  # ─── Admin Dashboard ──────────────────────────────────────────────────────────
+
+  /admin/dashboard:
+    get:
+      operationId: adminGetDashboard
+      tags: [admin-dashboard]
+      summary: Platform-wide admin dashboard stats
+      responses:
+        "200":
+          description: Admin dashboard data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminDashboard"
+
+  # ─── Admin Advisors ───────────────────────────────────────────────────────────
+
+  /admin/advisors:
+    get:
+      operationId: adminListAdvisors
+      tags: [admin-advisors]
+      summary: List all advisors
+      responses:
+        "200":
+          description: List of advisors
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AdminAdvisor"
+    post:
+      operationId: adminCreateAdvisor
+      tags: [admin-advisors]
+      summary: Create a new advisor
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdminAdvisorInput"
+      responses:
+        "201":
+          description: Advisor created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminAdvisor"
+
+  /admin/advisors/{id}:
+    get:
+      operationId: adminGetAdvisor
+      tags: [admin-advisors]
+      summary: Get advisor details
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Advisor
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminAdvisor"
+        "404":
+          description: Not found
+    patch:
+      operationId: adminUpdateAdvisor
+      tags: [admin-advisors]
+      summary: Update advisor
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdminAdvisorUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminAdvisor"
+    delete:
+      operationId: adminDeleteAdvisor
+      tags: [admin-advisors]
+      summary: Delete advisor
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # ─── Admin Admins (super_admin only) ─────────────────────────────────────────
+
+  /admin/admins:
+    get:
+      operationId: adminListAdmins
+      tags: [admin-admins]
+      summary: List admin users (super_admin only)
+      responses:
+        "200":
+          description: List of admins
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AdminUser"
+    post:
+      operationId: adminCreateAdmin
+      tags: [admin-admins]
+      summary: Create admin user (super_admin only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdminUserInput"
+      responses:
+        "201":
+          description: Admin created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminUser"
+
+  /admin/admins/{id}:
+    patch:
+      operationId: adminUpdateAdmin
+      tags: [admin-admins]
+      summary: Update admin user (super_admin only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdminUserUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminUser"
+    delete:
+      operationId: adminDeleteAdmin
+      tags: [admin-admins]
+      summary: Delete admin user (super_admin only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # ─── Admin FNA ────────────────────────────────────────────────────────────────
+
+  /admin/fna:
+    get:
+      operationId: adminListFna
+      tags: [admin-fna]
+      summary: List all FNA submissions
+      responses:
+        "200":
+          description: List of FNA submissions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FnaSubmission"
+
+  /admin/fna/{id}:
+    get:
+      operationId: adminGetFna
+      tags: [admin-fna]
+      summary: Get FNA submission details
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: FNA submission
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FnaSubmission"
+        "404":
+          description: Not found
+    patch:
+      operationId: adminUpdateFna
+      tags: [admin-fna]
+      summary: Update FNA (status, advisor assignment, notes)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdminFnaUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FnaSubmission"
+    delete:
+      operationId: adminDeleteFna
+      tags: [admin-fna]
+      summary: Delete FNA submission
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # ─── Admin Appointments ───────────────────────────────────────────────────────
+
+  /admin/appointments:
+    get:
+      operationId: adminListAppointments
+      tags: [admin-appointments]
+      summary: List all appointments
+      responses:
+        "200":
+          description: List of appointments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Appointment"
+    post:
+      operationId: adminCreateAppointment
+      tags: [admin-appointments]
+      summary: Create appointment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AppointmentInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Appointment"
+
+  /admin/appointments/{id}:
+    patch:
+      operationId: adminUpdateAppointment
+      tags: [admin-appointments]
+      summary: Update appointment
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AppointmentUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Appointment"
+    delete:
+      operationId: adminDeleteAppointment
+      tags: [admin-appointments]
+      summary: Delete appointment
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # ─── Admin Policies ───────────────────────────────────────────────────────────
+
+  /admin/policies:
+    get:
+      operationId: adminListPolicies
+      tags: [admin-policies]
+      summary: List all policies
+      responses:
+        "200":
+          description: List of policies
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Policy"
+    post:
+      operationId: adminCreatePolicy
+      tags: [admin-policies]
+      summary: Create policy
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PolicyInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Policy"
+
+  /admin/policies/{id}:
+    patch:
+      operationId: adminUpdatePolicy
+      tags: [admin-policies]
+      summary: Update policy
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PolicyUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Policy"
+    delete:
+      operationId: adminDeletePolicy
+      tags: [admin-policies]
+      summary: Delete policy
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # ─── Admin Documents ──────────────────────────────────────────────────────────
+
+  /admin/documents:
+    get:
+      operationId: adminListDocuments
+      tags: [admin-documents]
+      summary: List all documents
+      responses:
+        "200":
+          description: List of documents
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Document"
+
+  /admin/documents/{id}:
+    patch:
+      operationId: adminUpdateDocument
+      tags: [admin-documents]
+      summary: Update document status
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DocumentUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Document"
+    delete:
+      operationId: adminDeleteDocument
+      tags: [admin-documents]
+      summary: Delete document
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # ─── Admin Clients ────────────────────────────────────────────────────────────
+
+  /admin/clients:
+    get:
+      operationId: adminListClients
+      tags: [admin-clients]
+      summary: List all clients
+      responses:
+        "200":
+          description: List of clients
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Client"
+
+  /admin/clients/{id}:
+    get:
+      operationId: adminGetClient
+      tags: [admin-clients]
+      summary: Get client details
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Client
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Client"
+        "404":
+          description: Not found
+    delete:
+      operationId: adminDeleteClient
+      tags: [admin-clients]
+      summary: Delete client
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
 
 components:
   schemas:
@@ -584,6 +1149,54 @@ components:
         - status
         - startDate
 
+    PolicyInput:
+      type: object
+      properties:
+        policyNumber:
+          type: string
+        type:
+          type: string
+        clientName:
+          type: string
+        coverAmount:
+          type: number
+        premium:
+          type: number
+        status:
+          type: string
+        startDate:
+          type: string
+        renewalDate:
+          type: string
+      required:
+        - policyNumber
+        - type
+        - clientName
+        - coverAmount
+        - premium
+        - status
+        - startDate
+
+    PolicyUpdate:
+      type: object
+      properties:
+        policyNumber:
+          type: string
+        type:
+          type: string
+        clientName:
+          type: string
+        coverAmount:
+          type: number
+        premium:
+          type: number
+        status:
+          type: string
+        startDate:
+          type: string
+        renewalDate:
+          type: string
+
     Appointment:
       type: object
       properties:
@@ -643,6 +1256,26 @@ components:
         - time
         - type
 
+    AppointmentUpdate:
+      type: object
+      properties:
+        clientName:
+          type: string
+        clientEmail:
+          type: string
+        advisorId:
+          type: integer
+        date:
+          type: string
+        time:
+          type: string
+        type:
+          type: string
+        status:
+          type: string
+        notes:
+          type: string
+
     Document:
       type: object
       properties:
@@ -686,6 +1319,14 @@ components:
         - clientName
         - size
 
+    DocumentUpdate:
+      type: object
+      properties:
+        status:
+          type: string
+        name:
+          type: string
+
     Advisor:
       type: object
       properties:
@@ -716,3 +1357,231 @@ components:
         - initials
         - specializations
         - clientCount
+
+    # ─── Admin schemas ──────────────────────────────────────────────────────────
+
+    AdminSession:
+      type: object
+      properties:
+        admin:
+          type: ["object", "null"]
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+            email:
+              type: string
+            role:
+              type: string
+      required:
+        - admin
+
+    AdminLoginInput:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      required:
+        - email
+        - password
+
+    AdminDashboard:
+      type: object
+      properties:
+        totalAdvisors:
+          type: integer
+        totalClients:
+          type: integer
+        totalFnaSubmissions:
+          type: integer
+        pendingFna:
+          type: integer
+        totalPolicies:
+          type: integer
+        totalAppointments:
+          type: integer
+        totalDocuments:
+          type: integer
+        recentFna:
+          type: array
+          items:
+            $ref: "#/components/schemas/FnaSubmission"
+        recentAppointments:
+          type: array
+          items:
+            $ref: "#/components/schemas/Appointment"
+      required:
+        - totalAdvisors
+        - totalClients
+        - totalFnaSubmissions
+        - pendingFna
+        - totalPolicies
+        - totalAppointments
+        - totalDocuments
+        - recentFna
+        - recentAppointments
+
+    AdminAdvisor:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        title:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        initials:
+          type: string
+        specializations:
+          type: array
+          items:
+            type: string
+        clientCount:
+          type: integer
+        createdAt:
+          type: string
+      required:
+        - id
+        - name
+        - title
+        - email
+        - phone
+        - initials
+        - specializations
+        - clientCount
+        - createdAt
+
+    AdminAdvisorInput:
+      type: object
+      properties:
+        name:
+          type: string
+        title:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        initials:
+          type: string
+        specializations:
+          type: array
+          items:
+            type: string
+        password:
+          type: string
+      required:
+        - name
+        - title
+        - email
+        - phone
+        - initials
+        - specializations
+        - password
+
+    AdminAdvisorUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        title:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        initials:
+          type: string
+        specializations:
+          type: array
+          items:
+            type: string
+        clientCount:
+          type: integer
+        password:
+          type: string
+
+    AdminUser:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+        createdAt:
+          type: string
+      required:
+        - id
+        - name
+        - email
+        - role
+        - createdAt
+
+    AdminUserInput:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        role:
+          type: string
+      required:
+        - name
+        - email
+        - password
+        - role
+
+    AdminUserUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+        password:
+          type: string
+
+    AdminFnaUpdate:
+      type: object
+      properties:
+        status:
+          type: string
+        advisorId:
+          type: ["integer", "null"]
+        notes:
+          type: string
+      required:
+        - status
+
+    Client:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        createdAt:
+          type: string
+      required:
+        - id
+        - name
+        - email
+        - createdAt
