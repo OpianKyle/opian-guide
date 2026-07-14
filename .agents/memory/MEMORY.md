@@ -1,1 +1,3 @@
 - [MySQL migration](mysql-migration.md) — xneelo MySQL via mysql2+drizzle mysql-core; no .returning(); mysql2 must be direct dep in both lib/db and api-server; tsc --build lib/db after schema changes.
+- [Artifact re-registration after import](artifact-reregistration-after-import.md) — artifact.toml on disk but not registered (502s, empty listArtifacts) after GitHub import; fix via backup+recreate, not manual workflows.
+- [drizzle-kit push needs a TTY](drizzle-kit-push-tty.md) — push/push-force can hang non-interactively; check schema directly first and skip push if it already matches.

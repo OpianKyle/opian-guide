@@ -5,15 +5,20 @@ import { defineConfig } from 'vite';
 
 import runtimeErrorOverlay from '@replit/vite-plugin-runtime-error-modal';
 
-// PORT and BASE_PATH are only required when running the dev server (Replit).
-// During a production build (e.g. on xneelo) they are not needed.
+// PORT/BASE_PATH are injected by the Replit artifact workflow for `dev`.
+// Fall back to sane defaults so `vite build` (e.g. production builds, or
+// running this config outside the managed workflow) doesn't hard-fail.
 const rawPort = process.env.PORT;
-const parsedPort = rawPort ? Number(rawPort) : NaN;
-const port = !isNaN(parsedPort) && parsedPort > 0 ? parsedPort : 3000;
 
-// Ensure BASE_PATH always starts with a slash to avoid malformed asset URLs.
-const rawBase = process.env.BASE_PATH ?? '/';
-const basePath = rawBase.startsWith('/') ? rawBase : `/${rawBase}`;
+if (rawPort !== undefined) {
+  const parsed = Number(rawPort);
+  if (Number.isNaN(parsed) || parsed <= 0) {
+    throw new Error(`Invalid PORT value: "${rawPort}"`);
+  }
+}
+
+const port = rawPort !== undefined ? Number(rawPort) : 5173;
+const basePath = process.env.BASE_PATH ?? '/';
 
 export default defineConfig({
   base: basePath,

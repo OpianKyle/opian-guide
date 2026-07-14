@@ -4,20 +4,22 @@ A professional internal portal for OPIAN NFS Group financial advisors to manage 
 
 ## Run & Operate
 
-- `pnpm --filter @workspace/api-server run dev` — run the API server (port 8080)
-- `pnpm --filter @workspace/opian-portal run dev` — run the frontend (port auto-assigned)
+- Registered as Replit artifacts with managed workflows (restart via `WorkflowsRestart`, not `configureWorkflow`):
+  - `artifacts/opian-portal: web` — frontend (Vite), preview path `/`
+  - `artifacts/api-server: API Server` — backend (Express), preview path `/api`
+  - `artifacts/mockup-sandbox: Component Preview Server` — canvas component preview, preview path `/__mockup`
 - `pnpm run typecheck` — full typecheck across all packages
 - `pnpm run build` — typecheck + build all packages
 - `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec
-- `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
-- Required env: `DATABASE_URL` — Postgres connection string
+- `pnpm --filter @workspace/db run push` — push DB schema changes (dev only) — **do not run this against the current DB**; see Gotchas
+- Required env (MySQL, not Postgres): `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`, plus `SESSION_SECRET`
 
 ## Stack
 
 - pnpm workspaces, Node.js 24, TypeScript 5.9
 - Frontend: React + Vite + Tailwind CSS + Framer Motion
 - API: Express 5
-- DB: PostgreSQL + Drizzle ORM
+- DB: MySQL (xneelo-hosted) + Drizzle ORM (`drizzle-orm/mysql2`)
 - Validation: Zod (`zod/v4`), `drizzle-zod`
 - API codegen: Orval (from OpenAPI spec)
 - Build: esbuild (CJS bundle)
@@ -54,6 +56,7 @@ _Populate as you build — explicit user instructions worth remembering across s
 
 ## Gotchas
 
+- The live MySQL DB already has all tables populated (advisors, appointments, documents, fna_submissions, policies, users) — don't run `drizzle-kit push`/`push-force` against it non-interactively; it can hang waiting on a TTY prompt and risks unwanted destructive changes to real data.
 - `numeric` columns from Drizzle return strings; always cast with `Number()` before Zod parsing in route handlers
 - Run `pnpm run typecheck:libs` after editing any `lib/*` package to rebuild declarations before checking artifact packages
 - Express 5 wildcards require names: use `/{*splat}` not `*`
