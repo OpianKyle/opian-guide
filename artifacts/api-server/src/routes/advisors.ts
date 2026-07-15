@@ -11,10 +11,15 @@ const router: IRouter = Router();
 
 router.get("/advisors", async (req, res): Promise<void> => {
   const advisors = await db.select().from(advisorsTable);
-  const mapped = advisors.map((a) => ({
-    ...a,
-    specializations: a.specializations ?? [],
-  }));
+  const mapped = advisors.map((a) => {
+    let specs: string[] = [];
+    if (Array.isArray(a.specializations)) {
+      specs = a.specializations;
+    } else if (typeof a.specializations === "string" && a.specializations) {
+      try { specs = JSON.parse(a.specializations as unknown as string); } catch { specs = []; }
+    }
+    return { ...a, specializations: specs };
+  });
   res.json(ListAdvisorsResponse.parse(mapped));
 });
 
@@ -36,7 +41,13 @@ router.get("/advisors/:id", async (req, res): Promise<void> => {
     return;
   }
 
-  res.json(GetAdvisorResponse.parse({ ...advisor, specializations: advisor.specializations ?? [] }));
+  let specs: string[] = [];
+  if (Array.isArray(advisor.specializations)) {
+    specs = advisor.specializations;
+  } else if (typeof advisor.specializations === "string" && advisor.specializations) {
+    try { specs = JSON.parse(advisor.specializations as unknown as string); } catch { specs = []; }
+  }
+  res.json(GetAdvisorResponse.parse({ ...advisor, specializations: specs }));
 });
 
 export default router;

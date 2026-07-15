@@ -14,12 +14,42 @@ import { requireAdmin } from "./middleware";
 
 const router: IRouter = Router();
 
+// MySQL decimal columns come back as strings — convert to numbers
+function mapFnaRow(r: typeof fnaTable.$inferSelect) {
+  return {
+    ...r,
+    grossMonthlyIncome: Number(r.grossMonthlyIncome),
+    netMonthlyIncome: Number(r.netMonthlyIncome),
+    spouseIncome: Number(r.spouseIncome),
+    monthlyExpenses: Number(r.monthlyExpenses),
+    homeLoans: Number(r.homeLoans),
+    vehicleFinance: Number(r.vehicleFinance),
+    personalLoans: Number(r.personalLoans),
+    creditCards: Number(r.creditCards),
+    otherDebts: Number(r.otherDebts),
+    savings: Number(r.savings),
+    investments: Number(r.investments),
+    retirementFunds: Number(r.retirementFunds),
+    propertyValue: Number(r.propertyValue),
+    existingLifeCover: Number(r.existingLifeCover),
+    existingDisabilityCover: Number(r.existingDisabilityCover),
+    existingDreadDiseaseCover: Number(r.existingDreadDiseaseCover),
+    monthlyRetirementIncome: Number(r.monthlyRetirementIncome),
+    currentRetirementSavings: Number(r.currentRetirementSavings),
+    monthlyInvestmentBudget: Number(r.monthlyInvestmentBudget),
+    notes: r.notes ?? null,
+    advisorId: r.advisorId ?? null,
+    createdAt: r.createdAt instanceof Date ? r.createdAt.toISOString() : r.createdAt,
+    updatedAt: r.updatedAt instanceof Date ? r.updatedAt.toISOString() : r.updatedAt,
+  };
+}
+
 // ─── GET /api/admin/fna ───────────────────────────────────────────────────────
 
 router.get("/admin/fna", requireAdmin, async (req, res): Promise<void> => {
   try {
     const submissions = await db.select().from(fnaTable).orderBy(sql`${fnaTable.createdAt} desc`);
-    res.json(AdminListFnaResponse.parse(submissions));
+    res.json(AdminListFnaResponse.parse(submissions.map(mapFnaRow)));
   } catch (err) {
     req.log.error({ err }, "Admin list FNA error");
     res.status(500).json({ error: "Internal server error" });
@@ -41,7 +71,7 @@ router.get("/admin/fna/:id", requireAdmin, async (req, res): Promise<void> => {
       res.status(404).json({ error: "FNA submission not found" });
       return;
     }
-    res.json(AdminGetFnaResponse.parse(submission));
+    res.json(AdminGetFnaResponse.parse(mapFnaRow(submission)));
   } catch (err) {
     req.log.error({ err }, "Admin get FNA error");
     res.status(500).json({ error: "Internal server error" });
@@ -70,7 +100,7 @@ router.patch("/admin/fna/:id", requireAdmin, async (req, res): Promise<void> => 
       res.status(404).json({ error: "FNA submission not found" });
       return;
     }
-    res.json(AdminUpdateFnaResponse.parse(submission));
+    res.json(AdminUpdateFnaResponse.parse(mapFnaRow(submission)));
   } catch (err) {
     req.log.error({ err }, "Admin update FNA error");
     res.status(500).json({ error: "Internal server error" });
