@@ -17,12 +17,29 @@ import { requireAdmin } from "./middleware";
 
 const router: IRouter = Router();
 
+// MySQL JSON columns come back as a raw string — parse for Zod
+function parseSpecs(raw: unknown): string[] {
+  if (Array.isArray(raw)) return raw as string[];
+  if (typeof raw === "string" && raw) {
+    try { return JSON.parse(raw); } catch { return []; }
+  }
+  return [];
+}
+
+function mapAdvisor(a: typeof advisorsTable.$inferSelect) {
+  return {
+    ...a,
+    specializations: parseSpecs(a.specializations),
+    createdAt: a.createdAt instanceof Date ? a.createdAt.toISOString() : a.createdAt,
+  };
+}
+
 // ─── GET /api/admin/advisors ──────────────────────────────────────────────────
 
 router.get("/admin/advisors", requireAdmin, async (req, res): Promise<void> => {
   try {
     const advisors = await db.select().from(advisorsTable);
-    res.json(AdminListAdvisorsResponse.parse(advisors));
+    res.json(AdminListAdvisorsResponse.parse(advisors.map(mapAdvisor)));
   } catch (err) {
     req.log.error({ err }, "Admin list advisors error");
     res.status(500).json({ error: "Internal server error" });
@@ -49,7 +66,7 @@ router.post("/admin/advisors", requireAdmin, async (req, res): Promise<void> => 
       res.status(500).json({ error: "Failed to create advisor" });
       return;
     }
-    res.status(201).json(AdminCreateAdvisorResponse.parse(advisor));
+    res.status(201).json(AdminCreateAdvisorResponse.parse(mapAdvisor(advisor)));
   } catch (err) {
     req.log.error({ err }, "Admin create advisor error");
     res.status(500).json({ error: "Internal server error" });
@@ -71,7 +88,7 @@ router.get("/admin/advisors/:id", requireAdmin, async (req, res): Promise<void> 
       res.status(404).json({ error: "Advisor not found" });
       return;
     }
-    res.json(AdminGetAdvisorResponse.parse(advisor));
+    res.json(AdminGetAdvisorResponse.parse(mapAdvisor(advisor)));
   } catch (err) {
     req.log.error({ err }, "Admin get advisor error");
     res.status(500).json({ error: "Internal server error" });
@@ -106,7 +123,7 @@ router.patch("/admin/advisors/:id", requireAdmin, async (req, res): Promise<void
       res.status(404).json({ error: "Advisor not found" });
       return;
     }
-    res.json(AdminUpdateAdvisorResponse.parse(advisor));
+    res.json(AdminUpdateAdvisorResponse.parse(mapAdvisor(advisor)));
   } catch (err) {
     req.log.error({ err }, "Admin update advisor error");
     res.status(500).json({ error: "Internal server error" });

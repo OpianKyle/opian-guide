@@ -14,12 +14,22 @@ import { requireAdmin } from "./middleware";
 
 const router: IRouter = Router();
 
+// MySQL decimal columns come back as strings — convert to numbers for Zod
+function mapPolicy(r: typeof policiesTable.$inferSelect) {
+  return {
+    ...r,
+    coverAmount: Number(r.coverAmount),
+    premium: Number(r.premium),
+    renewalDate: r.renewalDate ?? null,
+  };
+}
+
 // ─── GET /api/admin/policies ──────────────────────────────────────────────────
 
 router.get("/admin/policies", requireAdmin, async (req, res): Promise<void> => {
   try {
     const policies = await db.select().from(policiesTable).orderBy(sql`${policiesTable.createdAt} desc`);
-    res.json(AdminListPoliciesResponse.parse(policies));
+    res.json(AdminListPoliciesResponse.parse(policies.map(mapPolicy)));
   } catch (err) {
     req.log.error({ err }, "Admin list policies error");
     res.status(500).json({ error: "Internal server error" });
@@ -36,7 +46,6 @@ router.post("/admin/policies", requireAdmin, async (req, res): Promise<void> => 
   }
 
   try {
-    // MySQL decimal columns are stored/typed as strings; convert numbers
     const insertData = {
       ...parsed.data,
       coverAmount: String(parsed.data.coverAmount),
@@ -49,7 +58,7 @@ router.post("/admin/policies", requireAdmin, async (req, res): Promise<void> => 
       res.status(500).json({ error: "Failed to create policy" });
       return;
     }
-    res.status(201).json(AdminCreatePolicyResponse.parse(policy));
+    res.status(201).json(AdminCreatePolicyResponse.parse(mapPolicy(policy)));
   } catch (err) {
     req.log.error({ err }, "Admin create policy error");
     res.status(500).json({ error: "Internal server error" });
@@ -81,7 +90,7 @@ router.patch("/admin/policies/:id", requireAdmin, async (req, res): Promise<void
       res.status(404).json({ error: "Policy not found" });
       return;
     }
-    res.json(AdminUpdatePolicyResponse.parse(policy));
+    res.json(AdminUpdatePolicyResponse.parse(mapPolicy(policy)));
   } catch (err) {
     req.log.error({ err }, "Admin update policy error");
     res.status(500).json({ error: "Internal server error" });
