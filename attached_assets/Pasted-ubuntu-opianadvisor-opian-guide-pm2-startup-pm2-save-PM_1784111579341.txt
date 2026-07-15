@@ -1,0 +1,42 @@
+ubuntu@opianadvisor:~/opian-guide$ pm2 startup && pm2 save                      [PM2] Init System found: systemd
+[PM2] To setup the Startup Script, copy/paste the following command:
+sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u ubuntu --hp /home/ubuntu
+ubuntu@opianadvisor:~/opian-guide$ sudo nginx -t && sudo systemctl reload nginx nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+ubuntu@opianadvisor:~/opian-guide$ git pull
+remote: Enumerating objects: 36, done.
+remote: Counting objects: 100% (36/36), done.
+remote: Compressing objects: 100% (2/2), done.
+remote: Total 22 (delta 20), reused 22 (delta 20), pack-reused 0 (from 0)
+Unpacking objects: 100% (22/22), 5.25 KiB | 768.00 KiB/s, done.
+From https://github.com/OpianKyle/opian-guide
+   db5a04a..ad20e8f  main       -> origin/main
+Updating db5a04a..ad20e8f
+Fast-forward
+ artifacts/api-server/src/routes/admin/advisors.ts |  25 +-
+ artifacts/api-server/src/routes/admin/fna.ts      |  36 ++-
+ artifacts/api-server/src/routes/admin/policies.ts |  17 +-
+ artifacts/api-server/src/routes/advisors.ts       |  21 +-
+ artifacts/opian-portal/src/pages/documents.tsx    | 266 ++++++++++++++--------
+ 5 files changed, 256 insertions(+), 109 deletions(-)
+ubuntu@opianadvisor:~/opian-guide$ pnpm --filter @workspace/opian-portal run build
+
+> @workspace/opian-portal@0.0.0 build /home/ubuntu/opian-guide/artifacts/opian-portal
+> vite build --config vite.config.ts
+
+vite v7.3.5 building client environment for production...
+src/components/ui/tooltip.tsx (2:0): Error when using sourcemap for reporting an error: Can't resolve original location of error.
+src/components/ui/avatar.tsx (2:0): Error when using sourcemap for reporting an error: Can't resolve original location of error.
+src/components/ui/label.tsx (2:0): Error when using sourcemap for reporting an error: Can't resolve original location of error.
+src/components/ui/dropdown-menu.tsx (2:0): Error when using sourcemap for reporting an error: Can't resolve original location of error.
+src/components/ui/select.tsx (2:0): Error when using sourcemap for reporting an error: Can't resolve original location of error.
+✓ 2570 modules transformed.
+dist/public/index.html                   1.44 kB │ gzip:   0.55 kB
+dist/public/assets/index-C9wdmyY2.css  130.25 kB │ gzip:  20.78 kB
+dist/public/assets/index-XP33O3dp.js   818.86 kB │ gzip: 239.38 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 8.09s
