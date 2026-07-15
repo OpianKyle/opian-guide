@@ -7,6 +7,10 @@ import { logger } from "./lib/logger";
 
 const app: Express = express();
 
+// Trust the first proxy (nginx) so req.secure and X-Forwarded-Proto are correct.
+// Required for session cookies with secure:true to work behind nginx on xneelo.
+app.set("trust proxy", 1);
+
 app.use(
   pinoHttp({
     logger,
