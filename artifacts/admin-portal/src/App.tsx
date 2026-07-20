@@ -12,6 +12,8 @@ import Appointments from "./pages/appointments";
 import Policies from "./pages/policies";
 import Documents from "./pages/documents";
 import Clients from "./pages/clients";
+import Leads from "./pages/leads";
+import ImportLeads from "./pages/import-leads";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -34,6 +36,8 @@ function ProtectedRoutes() {
         <Route path="/policies" component={Policies} />
         <Route path="/documents" component={Documents} />
         <Route path="/clients" component={Clients} />
+        <Route path="/leads" component={Leads} />
+        <Route path="/import-leads" component={ImportLeads} />
         <Route component={NotFound} />
       </Switch>
     </AppLayout>

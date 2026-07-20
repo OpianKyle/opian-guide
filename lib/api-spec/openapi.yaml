@@ -39,6 +39,8 @@ tags:
     description: Admin document management
   - name: admin-clients
     description: Admin client management
+  - name: admin-leads
+    description: Admin lead management and email campaigns
 paths:
   /healthz:
     get:

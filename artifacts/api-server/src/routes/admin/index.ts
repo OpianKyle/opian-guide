@@ -8,6 +8,8 @@ import adminAppointmentsRouter from "./appointments";
 import adminPoliciesRouter from "./policies";
 import adminDocumentsRouter from "./documents";
 import adminClientsRouter from "./clients";
+import adminLeadsRouter from "./leads";
+import adminEmailRouter from "./email";
 
 const router: IRouter = Router();
 
@@ -20,5 +22,7 @@ router.use(adminAppointmentsRouter);
 router.use(adminPoliciesRouter);
 router.use(adminDocumentsRouter);
 router.use(adminClientsRouter);
+router.use(adminLeadsRouter);
+router.use(adminEmailRouter);
 
 export default router;

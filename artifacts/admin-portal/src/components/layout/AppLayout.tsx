@@ -10,7 +10,9 @@ import {
   Shield, 
   FolderOpen, 
   LogOut,
-  Briefcase
+  Briefcase,
+  UserPlus,
+  Upload
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -43,6 +45,8 @@ export function AppLayout({ children }: { children: ReactNode }) {
 
   const navItems = [
     { href: "/", label: "Dashboard", icon: LayoutDashboard },
+    { href: "/leads", label: "Leads", icon: UserPlus },
+    { href: "/import-leads", label: "Import Leads", icon: Upload },
     { href: "/advisors", label: "Advisors", icon: Briefcase },
     { href: "/clients", label: "Clients", icon: Users },
     { href: "/fna", label: "FNA Submissions", icon: FileText },
