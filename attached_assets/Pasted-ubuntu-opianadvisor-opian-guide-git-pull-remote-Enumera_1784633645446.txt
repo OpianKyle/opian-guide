@@ -1,0 +1,324 @@
+ubuntu@opianadvisor:~/opian-guide$ git pull
+remote: Enumerating objects: 40, done.
+remote: Counting objects: 100% (40/40), done.
+remote: Compressing objects: 100% (21/21), done.
+remote: Total 30 (delta 8), reused 30 (delta 8), pack-reused 0 (from 0)
+Unpacking objects: 100% (30/30), 12.80 KiB | 936.00 KiB/s, done.
+From https://github.com/OpianKyle/opian-guide
+   2199bae..eab4e38  main       -> origin/main
+Updating 2199bae..eab4e38
+Fast-forward
+ .../.replit-artifact/artifact.toml                 |   0
+ .../components.json                                |   0
+ .../{admin-portal => admin-portal-bak}/index.html  |   0
+ .../package.json                                   |   0
+ .../public/favicon.svg                             |   0
+ .../public/robots.txt                              |   0
+ .../{admin-portal => admin-portal-bak}/src/App.tsx |   2 +
+ .../src/components/layout/AppLayout.tsx            |   4 +-
+ .../src/components/ui/accordion.tsx                |   0
+ .../src/components/ui/alert-dialog.tsx             |   0
+ .../src/components/ui/alert.tsx                    |   0
+ .../src/components/ui/aspect-ratio.tsx             |   0
+ .../src/components/ui/avatar.tsx                   |   0
+ .../src/components/ui/badge.tsx                    |   0
+ .../src/components/ui/breadcrumb.tsx               |   0
+ .../src/components/ui/button-group.tsx             |   0
+ .../src/components/ui/button.tsx                   |   0
+ .../src/components/ui/calendar.tsx                 |   0
+ .../src/components/ui/card.tsx                     |   0
+ .../src/components/ui/carousel.tsx                 |   0
+ .../src/components/ui/chart.tsx                    |   0
+ .../src/components/ui/checkbox.tsx                 |   0
+ .../src/components/ui/collapsible.tsx              |   0
+ .../src/components/ui/command.tsx                  |   0
+ .../src/components/ui/context-menu.tsx             |   0
+ .../src/components/ui/dialog.tsx                   |   0
+ .../src/components/ui/drawer.tsx                   |   0
+ .../src/components/ui/dropdown-menu.tsx            |   0
+ .../src/components/ui/empty.tsx                    |   0
+ .../src/components/ui/field.tsx                    |   0
+ .../src/components/ui/form.tsx                     |   0
+ .../src/components/ui/hover-card.tsx               |   0
+ .../src/components/ui/input-group.tsx              |   0
+ .../src/components/ui/input-otp.tsx                |   0
+ .../src/components/ui/input.tsx                    |   0
+ .../src/components/ui/item.tsx                     |   0
+ .../src/components/ui/kbd.tsx                      |   0
+ .../src/components/ui/label.tsx                    |   0
+ .../src/components/ui/menubar.tsx                  |   0
+ .../src/components/ui/navigation-menu.tsx          |   0
+ .../src/components/ui/pagination.tsx               |   0
+ .../src/components/ui/popover.tsx                  |   0
+ .../src/components/ui/progress.tsx                 |   0
+ .../src/components/ui/radio-group.tsx              |   0
+ .../src/components/ui/resizable.tsx                |   0
+ .../src/components/ui/scroll-area.tsx              |   0
+ .../src/components/ui/select.tsx                   |   0
+ .../src/components/ui/separator.tsx                |   0
+ .../src/components/ui/sheet.tsx                    |   0
+ .../src/components/ui/sidebar.tsx                  |   0
+ .../src/components/ui/skeleton.tsx                 |   0
+ .../src/components/ui/slider.tsx                   |   0
+ .../src/components/ui/sonner.tsx                   |   0
+ .../src/components/ui/spinner.tsx                  |   0
+ .../src/components/ui/switch.tsx                   |   0
+ .../src/components/ui/table.tsx                    |   0
+ .../src/components/ui/tabs.tsx                     |   0
+ .../src/components/ui/textarea.tsx                 |   0
+ .../src/components/ui/toast.tsx                    |   0
+ .../src/components/ui/toaster.tsx                  |   0
+ .../src/components/ui/toggle-group.tsx             |   0
+ .../src/components/ui/toggle.tsx                   |   0
+ .../src/components/ui/tooltip.tsx                  |   0
+ .../src/hooks/use-mobile.tsx                       |   0
+ .../src/hooks/use-toast.ts                         |   0
+ .../src/index.css                                  |   0
+ .../src/lib/utils.ts                               |   0
+ .../src/main.tsx                                   |   0
+ .../src/pages/admins.tsx                           |   0
+ .../src/pages/advisors.tsx                         |   0
+ .../src/pages/appointments.tsx                     |   0
+ .../src/pages/clients.tsx                          |   0
+ .../src/pages/dashboard.tsx                        |   0
+ .../src/pages/documents.tsx                        |   0
+ .../admin-portal-bak/src/pages/email-campaigns.tsx | 335 +++++++++++++++++++++
+ .../src/pages/fna.tsx                              |   0
+ .../src/pages/import-leads.tsx                     |   0
+ .../src/pages/leads.tsx                            |   0
+ .../src/pages/login.tsx                            |   0
+ .../src/pages/not-found.tsx                        |   0
+ .../src/pages/policies.tsx                         |   0
+ .../tsconfig.json                                  |   0
+ .../vite.config.ts                                 |   0
+ .../.replit-artifact/artifact.toml                 |   0
+ artifacts/{api-server => api-server-bak}/build.mjs |   0
+ .../{api-server => api-server-bak}/components.json |   0
+ .../{api-server => api-server-bak}/package.json    |   0
+ .../public/favicon.svg                             |   0
+ .../public/robots.txt                              |   0
+ .../{api-server => api-server-bak}/src/app.ts      |   0
+ .../{api-server => api-server-bak}/src/index.ts    |   0
+ .../src/lib/.gitkeep                               |   0
+ .../src/lib/campaign.ts                            |   0
+ .../src/lib/logger.ts                              |   0
+ .../src/lib/mailer.ts                              |   0
+ .../src/lib/utils.ts                               |   0
+ .../src/middlewares/.gitkeep                       |   0
+ .../src/routes/admin/admins.ts                     |   0
+ .../src/routes/admin/advisors.ts                   |   0
+ .../src/routes/admin/appointments.ts               |   0
+ .../src/routes/admin/auth.ts                       |   0
+ .../api-server-bak/src/routes/admin/campaigns.ts   | 133 ++++++++
+ .../src/routes/admin/clients.ts                    |   0
+ .../src/routes/admin/dashboard.ts                  |   0
+ .../src/routes/admin/documents.ts                  |   0
+ .../src/routes/admin/email.ts                      |   0
+ .../src/routes/admin/fna.ts                        |   0
+ .../src/routes/admin/index.ts                      |   2 +
+ .../src/routes/admin/leads.ts                      |   0
+ .../src/routes/admin/middleware.ts                 |   0
+ .../src/routes/admin/policies.ts                   |   0
+ .../src/routes/advisors.ts                         |   0
+ .../src/routes/appointments.ts                     |   0
+ .../src/routes/auth.ts                             |   0
+ .../src/routes/dashboard.ts                        |   0
+ .../src/routes/documents.ts                        |   0
+ .../src/routes/fna.ts                              |   0
+ .../src/routes/health.ts                           |   0
+ .../src/routes/index.ts                            |   0
+ .../src/routes/leads.ts                            |   0
+ .../src/routes/policies.ts                         |   0
+ .../{api-server => api-server-bak}/tsconfig.json   |   0
+ ...guide-pm2-logs-api-server-lin_1784632288450.txt |  70 +++++
+ lib/db/src/schema/campaign_templates.ts            |  11 +
+ lib/db/src/schema/index.ts                         |   1 +
+ pnpm-lock.yaml                                     |   4 +-
+ replit.md                                          |  68 ++---
+ 127 files changed, 592 insertions(+), 38 deletions(-)
+ rename artifacts/{admin-portal => admin-portal-bak}/.replit-artifact/artifact.toml (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/components.json (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/index.html (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/package.json (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/public/favicon.svg (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/public/robots.txt (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/App.tsx (94%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/layout/AppLayout.tsx (98%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/accordion.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/alert-dialog.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/alert.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/aspect-ratio.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/avatar.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/badge.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/breadcrumb.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/button-group.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/button.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/calendar.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/card.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/carousel.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/chart.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/checkbox.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/collapsible.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/command.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/context-menu.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/dialog.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/drawer.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/dropdown-menu.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/empty.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/field.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/form.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/hover-card.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/input-group.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/input-otp.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/input.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/item.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/kbd.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/label.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/menubar.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/navigation-menu.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/pagination.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/popover.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/progress.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/radio-group.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/resizable.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/scroll-area.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/select.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/separator.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/sheet.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/sidebar.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/skeleton.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/slider.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/sonner.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/spinner.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/switch.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/table.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/tabs.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/textarea.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/toast.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/toaster.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/toggle-group.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/toggle.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/components/ui/tooltip.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/hooks/use-mobile.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/hooks/use-toast.ts (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/index.css (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/lib/utils.ts (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/main.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/pages/admins.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/pages/advisors.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/pages/appointments.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/pages/clients.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/pages/dashboard.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/pages/documents.tsx (100%)
+ create mode 100644 artifacts/admin-portal-bak/src/pages/email-campaigns.tsx
+ rename artifacts/{admin-portal => admin-portal-bak}/src/pages/fna.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/pages/import-leads.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/pages/leads.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/pages/login.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/pages/not-found.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/src/pages/policies.tsx (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/tsconfig.json (100%)
+ rename artifacts/{admin-portal => admin-portal-bak}/vite.config.ts (100%)
+ rename artifacts/{api-server => api-server-bak}/.replit-artifact/artifact.toml (100%)
+ rename artifacts/{api-server => api-server-bak}/build.mjs (100%)
+ rename artifacts/{api-server => api-server-bak}/components.json (100%)
+ rename artifacts/{api-server => api-server-bak}/package.json (100%)
+ rename artifacts/{api-server => api-server-bak}/public/favicon.svg (100%)
+ rename artifacts/{api-server => api-server-bak}/public/robots.txt (100%)
+ rename artifacts/{api-server => api-server-bak}/src/app.ts (100%)
+ rename artifacts/{api-server => api-server-bak}/src/index.ts (100%)
+ rename artifacts/{api-server => api-server-bak}/src/lib/.gitkeep (100%)
+ rename artifacts/{api-server => api-server-bak}/src/lib/campaign.ts (100%)
+ rename artifacts/{api-server => api-server-bak}/src/lib/logger.ts (100%)
+ rename artifacts/{api-server => api-server-bak}/src/lib/mailer.ts (100%)
+ rename artifacts/{api-server => api-server-bak}/src/lib/utils.ts (100%)
+ rename artifacts/{api-server => api-server-bak}/src/middlewares/.gitkeep (100%)
+ rename artifacts/{api-server => api-server-bak}/src/routes/admin/admins.ts (100%)
+ rename artifacts/{api-server => api-server-bak}/src/routes/admin/advisors.ts (100%)
+ rename artifacts/{api-server => api-server-bak}/src/routes/admin/appointments.ts (100%)
+ rename artifacts/{api-server => api-server-bak}/src/routes/admin/auth.ts (100%)
+ create mode 100644 artifacts/api-server-bak/src/routes/admin/campaigns.ts
+ rename artifacts/{api-server => api-server-bak}/src/routes/admin/clients.ts (100%)
+ rename artifacts/{api-server => api-server-bak}/src/routes/admin/dashboard.ts (100%)
+ rename artifacts/{api-server => api-server-bak}/src/routes/admin/documents.ts (100%)
+ rename artifacts/{api-server => api-server-bak}/src/routes/admin/email.ts (100%)
+ rename artifacts/{api-server => api-server-bak}/src/routes/admin/fna.ts (100%)
+ rename artifacts/{api-server => api-server-bak}/src/routes/admin/index.ts (91%)
+ rename artifacts/{api-server => api-server-bak}/src/routes/admin/leads.ts (100%)
+ rename artifacts/{api-server => api-server-bak}/src/routes/admin/middleware.ts (100%)
+ rename artifacts/{api-server => api-server-bak}/src/routes/admin/policies.ts (100%)
+ rename artifacts/{api-server => api-server-bak}/src/routes/advisors.ts (100%)
+ rename artifacts/{api-server => api-server-bak}/src/routes/appointments.ts (100%)
+ rename artifacts/{api-server => api-server-bak}/src/routes/auth.ts (100%)
+ rename artifacts/{api-server => api-server-bak}/src/routes/dashboard.ts (100%)
+ rename artifacts/{api-server => api-server-bak}/src/routes/documents.ts (100%)
+ rename artifacts/{api-server => api-server-bak}/src/routes/fna.ts (100%)
+ rename artifacts/{api-server => api-server-bak}/src/routes/health.ts (100%)
+ rename artifacts/{api-server => api-server-bak}/src/routes/index.ts (100%)
+ rename artifacts/{api-server => api-server-bak}/src/routes/leads.ts (100%)
+ rename artifacts/{api-server => api-server-bak}/src/routes/policies.ts (100%)
+ rename artifacts/{api-server => api-server-bak}/tsconfig.json (100%)
+ create mode 100644 attached_assets/Pasted-ubuntu-opianadvisor-opian-guide-pm2-logs-api-server-lin_1784632288450.txt
+ create mode 100644 lib/db/src/schema/campaign_templates.ts
+ubuntu@opianadvisor:~/opian-guide$ pnpm --filter @workspace/api-server run build
+
+> @workspace/api-server@0.0.0 build /home/ubuntu/opian-guide/artifacts/api-server-bak
+> node ./build.mjs
+
+node:internal/modules/esm/resolve:873
+  throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+        ^
+
+Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'esbuild' imported from /home/ubuntu/opian-guide/artifacts/api-server-bak/build.mjs
+    at packageResolve (node:internal/modules/esm/resolve:873:9)
+    at moduleResolve (node:internal/modules/esm/resolve:946:18)
+    at defaultResolve (node:internal/modules/esm/resolve:1188:11)
+    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:708:12)
+    at #cachedDefaultResolve (node:internal/modules/esm/loader:657:25)
+    at ModuleLoader.resolve (node:internal/modules/esm/loader:640:38)
+    at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+    at ModuleJob._link (node:internal/modules/esm/module_job:168:49) {
+  code: 'ERR_MODULE_NOT_FOUND'
+}
+
+Node.js v20.20.2
+/home/ubuntu/opian-guide/artifacts/api-server-bak:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @workspace/api-server@0.0.0 build: `node ./build.mjs`
+Exit status 1
+ WARN   Local package.json exists, but node_modules missing, did you mean to install?
+ubuntu@opianadvisor:~/opian-guide$ pnpm install
+Scope: all 9 workspace projects
+Lockfile is up to date, resolution step is skipped
+Already up to date
+^[[A. preinstall$ sh -c 'rm -f package-lock.json yarn.lock; case "$npm_config_use…
+└─ Done in 13ms
+Done in 1.8s using pnpm v10.34.4
+ubuntu@opianadvisor:~/opian-guide$ pnpm --filter @workspace/api-server run build
+
+> @workspace/api-server@0.0.0 build /home/ubuntu/opian-guide/artifacts/api-server-bak
+> node ./build.mjs
+
+
+  dist/index.mjs                       2.7mb ⚠️
+  dist/pino-worker.mjs               153.4kb
+  dist/pino-file.mjs                 142.1kb
+  dist/pino-pretty.mjs               114.4kb
+  dist/thread-stream-worker.mjs        7.3kb
+  dist/index.mjs.map                   4.6mb
+  dist/pino-worker.mjs.map           256.9kb
+  dist/pino-file.mjs.map             229.0kb
+  dist/pino-pretty.mjs.map           203.6kb
+  dist/thread-stream-worker.mjs.map   12.0kb
+
+⚡ Done in 514ms
+ubuntu@opianadvisor:~/opian-guide$ pm2 restart api-server
+Use --update-env to update environment variables
+[PM2] Applying action restartProcessId on app [api-server](ids: [ 0 ])
+[PM2] [api-server](0) ✓
+┌────┬───────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name          │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼───────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ api-server    │ fork     │ 10   │ online    │ 0%       │ 4.0kb    │
+└────┴───────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+host metrics | cpu: 8.5% | ram usage: 44.1% | ens3: ⇓ 0.031mb/s ⇑ 0.002mb/s |
+ubuntu@opianadvisor:~/opian-guide$
