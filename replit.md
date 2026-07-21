@@ -1,67 +1,54 @@
 # OPIAN Advisor Portal
 
-A full-stack financial advisor sales portal for managing clients, policies, appointments, FNA submissions, and documents.
+A pnpm monorepo for the OPIAN financial advisory platform, consisting of three artifacts:
 
-## Stack
+## Artifacts
 
-- **Frontend**: React + Vite (`artifacts/opian-portal`) — served at `/`
-- **Backend**: Express API server (`artifacts/api-server`) — served at `/api`
-- **Database**: MySQL via Drizzle ORM (`lib/db`) — hosted on xneelo
-- **Shared libs**: `lib/api-spec` (OpenAPI), `lib/api-zod` (Zod schemas), `lib/api-client-react` (React Query hooks), `lib/db` (Drizzle schema + client)
+| Artifact | Path | Description |
+|---|---|---|
+| `artifacts/opian-portal` | `/` | Public-facing advisor portal (landing page + advisor login/dashboard) |
+| `artifacts/admin-portal` | `/admin/` | Admin portal (OPIAN Command Centre — staff login, leads, advisors, clients) |
+| `artifacts/api-server` | `/api/` | Express 5 REST API server (Node.js + TypeScript) |
+
+## Shared Libraries (`lib/`)
+
+- **`lib/db`** — Drizzle ORM schema + MySQL2 client (external MySQL on xneelo)
+- **`lib/api-spec`** — OpenAPI YAML spec (`openapi.yaml`)
+- **`lib/api-client-react`** — Generated React Query hooks from the OpenAPI spec
+- **`lib/api-zod`** — Generated Zod validation schemas from the OpenAPI spec
 
 ## Running the project
 
-Both services start automatically via their managed workflows:
+All three workflows start automatically. From the shell:
 
-| Service | Workflow name | Dev command |
-|---|---|---|
-| Frontend | `artifacts/opian-portal: web` | `pnpm --filter @workspace/opian-portal run dev` |
-| API Server | `artifacts/api-server: API Server` | `pnpm --filter @workspace/api-server run dev` |
-
-Install dependencies: `pnpm install`
-
-## Environment variables / secrets required
-
-| Key | Description |
-|---|---|
-| `DB_HOST` | MySQL host (xneelo) |
-| `DB_PORT` | MySQL port (default 3306) |
-| `DB_NAME` | Database name |
-| `DB_USER` | Database user |
-| `DB_PASSWORD` | Database password |
-| `SESSION_SECRET` | Long random string for session signing |
-| `NODE_ENV` | `development` or `production` |
-
-## Key pages (frontend)
-
-- `/` — Landing page
-- `/auth` — Login / registration
-- `/dashboard` — Advisor dashboard
-- `/appointments` — Appointment booking & management
-- `/documents` — Document upload & management
-- `/fna` — Financial Needs Analysis form
-- `/fna-list` — FNA submissions list
-- `/policies` — Client policies
-- `/settings` — Account settings
-- `/contact` — Contact page
-
-## API routes
-
-All routes are under `/api`. See `lib/api-spec/openapi.yaml` for the full OpenAPI spec.
-
-After changing the spec, regenerate types with:
 ```bash
-pnpm --filter @workspace/api-spec run codegen
+# Install dependencies
+pnpm install
+
+# Start individual services
+pnpm --filter @workspace/opian-portal run dev
+pnpm --filter @workspace/admin-portal run dev
+pnpm --filter @workspace/api-server run dev
 ```
 
-## Database schema
+## Database
 
-Schema files live in `lib/db/src/schema/`. After editing, push changes with:
+External MySQL on xneelo. Credentials are stored as Replit secrets:
+- `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`
+
+Schema is managed with Drizzle ORM. After schema changes:
 ```bash
-pnpm --filter @workspace/db run push
+cd lib/db && tsc --build && pnpm run push
 ```
+
+Key tables: `users`, `advisors`, `admins`, `leads`, `lead_email_logs`, `lead_import_history`, `clients`, `appointments`, `policies`, `documents`, `fna`
+
+## Auth
+
+Session-based auth via `SESSION_SECRET`. The admin portal is fully protected — navigate to `/admin/login` to sign in.
 
 ## User preferences
 
-- Use pnpm for all package management (enforced by preinstall script)
-- Keep existing project structure — do not restructure or migrate
+- Use pnpm for all package management (not npm/yarn)
+- TypeScript strict mode throughout
+- Express 5 for the API server (no `app.use(express.Router())` pattern changes)

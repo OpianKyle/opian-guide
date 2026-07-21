@@ -8,6 +8,7 @@ import { AppLayout } from '@/components/layout';
 import Landing from '@/pages/landing';
 import Auth from '@/pages/auth';
 import Dashboard from '@/pages/dashboard';
+import Leads from '@/pages/leads';
 import FnaForm from '@/pages/fna';
 import FnaList from '@/pages/fna-list';
 import Policies from '@/pages/policies';
@@ -19,6 +20,8 @@ import NotFound from '@/pages/not-found';
 
 // Admin pages
 import AdminDashboard from '@/pages/admin/dashboard';
+import AdminLeads from '@/pages/admin/leads';
+import AdminImportLeads from '@/pages/admin/import-leads';
 import AdminAdvisors from '@/pages/admin/advisors';
 import AdminAdmins from '@/pages/admin/admins';
 import AdminFna from '@/pages/admin/fna';
@@ -58,6 +61,7 @@ function ProtectedApp() {
     <AppLayout>
       <Switch>
         <Route path="/dashboard" component={Dashboard} />
+        <Route path="/leads" component={Leads} />
         <Route path="/fna" component={FnaForm} />
         <Route path="/fna/list" component={FnaList} />
         <Route path="/policies" component={Policies} />
@@ -82,6 +86,8 @@ function AdminProtectedApp() {
     <AppLayout>
       <Switch>
         <Route path="/admin/dashboard" component={AdminDashboard} />
+        <Route path="/admin/leads" component={AdminLeads} />
+        <Route path="/admin/import-leads" component={AdminImportLeads} />
         <Route path="/admin/advisors" component={AdminAdvisors} />
         <Route path="/admin/admins" component={AdminAdmins} />
         <Route path="/admin/fna" component={AdminFna} />
