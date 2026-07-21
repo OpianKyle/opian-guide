@@ -12,7 +12,8 @@ import {
   LogOut,
   Briefcase,
   UserPlus,
-  Upload
+  Upload,
+  Mail
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -47,6 +48,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
     { href: "/", label: "Dashboard", icon: LayoutDashboard },
     { href: "/leads", label: "Leads", icon: UserPlus },
     { href: "/import-leads", label: "Import Leads", icon: Upload },
+    { href: "/email-campaigns", label: "Email Campaigns", icon: Mail },
     { href: "/advisors", label: "Advisors", icon: Briefcase },
     { href: "/clients", label: "Clients", icon: Users },
     { href: "/fna", label: "FNA Submissions", icon: FileText },

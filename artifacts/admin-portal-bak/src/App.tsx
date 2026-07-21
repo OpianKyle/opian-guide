@@ -14,6 +14,7 @@ import Documents from "./pages/documents";
 import Clients from "./pages/clients";
 import Leads from "./pages/leads";
 import ImportLeads from "./pages/import-leads";
+import EmailCampaigns from "./pages/email-campaigns";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -38,6 +39,7 @@ function ProtectedRoutes() {
         <Route path="/clients" component={Clients} />
         <Route path="/leads" component={Leads} />
         <Route path="/import-leads" component={ImportLeads} />
+        <Route path="/email-campaigns" component={EmailCampaigns} />
         <Route component={NotFound} />
       </Switch>
     </AppLayout>

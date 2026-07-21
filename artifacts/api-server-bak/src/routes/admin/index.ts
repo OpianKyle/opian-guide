@@ -10,6 +10,7 @@ import adminDocumentsRouter from "./documents";
 import adminClientsRouter from "./clients";
 import adminLeadsRouter from "./leads";
 import adminEmailRouter from "./email";
+import adminCampaignsRouter from "./campaigns";
 
 const router: IRouter = Router();
 
@@ -24,5 +25,6 @@ router.use(adminDocumentsRouter);
 router.use(adminClientsRouter);
 router.use(adminLeadsRouter);
 router.use(adminEmailRouter);
+router.use(adminCampaignsRouter);
 
 export default router;
