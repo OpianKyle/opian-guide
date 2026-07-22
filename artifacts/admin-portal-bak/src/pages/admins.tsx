@@ -11,11 +11,13 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Plus, Edit2, Trash2, X, UserCog, ShieldAlert } from "lucide-react";
 import { format } from "date-fns";
+import { toast } from "sonner";
 
 export default function Admins() {
   const queryClient = useQueryClient();
-  const { data: session } = useAdminGetSession();
-  const { data: admins, isLoading } = useAdminListAdmins({ query: { enabled: session?.admin?.role === 'super_admin' } });
+  const { data: session, isLoading: sessionLoading } = useAdminGetSession();
+  const isSuperAdmin = session?.admin?.role === 'super_admin';
+  const { data: admins, isLoading } = useAdminListAdmins({ query: { enabled: isSuperAdmin } });
   
   const createAdmin = useAdminCreateAdmin();
   const updateAdmin = useAdminUpdateAdmin();
@@ -29,7 +31,12 @@ export default function Admins() {
     name: "", email: "", role: "admin", password: ""
   });
 
-  if (session?.admin?.role !== 'super_admin') {
+  // Don't flash Access Denied while the session is loading
+  if (sessionLoading) {
+    return <div className="p-8 text-center text-muted-foreground">Loading...</div>;
+  }
+
+  if (!isSuperAdmin) {
     return (
       <div className="min-h-[50vh] flex flex-col items-center justify-center text-center">
         <ShieldAlert className="w-16 h-16 text-destructive mb-4" />
@@ -73,6 +80,10 @@ export default function Admins() {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: getAdminListAdminsQueryKey() });
           resetForm();
+          toast.success("Admin updated successfully.");
+        },
+        onError: (err: any) => {
+          toast.error(err?.data?.error ?? err?.message ?? "Failed to update admin.");
         }
       });
     } else {
@@ -80,6 +91,10 @@ export default function Admins() {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: getAdminListAdminsQueryKey() });
           resetForm();
+          toast.success("Admin created successfully.");
+        },
+        onError: (err: any) => {
+          toast.error(err?.data?.error ?? err?.message ?? "Failed to create admin.");
         }
       });
     }
@@ -87,13 +102,17 @@ export default function Admins() {
 
   const handleDelete = (id: number) => {
     if (session?.admin?.id === id) {
-      alert("You cannot delete your own account.");
+      toast.error("You cannot delete your own account.");
       return;
     }
     if (confirm("Are you sure you want to delete this admin? This action cannot be undone.")) {
       deleteAdmin.mutate({ id }, {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: getAdminListAdminsQueryKey() });
+          toast.success("Admin deleted.");
+        },
+        onError: (err: any) => {
+          toast.error(err?.data?.error ?? err?.message ?? "Failed to delete admin.");
         }
       });
     }
@@ -142,7 +161,7 @@ export default function Admins() {
             <div className="md:col-span-2 flex justify-end gap-3 mt-4 pt-4 border-t">
               <Button type="button" variant="outline" onClick={resetForm}>Cancel</Button>
               <Button type="submit" disabled={createAdmin.isPending || updateAdmin.isPending}>
-                {editingId ? "Save Changes" : "Create Admin"}
+                {createAdmin.isPending || updateAdmin.isPending ? "Saving..." : editingId ? "Save Changes" : "Create Admin"}
               </Button>
             </div>
           </form>
