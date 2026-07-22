@@ -12,7 +12,7 @@ import {
   AdminDeleteAdminParams,
 } from "@workspace/api-zod";
 import { requireSuperAdmin } from "./middleware";
-import { serializeDates } from "../../lib/utils";
+import { serializeDates } from "../../lib/serialize-dates";
 
 const router: IRouter = Router();
 
@@ -23,7 +23,7 @@ router.get("/admin/admins", requireSuperAdmin, async (req, res): Promise<void> =
     const admins = await db
       .select({ id: adminsTable.id, name: adminsTable.name, email: adminsTable.email, role: adminsTable.role, createdAt: adminsTable.createdAt })
       .from(adminsTable);
-    res.json(AdminListAdminsResponse.parse(admins));
+    res.json(AdminListAdminsResponse.parse(serializeDates(admins)));
   } catch (err) {
     req.log.error({ err }, "Admin list admins error");
     res.status(500).json({ error: "Internal server error" });
@@ -64,7 +64,7 @@ router.post("/admin/admins", requireSuperAdmin, async (req, res): Promise<void> 
       res.status(500).json({ error: "Failed to create admin" });
       return;
     }
-    res.status(201).json(AdminCreateAdminResponse.parse(admin));
+    res.status(201).json(AdminCreateAdminResponse.parse(serializeDates(admin)));
   } catch (err) {
     req.log.error({ err }, "Admin create admin error");
     res.status(500).json({ error: "Internal server error" });
@@ -102,7 +102,7 @@ router.patch("/admin/admins/:id", requireSuperAdmin, async (req, res): Promise<v
       res.status(404).json({ error: "Admin not found" });
       return;
     }
-    res.json(AdminUpdateAdminResponse.parse(admin));
+    res.json(AdminUpdateAdminResponse.parse(serializeDates(admin)));
   } catch (err) {
     req.log.error({ err }, "Admin update admin error");
     res.status(500).json({ error: "Internal server error" });
