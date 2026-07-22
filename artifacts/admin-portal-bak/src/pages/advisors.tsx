@@ -115,7 +115,7 @@ export default function Advisors() {
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium">Email Address</label>
-              <input required type="email" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} className="w-full h-10 rounded-md border bg-background px-3 text-sm focus:ring-2 focus:ring-ring outline-none" placeholder="jane@opian.com" />
+              <input required type="email" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} className="w-full h-10 rounded-md border bg-background px-3 text-sm focus:ring-2 focus:ring-ring outline-none" placeholder="jane@myifa.co.za" />
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium">Phone Number</label>

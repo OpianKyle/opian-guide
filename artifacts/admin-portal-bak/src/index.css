@@ -53,91 +53,52 @@
 }
 
 :root {
-  /* Executive Cobalt & Slate */
-  --background: 210 40% 98%;
-  --foreground: 222 47% 11%;
-  
-  --border: 214 32% 91%;
-  --input: 214 32% 91%;
-  --ring: 224 76% 48%;
-  
-  --card: 0 0% 100%;
-  --card-foreground: 222 47% 11%;
-  --card-border: 214 32% 91%;
-  
-  --popover: 0 0% 100%;
-  --popover-foreground: 222 47% 11%;
-  --popover-border: 214 32% 91%;
-  
-  --primary: 224 76% 48%; /* Cobalt Blue */
-  --primary-foreground: 210 40% 98%;
-  
-  --secondary: 35 92% 43%; /* Rich Amber */
-  --secondary-foreground: 0 0% 100%;
-  
-  --muted: 210 40% 96%;
-  --muted-foreground: 215 16% 47%;
-  
-  --accent: 210 40% 96%;
-  --accent-foreground: 222 47% 11%;
-  
-  --destructive: 0 84% 60%;
-  --destructive-foreground: 210 40% 98%;
+  /* MyIFA — Light Financial Theme */
+  --background: 36 20% 97%;
+  --foreground: 220 25% 14%;
 
-  /* Sidebar - Deep Indigo */
-  --sidebar: 226 45% 15%;
-  --sidebar-foreground: 213 31% 91%;
-  --sidebar-border: 226 45% 12%;
-  --sidebar-primary: 224 76% 48%;
+  --border: 220 15% 88%;
+  --input: 220 15% 88%;
+  --ring: 28 85% 50%;
+
+  --card: 0 0% 100%;
+  --card-foreground: 220 25% 14%;
+  --card-border: 220 15% 90%;
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 220 25% 14%;
+  --popover-border: 220 15% 88%;
+
+  /* Primary — MyIFA Orange */
+  --primary: 28 85% 50%;
+  --primary-foreground: 0 0% 100%;
+
+  /* Secondary — MyIFA Blue */
+  --secondary: 215 65% 38%;
+  --secondary-foreground: 0 0% 100%;
+
+  --muted: 36 15% 93%;
+  --muted-foreground: 220 12% 46%;
+
+  --accent: 28 80% 95%;
+  --accent-foreground: 28 85% 38%;
+
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+
+  /* Sidebar — Clean White */
+  --sidebar: 0 0% 100%;
+  --sidebar-foreground: 220 25% 20%;
+  --sidebar-border: 220 15% 90%;
+  --sidebar-primary: 28 85% 50%;
   --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 226 45% 20%;
-  --sidebar-accent-foreground: 213 31% 91%;
-  --sidebar-ring: 224 76% 48%;
+  --sidebar-accent: 28 80% 95%;
+  --sidebar-accent-foreground: 220 25% 18%;
+  --sidebar-ring: 28 85% 50%;
 
   --app-font-sans: "Inter", -apple-system, sans-serif;
   --app-font-mono: "JetBrains Mono", monospace;
-  --radius: 0.3rem;
-}
-
-.dark {
-  --background: 222 47% 11%;
-  --foreground: 210 40% 98%;
-  
-  --border: 217 33% 17%;
-  --input: 217 33% 17%;
-  --ring: 224 76% 48%;
-  
-  --card: 222 47% 11%;
-  --card-foreground: 210 40% 98%;
-  --card-border: 217 33% 17%;
-  
-  --popover: 222 47% 11%;
-  --popover-foreground: 210 40% 98%;
-  --popover-border: 217 33% 17%;
-  
-  --primary: 224 76% 48%;
-  --primary-foreground: 0 0% 100%;
-  
-  --secondary: 35 92% 43%;
-  --secondary-foreground: 0 0% 100%;
-  
-  --muted: 217 33% 17%;
-  --muted-foreground: 215 20.2% 65.1%;
-  
-  --accent: 217 33% 17%;
-  --accent-foreground: 210 40% 98%;
-  
-  --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 210 40% 98%;
-
-  --sidebar: 222 47% 8%;
-  --sidebar-foreground: 213 31% 91%;
-  --sidebar-border: 217 33% 17%;
-  --sidebar-primary: 224 76% 48%;
-  --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 217 33% 17%;
-  --sidebar-accent-foreground: 213 31% 91%;
-  --sidebar-ring: 224 76% 48%;
+  --radius: 0.5rem;
 }
 
 @layer base {

@@ -125,7 +125,7 @@ export default function Admins() {
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium">Email Address</label>
-              <input required type="email" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} className="w-full h-10 rounded-md border bg-background px-3 text-sm focus:ring-2 focus:ring-ring outline-none" placeholder="admin@opian.com" />
+              <input required type="email" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} className="w-full h-10 rounded-md border bg-background px-3 text-sm focus:ring-2 focus:ring-ring outline-none" placeholder="admin@myifa.co.za" />
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium">Role</label>

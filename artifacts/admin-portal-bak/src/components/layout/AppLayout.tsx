@@ -1,14 +1,14 @@
 import { ReactNode, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { useAdminGetSession, useAdminLogout } from "@workspace/api-client-react";
-import { 
-  LayoutDashboard, 
-  Users, 
-  UserCog, 
-  FileText, 
-  Calendar, 
-  Shield, 
-  FolderOpen, 
+import {
+  LayoutDashboard,
+  Users,
+  UserCog,
+  FileText,
+  Calendar,
+  Shield,
+  FolderOpen,
   LogOut,
   Briefcase,
   UserPlus,
@@ -22,8 +22,6 @@ export function AppLayout({ children }: { children: ReactNode }) {
   const { data: session, isLoading } = useAdminGetSession();
   const logout = useAdminLogout();
 
-  // Redirect to login when session is resolved and there's no admin — never
-  // call setLocation during render; put it in an effect instead.
   useEffect(() => {
     if (!isLoading && !session?.admin) {
       setLocation("/login");
@@ -62,27 +60,37 @@ export function AppLayout({ children }: { children: ReactNode }) {
   }
 
   return (
-    <div className="min-h-[100dvh] flex bg-muted/30">
+    <div className="min-h-[100dvh] flex bg-muted/40">
       {/* Sidebar */}
-      <aside className="w-64 bg-sidebar border-r border-sidebar-border flex flex-col hidden md:flex">
-        <div className="h-16 flex items-center px-6 border-b border-sidebar-border">
-          <div className="flex items-center gap-2 text-sidebar-primary-foreground font-semibold text-lg tracking-tight">
-            <div className="w-6 h-6 bg-sidebar-primary rounded flex items-center justify-center text-xs">O</div>
-            OPIAN <span className="text-sidebar-foreground/60 font-normal">Admin</span>
-          </div>
+      <aside className="w-64 bg-sidebar border-r border-sidebar-border flex flex-col hidden md:flex shadow-sm">
+        {/* Logo */}
+        <div className="h-16 flex items-center px-5 border-b border-sidebar-border">
+          <img src="/logo.png" alt="MyIFA Financial Services" className="h-8 object-contain" />
         </div>
-        
-        <div className="flex-1 py-6 px-3 flex flex-col gap-1 overflow-y-auto">
-          <div className="px-3 mb-2 text-xs font-semibold text-sidebar-foreground/50 uppercase tracking-wider">
-            Platform
-          </div>
+
+        {/* Role badge */}
+        <div className="px-5 pt-4 pb-2">
+          <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest">
+            Command Centre
+          </span>
+        </div>
+
+        <div className="flex-1 py-2 px-3 flex flex-col gap-0.5 overflow-y-auto">
           {navItems.map((item) => {
             const isActive = location === item.href || (item.href !== "/" && location.startsWith(item.href));
             const Icon = item.icon;
-            
+
             return (
-              <Link key={item.href} href={item.href} className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-sm" : "text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"}`}>
-                <Icon className="w-4 h-4" />
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
+                  isActive
+                    ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-sm shadow-primary/20"
+                    : "text-sidebar-foreground/75 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                }`}
+              >
+                <Icon className="w-4 h-4 shrink-0" />
                 {item.label}
               </Link>
             );
@@ -90,15 +98,15 @@ export function AppLayout({ children }: { children: ReactNode }) {
         </div>
 
         <div className="p-4 border-t border-sidebar-border">
-          <div className="flex items-center justify-between px-2 py-2">
-            <div className="flex flex-col">
-              <span className="text-sm font-medium text-sidebar-foreground">{session.admin.name}</span>
-              <span className="text-xs text-sidebar-foreground/60 capitalize">{session.admin.role?.replace('_', ' ')}</span>
+          <div className="flex items-center justify-between px-2 py-1.5">
+            <div className="flex flex-col min-w-0">
+              <span className="text-sm font-medium text-sidebar-foreground truncate">{session.admin.name}</span>
+              <span className="text-xs text-muted-foreground capitalize">{session.admin.role?.replace('_', ' ')}</span>
             </div>
-            <button 
+            <button
               onClick={handleLogout}
-              className="p-2 text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent rounded-md transition-colors"
-              title="Logout"
+              className="p-2 text-muted-foreground hover:text-foreground hover:bg-sidebar-accent rounded-lg transition-colors"
+              title="Sign out"
             >
               <LogOut className="w-4 h-4" />
             </button>
@@ -106,14 +114,18 @@ export function AppLayout({ children }: { children: ReactNode }) {
         </div>
       </aside>
 
-      {/* Main Content */}
+      {/* Main content */}
       <main className="flex-1 flex flex-col min-w-0">
-        <header className="h-16 border-b bg-background flex items-center justify-between px-8 md:hidden">
-          <div className="font-semibold text-foreground">OPIAN</div>
-          <button onClick={handleLogout} className="text-muted-foreground"><LogOut className="w-5 h-5" /></button>
+        {/* Mobile header */}
+        <header className="h-14 border-b bg-card flex items-center justify-between px-4 md:hidden shadow-sm">
+          <img src="/logo.png" alt="MyIFA" className="h-7 object-contain" />
+          <button onClick={handleLogout} className="text-muted-foreground p-2">
+            <LogOut className="w-5 h-5" />
+          </button>
         </header>
+
         <div className="flex-1 overflow-y-auto">
-          <div className="p-8 max-w-[1400px] mx-auto">
+          <div className="p-6 md:p-8 max-w-[1400px] mx-auto">
             {children}
           </div>
         </div>
