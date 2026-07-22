@@ -45,7 +45,12 @@ function Nav() {
     >
       <div className="max-w-7xl mx-auto px-6 h-18 flex items-center justify-between py-4">
         <button onClick={() => scrollTo("home")} className="flex items-center">
-          <img src="/logo.png" alt="MyIFA Financial Services" className="h-10 object-contain" />
+          <span
+            className="font-serif font-bold tracking-widest text-white text-xl select-none"
+            style={{ fontFamily: "'Georgia', 'Times New Roman', serif", letterSpacing: "0.18em" }}
+          >
+            MY<span style={{ color: "#f97316" }}>IFA</span>
+          </span>
         </button>
 
         {/* Desktop nav */}
@@ -557,7 +562,12 @@ export default function Landing() {
       {/* ── Footer ────────────────────────────────────────────────────── */}
       <footer className="bg-[#070e1c] border-t border-white/5 py-10 px-6">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
-          <img src="/logo.png" alt="MyIFA Financial Services" className="h-9 object-contain brightness-0 invert opacity-80" />
+          <span
+            className="font-serif font-bold tracking-widest text-white/80 text-lg select-none"
+            style={{ fontFamily: "'Georgia', 'Times New Roman', serif", letterSpacing: "0.18em" }}
+          >
+            MY<span style={{ color: "#f97316" }}>IFA</span>
+          </span>
 
           <p className="text-white/25 text-xs text-center">
             © {new Date().getFullYear()} MyIFA Financial Services. Authorised Financial Services Provider (FSP No. XXXXX). All rights reserved.

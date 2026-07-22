@@ -6,10 +6,13 @@ interface LogoProps {
 
 export function Logo({ className = "", variant = "dark" }: LogoProps) {
   return (
-    <img
-      src="/logo.png"
-      alt="MyIFA Financial Services"
-      className={`object-contain ${variant === "dark" ? "brightness-0 invert" : ""} ${className}`}
-    />
+    <span
+      className={`font-serif tracking-widest font-bold select-none ${
+        variant === "dark" ? "text-white" : "text-[#1a1a2e]"
+      } ${className}`}
+      style={{ fontFamily: "'Georgia', 'Times New Roman', serif", letterSpacing: "0.18em" }}
+    >
+      MY<span style={{ color: variant === "dark" ? "#f97316" : "#f97316" }}>IFA</span>
+    </span>
   );
 }

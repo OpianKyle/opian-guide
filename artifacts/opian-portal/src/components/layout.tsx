@@ -82,7 +82,12 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       <aside className="fixed left-0 top-0 bottom-0 w-[240px] bg-sidebar flex flex-col z-20 shadow-sm">
         {/* Logo */}
         <div className="h-20 flex items-center justify-center border-b border-white/10 px-5">
-          <img src="/logo.png" alt="MyIFA Financial Services" className="h-10 object-contain brightness-0 invert" />
+          <span
+            className="font-serif font-bold tracking-widest text-white text-xl select-none"
+            style={{ fontFamily: "'Georgia', 'Times New Roman', serif", letterSpacing: "0.18em" }}
+          >
+            MY<span style={{ color: "#f97316" }}>IFA</span>
+          </span>
         </div>
 
         {/* Role badge */}
