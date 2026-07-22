@@ -1,0 +1,66 @@
+ubuntu@opianadvisor:~/opian-guide$ git pull
+remote: Enumerating objects: 107, done.
+remote: Counting objects: 100% (106/106), done.
+remote: Compressing objects: 100% (29/29), done.
+remote: Total 73 (delta 52), reused 64 (delta 43), pack-reused 0 (from 0)
+Unpacking objects: 100% (73/73), 5.19 MiB | 9.67 MiB/s, done.
+From https://github.com/OpianKyle/opian-guide
+   eab4e38..6f3cc2b  main       -> origin/main
+Updating eab4e38..6f3cc2b
+Fast-forward
+ artifacts/admin-portal-bak/index.html              |  14 +-
+ artifacts/admin-portal-bak/public/logo.png         | Bin 0 -> 5996094 bytes
+ .../src/components/layout/AppLayout.tsx            |  86 +--
+ artifacts/admin-portal-bak/src/index.css           | 113 ++--
+ artifacts/admin-portal-bak/src/pages/admins.tsx    |  33 +-
+ artifacts/admin-portal-bak/src/pages/advisors.tsx  |   2 +-
+ artifacts/admin-portal-bak/src/pages/login.tsx     | 149 +++---
+ artifacts/api-server-bak/src/lib/utils.ts          |  17 +
+ .../api-server-bak/src/routes/admin/admins.ts      |   1 +
+ .../src/routes/admin/appointments.ts               |   1 +
+ .../api-server-bak/src/routes/admin/clients.ts     |   1 +
+ .../api-server-bak/src/routes/admin/documents.ts   |   1 +
+ artifacts/opian-portal/index.html                  |  16 +-
+ artifacts/opian-portal/public/logo.png             | Bin 0 -> 5996094 bytes
+ artifacts/opian-portal/src/components/layout.tsx   |  37 +-
+ artifacts/opian-portal/src/components/logo.tsx     |  28 +-
+ artifacts/opian-portal/src/pages/admin/admins.tsx  |  36 +-
+ artifacts/opian-portal/src/pages/landing.tsx       | 580 +++++++++++----------
+ attached_assets/MyIFA-LogoBlack_1784719678679.png  | Bin 0 -> 5996094 bytes
+ ...guide-git-pull-remote-Enumera_1784633645446.txt | 324 ++++++++++++
+ attached_assets/image_1784634850169.png            | Bin 0 -> 119745 bytes
+ attached_assets/image_1784722574732.png            | Bin 0 -> 51388 bytes
+ 22 files changed, 916 insertions(+), 523 deletions(-)
+ create mode 100644 artifacts/admin-portal-bak/public/logo.png
+ create mode 100644 artifacts/opian-portal/public/logo.png
+ create mode 100644 attached_assets/MyIFA-LogoBlack_1784719678679.png
+ create mode 100644 attached_assets/Pasted-ubuntu-opianadvisor-opian-guide-git-pull-remote-Enumera_1784633645446.txt
+ create mode 100644 attached_assets/image_1784634850169.png
+ create mode 100644 attached_assets/image_1784722574732.png
+ubuntu@opianadvisor:~/opian-guide$ pnpm --filter @workspace/admin-portal run build
+
+> @workspace/admin-portal@0.0.0 build /home/ubuntu/opian-guide/artifacts/admin-portal-bak
+> vite build --config vite.config.ts
+
+vite v7.3.5 building client environment for production...
+✓ 2077 modules transformed.
+dist/public/index.html                   1.32 kB │ gzip:   0.53 kB
+dist/public/assets/index-0wEvK3_1.css  111.25 kB │ gzip:  18.10 kB
+dist/public/assets/index-C4KvwQsJ.js   447.38 kB │ gzip: 124.08 kB
+✓ built in 6.86s
+ubuntu@opianadvisor:~/opian-guide$ pm2 list
+┌────┬───────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name          │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼───────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ api-server    │ fork     │ 10   │ online    │ 0%       │ 98.0mb   │
+└────┴───────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+host metrics | cpu: 29.9% | ram usage: 49.9% | ens3: ⇓ 0.202mb/s ⇑ 0.003mb/s |
+ubuntu@opianadvisor:~/opian-guide$ pm2 restart api-server                       Use --update-env to update environment variables
+[PM2] Applying action restartProcessId on app [api-server](ids: [ 0 ])
+[PM2] [api-server](0) ✓
+┌────┬───────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name          │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼───────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ api-server    │ fork     │ 11   │ online    │ 0%       │ 7.6mb    │
+└────┴───────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+host metrics | cpu: 0.4% | ram usage: 48.2% | ens3: ⇓ 0.025mb/s ⇑ 0.032mb/s |
