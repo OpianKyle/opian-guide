@@ -9,6 +9,7 @@ import {
   AdminDeleteDocumentParams,
 } from "@workspace/api-zod";
 import { requireAdmin } from "./middleware";
+import { serializeDates } from "../../lib/utils";
 
 const router: IRouter = Router();
 

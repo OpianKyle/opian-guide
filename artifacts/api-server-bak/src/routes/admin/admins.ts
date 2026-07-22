@@ -12,6 +12,7 @@ import {
   AdminDeleteAdminParams,
 } from "@workspace/api-zod";
 import { requireSuperAdmin } from "./middleware";
+import { serializeDates } from "../../lib/utils";
 
 const router: IRouter = Router();
 
