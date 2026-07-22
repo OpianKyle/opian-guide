@@ -4,7 +4,6 @@ import {
   Contact, Settings, LogOut, Users, Briefcase, UserCog, Shield,
   UserPlus, Upload,
 } from "lucide-react";
-import { Logo } from "@/components/logo";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useAuth } from "@/contexts/auth";
 
@@ -80,46 +79,47 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-[100dvh] w-full bg-background font-sans">
       {/* Sidebar */}
-      <aside className="fixed left-0 top-0 bottom-0 w-[240px] bg-sidebar flex flex-col z-20">
-        <div className="h-20 flex items-center justify-center border-b border-white/10 px-4">
-          <Logo />
+      <aside className="fixed left-0 top-0 bottom-0 w-[240px] bg-sidebar flex flex-col z-20 shadow-sm">
+        {/* Logo */}
+        <div className="h-20 flex items-center justify-center border-b border-white/10 px-5">
+          <img src="/logo.png" alt="MyIFA Financial Services" className="h-10 object-contain brightness-0 invert" />
         </div>
 
         {/* Role badge */}
-        <div className="mx-3 mt-3 px-3 py-1.5 bg-white/5 rounded-md border border-white/10">
+        <div className="mx-3 mt-3 px-3 py-1.5 bg-white/5 rounded-lg border border-white/10">
           <p className="text-white/40 text-[10px] font-semibold uppercase tracking-wider">
             {displayRole}
           </p>
         </div>
 
-        <nav className="flex-1 py-4 flex flex-col gap-1 px-3 overflow-y-auto">
+        <nav className="flex-1 py-4 flex flex-col gap-0.5 px-3 overflow-y-auto">
           {navItems.map((item) => {
             const isActive = location === item.href || (item.href !== "/dashboard" && item.href !== "/admin/dashboard" && location.startsWith(item.href));
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-md transition-colors ${
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${
                   isActive
-                    ? "bg-sidebar-primary text-white"
-                    : "text-sidebar-foreground/70 hover:bg-white/5 hover:text-white"
+                    ? "bg-[#E07820] text-white shadow-sm shadow-[#E07820]/30"
+                    : "text-sidebar-foreground/65 hover:bg-white/8 hover:text-white"
                 }`}
               >
-                <item.icon className="h-4 w-4" />
+                <item.icon className="h-4 w-4 shrink-0" />
                 <span className="font-medium text-sm">{item.name}</span>
               </Link>
             );
           })}
         </nav>
 
-        <div className="p-3 border-t border-white/10 space-y-1">
+        <div className="p-3 border-t border-white/10 space-y-0.5">
           {!isAdmin && (
             <Link
               href="/settings"
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-md transition-colors ${
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${
                 location === "/settings"
-                  ? "bg-sidebar-primary text-white"
-                  : "text-sidebar-foreground/70 hover:bg-white/5 hover:text-white"
+                  ? "bg-[#E07820] text-white"
+                  : "text-sidebar-foreground/65 hover:bg-white/8 hover:text-white"
               }`}
             >
               <Settings className="h-4 w-4" />
@@ -128,7 +128,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           )}
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-md transition-colors text-sidebar-foreground/70 hover:bg-white/5 hover:text-white"
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all text-sidebar-foreground/65 hover:bg-white/8 hover:text-white"
           >
             <LogOut className="h-4 w-4" />
             <span className="font-medium text-sm">Sign Out</span>
@@ -146,7 +146,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               <p className="text-xs text-muted-foreground mt-0.5">{displayRole}</p>
             </div>
             <Avatar className="h-9 w-9 border-2 border-primary/20">
-              <AvatarFallback className="bg-primary/10 text-primary font-semibold text-sm">
+              <AvatarFallback className="bg-[#E07820]/10 text-[#E07820] font-semibold text-sm">
                 {initials}
               </AvatarFallback>
             </Avatar>
