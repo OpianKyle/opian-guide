@@ -1,0 +1,27 @@
+kind = "web"
+previewPath = "/admin/"
+title = "OPIAN Admin Portal"
+version = "1.0.0"
+id = "artifacts/admin-portal"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/admin/" ]
+localPort = 25580
+
+[services.development]
+run = "pnpm --filter @workspace/admin-portal run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/admin-portal", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/admin-portal/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "25580"
+BASE_PATH = "/admin/"
