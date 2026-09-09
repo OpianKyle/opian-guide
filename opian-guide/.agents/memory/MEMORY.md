@@ -2,3 +2,4 @@
 - [Artifact re-registration after import](artifact-reregistration-after-import.md) — artifact.toml on disk but not registered (502s, empty listArtifacts) after GitHub import; fix via backup+recreate, not manual workflows.
 - [drizzle-kit push needs a TTY](drizzle-kit-push-tty.md) — push/push-force can hang non-interactively; check schema directly first and skip push if it already matches.
 - [Workspace install recovery](workspace-install-recovery.md) — use frozen-lockfile workspace filters when an unrelated package blocks the full monorepo install.
+- [Git import history](git-import-history.md) — connect unrelated local and GitHub histories with a backed-up, current-tree-preserving merge.
