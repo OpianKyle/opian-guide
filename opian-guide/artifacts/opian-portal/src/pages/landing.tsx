@@ -164,12 +164,12 @@ const whyChoose = [
 ];
 
 const team = [
-  { initials: "LH", name: "Lance Heynes", title: "Director of Operations" },
-  { initials: "KM", name: "Kyle McBryne", title: "Systems Developer" },
-  { initials: "WK", name: "Wessel Krige", title: "Social Media Manager" },
-  { initials: "MB", name: "Mic-Shane Brown", title: "Head of Admin" },
-  { initials: "JR", name: "Jodie Rensburg", title: "Client Services" },
-  { initials: "LL", name: "Lionel Lottering", title: "Head of Investor Matters" },
+  { initials: "LH", name: "Lance Heynes", title: "Principal Financial Adviser" },
+  { initials: "KM", name: "Kyle McBryne", title: "Systems Manager" },
+  { initials: "MB", name: "Mic-shane Brown", title: "Admin Manager" },
+  { initials: "N", name: "Nceba", title: "Administrator" },
+  { initials: "KM", name: "Kaydon Merrington", title: "Financial Consultant" },
+  { initials: "DD", name: "Damian Delillie", title: "Financial Consultant" },
 ];
 
 // ─── Main component ───────────────────────────────────────────────────────────
