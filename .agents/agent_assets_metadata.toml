@@ -1,0 +1,16 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "9nhPArYfwSRIoCp1zbt6v"
+uri = "file://opian-advisor-portal-standalone.html"
+type = "html"
+title = "OPIAN Advisor Portal — Standalone HTML"
+description = "A self-contained, responsive advisor portal frontend with dashboard, leads, policies, appointments, documents, an 8-step FNA with client-side estimates, submissions, adviser contact, and settings. No API, database, external scripts, uploads, or persistent storage."
+logical_id = "6ace049d-bf59-405c-8c20-63ba3e6a2c5e"
+content_hash = "sha256:99b60eacb1949824e015b52461c93ee2425f93d3fc13d83f543bb707938e4d6a"
+size = 73976
+mtime_ms = 1792418100448
+storage_uri = "gcs://replit-rams-assets-worf/rams/assets/repl:8afed5a7-3ee2-4747-8190-ae5f666a40ad/6ace049d-bf59-405c-8c20-63ba3e6a2c5e/fb1c58a0-2f15-4af2-a99c-68820c3138df"
+storage_version_token = "1792418171385519"
+content_type = "text/html"
