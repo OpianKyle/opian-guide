@@ -1,0 +1,831 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#1b2a4a">
+  <meta name="description" content="MyIFA Financial Services provides expert long-term assurance, estate planning, and wealth protection strategies tailored for South Africans.">
+  <title>MyIFA Financial Services | Your Financial Future</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --navy: #1b2a4a;
+      --navy-deep: #0f1e35;
+      --orange: #e07820;
+      --orange-dark: #c96a18;
+      --ink: #171a20;
+      --muted: #687080;
+      --line: #e9ebef;
+      --paper: #fff;
+      --soft: #f7f8fa;
+      --sans: "Plus Jakarta Sans", "Avenir Next", Avenir, "Segoe UI", sans-serif;
+      --serif: "Playfair Display", Georgia, "Times New Roman", serif;
+      font-family: var(--sans);
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+      scroll-behavior: smooth;
+      scroll-padding-top: 84px;
+    }
+
+    * { box-sizing: border-box; }
+    body { margin: 0; min-width: 320px; color: var(--ink); background: var(--paper); }
+    button, input { font: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    button { cursor: pointer; }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+    .container { width: min(1232px, calc(100% - 48px)); margin: 0 auto; }
+    .serif { font-family: var(--serif); }
+
+    .site-header {
+      position: fixed;
+      z-index: 40;
+      inset: 0 0 auto;
+      color: #fff;
+      background: transparent;
+      border-bottom: 1px solid transparent;
+      transition: background .25s ease, color .25s ease, box-shadow .25s ease, border-color .25s ease;
+    }
+    .site-header.scrolled {
+      color: #4b5563;
+      background: rgba(255,255,255,.96);
+      border-color: #eceef1;
+      box-shadow: 0 4px 22px rgba(15,30,53,.06);
+      backdrop-filter: blur(14px);
+    }
+    .nav-inner {
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .wordmark {
+      padding: 0;
+      border: 0;
+      color: #fff;
+      background: transparent;
+      font: 700 20px/1 var(--serif);
+      letter-spacing: .18em;
+      white-space: nowrap;
+    }
+    .scrolled .wordmark { color: var(--navy); }
+    .wordmark .accent { color: #f97316; }
+    .desktop-nav, .nav-actions { display: flex; align-items: center; }
+    .desktop-nav { gap: 31px; margin-left: auto; margin-right: auto; }
+    .desktop-nav a {
+      color: rgba(255,255,255,.82);
+      font-size: 14px;
+      font-weight: 550;
+      transition: color .18s ease;
+    }
+    .desktop-nav a:hover { color: #fff; }
+    .scrolled .desktop-nav a { color: #596170; }
+    .scrolled .desktop-nav a:hover { color: var(--navy); }
+    .nav-actions { gap: 12px; }
+    .button {
+      display: inline-flex;
+      min-height: 42px;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      padding: 10px 19px;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      color: #fff;
+      background: var(--orange);
+      font-size: 14px;
+      font-weight: 650;
+      line-height: 1.15;
+      transition: background .18s ease, border-color .18s ease, transform .18s ease, box-shadow .18s ease;
+    }
+    .button:hover { background: var(--orange-dark); transform: translateY(-1px); }
+    .button:focus-visible, .menu-toggle:focus-visible, a:focus-visible {
+      outline: 3px solid #ffb66d;
+      outline-offset: 3px;
+    }
+    .button-nav { min-height: 40px; padding: 9px 18px; box-shadow: 0 6px 16px rgba(224,120,32,.2); }
+    .button-ghost {
+      color: #fff;
+      background: transparent;
+      border-color: rgba(255,255,255,.35);
+      font-weight: 550;
+    }
+    .button-ghost:hover { color: #fff; background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.65); }
+    .scrolled .button-ghost { color: #4c5564; border-color: #dfe3e8; }
+    .scrolled .button-ghost:hover { color: var(--navy); background: #f8f9fa; border-color: #c8ced7; }
+    .menu-toggle {
+      display: none;
+      width: 42px;
+      height: 42px;
+      border: 1px solid rgba(255,255,255,.28);
+      border-radius: 10px;
+      color: #fff;
+      background: rgba(255,255,255,.08);
+      font-size: 22px;
+      line-height: 1;
+    }
+    .scrolled .menu-toggle { color: var(--navy); border-color: #e3e6ea; background: #fff; }
+    .mobile-menu {
+      display: none;
+      padding: 12px 24px 20px;
+      border-top: 1px solid #eef0f2;
+      background: #fff;
+      color: #3e4653;
+      box-shadow: 0 12px 18px rgba(15,30,53,.08);
+    }
+    .mobile-menu.open { display: grid; }
+    .mobile-menu a { padding: 11px 0; font-size: 14px; font-weight: 600; }
+    .mobile-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 9px; padding-top: 14px; border-top: 1px solid var(--line); }
+    .mobile-actions .button { min-height: 42px; padding: 9px 10px; font-size: 12px; }
+    .mobile-actions .button-ghost { color: var(--navy); border-color: #dfe3e8; }
+
+    .hero {
+      position: relative;
+      min-height: 700px;
+      min-height: 100svh;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      color: #fff;
+      background-color: #16243c;
+      isolation: isolate;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      z-index: -2;
+      inset: 0;
+      background-image: url("https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=1800&auto=format&fit=crop&q=85");
+      background-size: cover;
+      background-position: center 43%;
+      transform: scale(1.015);
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(15,30,53,.91) 0%, rgba(15,30,53,.77) 48%, rgba(15,30,53,.24) 100%);
+    }
+    .hero-inner { width: min(1232px, calc(100% - 48px)); margin: 0 auto; padding: 142px 0 120px; }
+    .hero-copy { max-width: 700px; }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      min-height: 31px;
+      padding: 6px 16px;
+      border: 1px solid rgba(255,255,255,.3);
+      border-radius: 999px;
+      color: rgba(255,255,255,.88);
+      background: rgba(255,255,255,.1);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      backdrop-filter: blur(8px);
+    }
+    .hero h1 {
+      max-width: 690px;
+      margin: 35px 0 22px;
+      color: #fff;
+      font: 700 clamp(48px, 6vw, 76px)/1.04 var(--serif);
+      letter-spacing: -.035em;
+    }
+    .hero h1 em { color: var(--orange); font-style: normal; }
+    .hero-copy > p {
+      max-width: 600px;
+      margin: 0 0 39px;
+      color: rgba(255,255,255,.72);
+      font-size: 18px;
+      line-height: 1.8;
+    }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 15px; }
+    .button-large { min-height: 57px; padding: 16px 27px; border-radius: 11px; font-size: 15px; }
+    .button-outline-light { color: #fff; border-color: rgba(255,255,255,.42); background: rgba(15,30,53,.12); backdrop-filter: blur(6px); }
+    .button-outline-light:hover { color: #fff; border-color: rgba(255,255,255,.75); background: rgba(255,255,255,.11); }
+    .button-navy { color: #fff; background: var(--navy); }
+    .button-navy:hover { background: #253d6b; }
+    .scroll-cue {
+      position: absolute;
+      bottom: 31px;
+      left: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 7px;
+      color: rgba(255,255,255,.58);
+      font-size: 9px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      transform: translateX(-50%);
+    }
+    .scroll-cue span {
+      width: 23px;
+      height: 37px;
+      border: 1px solid rgba(255,255,255,.4);
+      border-radius: 99px;
+      position: relative;
+    }
+    .scroll-cue span::after {
+      content: "";
+      position: absolute;
+      top: 7px;
+      left: 50%;
+      width: 3px;
+      height: 5px;
+      border-radius: 99px;
+      background: rgba(255,255,255,.8);
+      transform: translateX(-50%);
+      animation: scroll-dot 1.45s ease-in-out infinite;
+    }
+    @keyframes scroll-dot { 0%,100% { opacity: .45; transform: translate(-50%,0); } 55% { opacity: 1; transform: translate(-50%,9px); } }
+
+    .stats { padding: 48px 0; color: #fff; background: var(--navy); }
+    .stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 25px; }
+    .stat { text-align: center; }
+    .stat-value { color: var(--orange); font: 700 38px/1.1 var(--serif); }
+    .stat-label { margin-top: 8px; color: rgba(255,255,255,.62); font-size: 13px; font-weight: 550; }
+
+    .section { padding: 100px 0; }
+    .section-soft { background: #f7f8fa; }
+    .section-heading { max-width: 690px; margin: 0 auto 52px; text-align: center; }
+    .section-kicker { margin: 0 0 12px; color: var(--orange); font-size: 12px; font-weight: 750; letter-spacing: .14em; text-transform: uppercase; }
+    .section-heading h2, .about-copy h2, .contact-content h2 {
+      margin: 0;
+      color: #1a1d23;
+      font: 700 clamp(32px,4vw,45px)/1.16 var(--serif);
+      letter-spacing: -.025em;
+    }
+    .section-heading > p:last-child { margin: 16px auto 0; color: var(--muted); font-size: 15px; line-height: 1.75; }
+
+    .services-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 23px; }
+    .service-card {
+      overflow: hidden;
+      border: 1px solid #eaedf0;
+      border-radius: 17px;
+      background: #fff;
+      box-shadow: 0 4px 14px rgba(15,30,53,.035);
+      transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+    }
+    .service-card:hover { transform: translateY(-5px); border-color: #e5d7c8; box-shadow: 0 18px 38px rgba(15,30,53,.1); }
+    .service-image { height: 176px; position: relative; overflow: hidden; background: #dfe3e8; }
+    .service-image img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
+    .service-card:hover .service-image img { transform: scale(1.055); }
+    .service-image::after { content: ""; position: absolute; inset: 30% 0 0; background: linear-gradient(0deg,rgba(0,0,0,.48),transparent); }
+    .service-icon { position: absolute; z-index: 1; left: 19px; bottom: 14px; font-size: 24px; }
+    .service-copy { padding: 23px 23px 21px; }
+    .service-copy h3 { margin: 0 0 10px; color: #20242c; font-size: 17px; font-weight: 700; letter-spacing: -.015em; }
+    .service-copy p { min-height: 77px; margin: 0 0 17px; color: #6e7684; font-size: 13px; line-height: 1.72; }
+    .service-more { display: inline-flex; align-items: center; gap: 6px; color: var(--orange); font-size: 13px; font-weight: 700; transition: gap .18s ease; }
+    .service-card:hover .service-more { gap: 10px; }
+    .service-cta {
+      display: flex;
+      min-height: 300px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 22px;
+      padding: 34px;
+      border: 1px solid #17233a;
+      border-radius: 17px;
+      color: #fff;
+      background: linear-gradient(140deg,#1b2a4a,#0f1e35);
+      text-align: center;
+    }
+    .service-cta-mark { display: grid; width: 54px; height: 54px; place-items: center; border: 1px solid rgba(224,120,32,.32); border-radius: 17px; color: var(--orange); background: rgba(224,120,32,.12); font-size: 25px; }
+    .service-cta p { max-width: 235px; margin: 0; color: rgba(255,255,255,.72); font: 600 18px/1.55 var(--serif); }
+
+    .about-grid { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,.95fr); align-items: center; gap: 75px; }
+    .about-visual { position: relative; margin: 0 22px 24px 0; }
+    .about-visual img { width: 100%; height: 472px; border-radius: 20px; object-fit: cover; box-shadow: 0 18px 42px rgba(15,30,53,.17); }
+    .experience-badge {
+      position: absolute;
+      right: -21px;
+      bottom: -20px;
+      min-width: 184px;
+      padding: 20px 23px;
+      border-radius: 15px;
+      color: #fff;
+      background: var(--orange);
+      box-shadow: 0 12px 28px rgba(224,120,32,.22);
+    }
+    .experience-badge strong { display: block; font: 700 38px/1 var(--serif); }
+    .experience-badge span { display: block; margin-top: 6px; color: rgba(255,255,255,.86); font-size: 12px; }
+    .about-copy .section-kicker { margin-bottom: 13px; }
+    .about-copy h2 { max-width: 530px; }
+    .about-copy > p { margin: 18px 0 24px; color: var(--muted); font-size: 14px; line-height: 1.82; }
+    .benefits { display: grid; gap: 14px; margin: 0; padding: 0; list-style: none; }
+    .benefits li { display: flex; align-items: flex-start; gap: 12px; color: #56606e; font-size: 13px; line-height: 1.65; }
+    .check {
+      display: grid;
+      flex: 0 0 21px;
+      width: 21px;
+      height: 21px;
+      place-items: center;
+      margin-top: 1px;
+      border-radius: 50%;
+      color: var(--orange);
+      background: rgba(224,120,32,.12);
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .about-action { margin-top: 30px; }
+
+    .team-grid { display: grid; grid-template-columns: repeat(6,minmax(0,1fr)); gap: 22px; }
+    .team-card { display: flex; flex-direction: column; align-items: center; gap: 13px; text-align: center; }
+    .team-initials {
+      display: grid;
+      width: 70px;
+      height: 70px;
+      place-items: center;
+      border-radius: 20px;
+      color: #fff;
+      background: linear-gradient(140deg,#1b2a4a,#324b76);
+      box-shadow: 0 8px 18px rgba(27,42,74,.16);
+      font: 700 19px var(--serif);
+    }
+    .team-name { margin: 0; color: #20242c; font-size: 12px; font-weight: 700; line-height: 1.4; }
+    .team-title { margin: 4px 0 0; color: #828a96; font-size: 10px; line-height: 1.45; }
+
+    .testimonial-wrap { max-width: 920px; margin: 0 auto; }
+    .testimonial {
+      position: relative;
+      overflow: hidden;
+      padding: 54px 66px;
+      border-radius: 24px;
+      background: linear-gradient(140deg,#1b2a4a,#0f1e35);
+    }
+    .testimonial::after { content: ""; position: absolute; width: 240px; height: 240px; top: -110px; right: -55px; border-radius: 50%; background: rgba(224,120,32,.09); }
+    .quote-mark { position: absolute; top: 23px; left: 34px; color: rgba(224,120,32,.42); font: 700 94px/.9 var(--serif); }
+    .testimonial blockquote { position: relative; z-index: 1; margin: 0; }
+    .testimonial blockquote > p { max-width: 670px; margin: 0 0 30px; color: rgba(255,255,255,.84); font: italic 20px/1.8 var(--serif); }
+    .quote-author { display: flex; align-items: center; gap: 14px; }
+    .quote-avatar { display: grid; width: 47px; height: 47px; place-items: center; border: 2px solid rgba(224,120,32,.55); border-radius: 50%; color: var(--orange); background: rgba(224,120,32,.14); font-size: 13px; font-weight: 750; }
+    .quote-author strong { display: block; color: #fff; font-size: 13px; }
+    .quote-author small { display: block; margin-top: 4px; color: rgba(255,255,255,.5); font-size: 11px; }
+
+    .contact {
+      position: relative;
+      overflow: hidden;
+      padding: 105px 24px;
+      color: #fff;
+      background: #111e35;
+      isolation: isolate;
+    }
+    .contact::before {
+      content: "";
+      position: absolute;
+      z-index: -2;
+      inset: 0;
+      background: url("https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1600&auto=format&fit=crop&q=80") center/cover no-repeat;
+    }
+    .contact::after { content: ""; position: absolute; z-index: -1; inset: 0; background: rgba(27,42,74,.9); }
+    .contact-content { max-width: 760px; margin: 0 auto; text-align: center; }
+    .contact-content h2 { color: #fff; font-size: clamp(37px,5vw,54px); }
+    .contact-content > p:not(.section-kicker) { max-width: 620px; margin: 19px auto 31px; color: rgba(255,255,255,.69); font-size: 16px; line-height: 1.8; }
+    .contact-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 13px; }
+    .contact-actions .button { min-height: 54px; padding-inline: 24px; }
+    .contact-phone { color: #fff; border-color: rgba(255,255,255,.4); background: rgba(255,255,255,.03); }
+    .contact-phone:hover { color: #fff; border-color: rgba(255,255,255,.75); background: rgba(255,255,255,.1); }
+
+    .site-footer { padding: 29px 0; color: rgba(255,255,255,.58); background: #070e1c; }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 25px; }
+    .footer-logo { color: rgba(255,255,255,.86); font-size: 18px; }
+    .footer-copy { margin: 0; color: rgba(255,255,255,.35); font-size: 10px; line-height: 1.6; text-align: center; }
+    .footer-links { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 17px; font-size: 10px; }
+    .footer-links a { color: rgba(255,255,255,.52); transition: color .16s ease; }
+    .footer-links a:hover { color: #fff; }
+    .footer-button { padding: 0; border: 0; color: rgba(255,255,255,.52); background: transparent; font: inherit; cursor: pointer; transition: color .16s ease; }
+    .footer-button:hover { color: #fff; }
+
+    .modal-backdrop {
+      position: fixed;
+      z-index: 100;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(8,16,29,.68);
+      backdrop-filter: blur(5px);
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal {
+      width: min(470px,100%);
+      max-height: min(90vh,720px);
+      overflow: auto;
+      padding: 30px;
+      border: 1px solid rgba(255,255,255,.55);
+      border-radius: 18px;
+      background: #fff;
+      box-shadow: 0 30px 90px rgba(0,0,0,.28);
+      animation: modal-in .18s ease-out;
+    }
+    @keyframes modal-in { from { opacity: 0; transform: translateY(10px) scale(.985); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    .modal-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 15px; margin-bottom: 21px; }
+    .modal-kicker { margin: 0 0 6px; color: var(--orange); font-size: 10px; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; }
+    .modal h2 { margin: 0; color: var(--navy); font: 700 27px/1.2 var(--serif); }
+    .modal-intro { margin: 9px 0 0; color: var(--muted); font-size: 12px; line-height: 1.6; }
+    .modal-close { width: 34px; height: 34px; flex: none; border: 1px solid #e5e8ec; border-radius: 9px; color: #586273; background: #fff; font-size: 20px; }
+    .modal-close:hover { color: var(--navy); background: #f7f8fa; }
+    .modal-form { display: grid; gap: 14px; }
+    .modal-field { display: grid; gap: 6px; }
+    .modal-field[hidden] { display: none; }
+    .modal-field label { color: #394354; font-size: 11px; font-weight: 700; }
+    .modal-field input {
+      width: 100%;
+      min-height: 44px;
+      padding: 10px 12px;
+      border: 1px solid #dce1e7;
+      border-radius: 8px;
+      color: #263044;
+      background: #fff;
+      font-size: 13px;
+    }
+    .modal-field input:focus { border-color: var(--orange); outline: 3px solid rgba(224,120,32,.14); }
+    .modal-submit { width: 100%; min-height: 46px; margin-top: 3px; }
+    .modal-note { margin: 1px 0 0; color: #7b8492; font-size: 10px; line-height: 1.55; }
+    .form-feedback { display: none; padding: 11px 12px; border: 1px solid #d7eade; border-radius: 8px; color: #286443; background: #f0f8f2; font-size: 12px; line-height: 1.5; }
+    .form-feedback.show { display: block; }
+    .no-scroll { overflow: hidden; }
+    .reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s ease, transform .6s cubic-bezier(.22,1,.36,1); }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .delay-1 { transition-delay: .08s; }
+    .delay-2 { transition-delay: .16s; }
+    .delay-3 { transition-delay: .24s; }
+    .delay-4 { transition-delay: .32s; }
+
+    @media (max-width: 900px) {
+      .container, .hero-inner { width: min(100% - 42px, 720px); }
+      .desktop-nav { gap: 20px; }
+      .nav-inner { gap: 16px; }
+      .about-grid { gap: 47px; }
+      .about-visual img { height: 420px; }
+      .team-grid { grid-template-columns: repeat(3,minmax(0,1fr)); row-gap: 30px; }
+      .services-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+      .service-cta { min-height: 280px; }
+    }
+    @media (max-width: 680px) {
+      :root { scroll-padding-top: 70px; }
+      .container, .hero-inner { width: calc(100% - 40px); }
+      .nav-inner { height: 66px; }
+      .desktop-nav, .nav-actions { display: none; }
+      .menu-toggle { display: inline-grid; place-items: center; }
+      .hero { min-height: 720px; min-height: 100svh; }
+      .hero::before { background-position: 59% center; }
+      .hero::after { background: linear-gradient(90deg,rgba(15,30,53,.9),rgba(15,30,53,.68)); }
+      .hero-inner { padding: 112px 0 115px; }
+      .eyebrow { max-width: 100%; padding: 7px 12px; font-size: 9px; letter-spacing: .085em; }
+      .hero h1 { margin: 27px 0 17px; font-size: clamp(45px,12vw,64px); line-height: 1.04; }
+      .hero-copy > p { margin-bottom: 27px; font-size: 15px; line-height: 1.75; }
+      .hero-actions { align-items: stretch; flex-direction: column; gap: 11px; }
+      .hero-actions .button { width: 100%; min-height: 52px; }
+      .scroll-cue { bottom: 17px; }
+      .stats { padding: 33px 0; }
+      .stats-grid { grid-template-columns: repeat(2,1fr); gap: 27px 12px; }
+      .stat-value { font-size: 31px; }
+      .stat-label { font-size: 11px; }
+      .section { padding: 75px 0; }
+      .section-heading { margin-bottom: 34px; }
+      .section-heading h2, .about-copy h2 { font-size: 34px; }
+      .section-heading > p:last-child { font-size: 13px; }
+      .services-grid { grid-template-columns: 1fr; gap: 16px; }
+      .service-image { height: 190px; }
+      .service-copy p { min-height: auto; }
+      .service-cta { min-height: 235px; }
+      .about-grid { grid-template-columns: 1fr; gap: 54px; }
+      .about-visual { margin: 0 12px 10px 0; }
+      .about-visual img { height: 340px; }
+      .experience-badge { right: -12px; bottom: -18px; min-width: 155px; padding: 17px 19px; }
+      .experience-badge strong { font-size: 32px; }
+      .about-copy > p { font-size: 13px; }
+      .team-grid { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 27px 12px; }
+      .testimonial { padding: 48px 25px 31px; border-radius: 19px; }
+      .quote-mark { top: 18px; left: 19px; font-size: 76px; }
+      .testimonial blockquote > p { font-size: 17px; }
+      .contact { padding: 76px 20px; }
+      .contact-content h2 { font-size: 39px; }
+      .contact-content > p:not(.section-kicker) { font-size: 14px; }
+      .contact-actions { align-items: stretch; flex-direction: column; }
+      .contact-actions .button { width: 100%; }
+      .footer-inner { flex-direction: column; gap: 16px; }
+      .footer-copy { max-width: 370px; order: 2; }
+      .footer-links { order: 3; gap: 14px; }
+      .modal { padding: 25px 21px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+      .reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header" id="siteHeader">
+    <div class="container nav-inner">
+      <a class="wordmark" href="#home" aria-label="MyIFA home">MY<span class="accent">IFA</span></a>
+      <nav class="desktop-nav" aria-label="Main navigation">
+        <a href="#home">Home</a>
+        <a href="#services">Services</a>
+        <a href="#about">About Us</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <div class="nav-actions">
+        <button class="button button-ghost" type="button" data-open="signin">Sign In</button>
+        <button class="button button-nav" type="button" data-open="booking">Book Consultation</button>
+      </div>
+      <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">☰</button>
+    </div>
+    <nav class="mobile-menu" id="mobileMenu" aria-label="Mobile navigation">
+      <a href="#home">Home</a>
+      <a href="#services">Services</a>
+      <a href="#about">About Us</a>
+      <a href="#contact">Contact</a>
+      <div class="mobile-actions">
+        <button class="button button-ghost" type="button" data-open="signin">Sign In</button>
+        <button class="button" type="button" data-open="booking">Book Consultation</button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <span class="eyebrow">Authorised Financial Services Provider</span>
+          <h1>Your Financial Future, <em>Secured &amp; Prosperous</em></h1>
+          <p>MyIFA Financial Services provides expert long-term assurance, estate planning, and wealth protection strategies tailored for South Africans.</p>
+          <div class="hero-actions">
+            <button class="button button-large" type="button" data-open="booking">Book a Free Consultation <span aria-hidden="true">→</span></button>
+            <a class="button button-large button-outline-light" href="#services">Explore Our Services</a>
+          </div>
+        </div>
+      </div>
+      <a class="scroll-cue" href="#stats" aria-label="Scroll to learn more"><span></span><small>Scroll to explore</small></a>
+    </section>
+
+    <section class="stats" id="stats" aria-label="MyIFA at a glance">
+      <div class="container stats-grid">
+        <div class="stat reveal"><div class="stat-value">15+</div><div class="stat-label">Years Experience</div></div>
+        <div class="stat reveal delay-1"><div class="stat-value">2,400+</div><div class="stat-label">Families Protected</div></div>
+        <div class="stat reveal delay-2"><div class="stat-value">R1.2B+</div><div class="stat-label">Assets Managed</div></div>
+        <div class="stat reveal delay-3"><div class="stat-value">98%</div><div class="stat-label">Client Satisfaction</div></div>
+      </div>
+    </section>
+
+    <section class="section section-soft" id="services">
+      <div class="container">
+        <div class="section-heading reveal">
+          <p class="section-kicker">What We Offer</p>
+          <h2>Our Services</h2>
+          <p>Comprehensive financial services designed to protect what matters most and grow what's possible.</p>
+        </div>
+        <div class="services-grid">
+          <article class="service-card reveal">
+            <div class="service-image"><img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=600&auto=format&fit=crop&q=80" alt="Documents prepared for estate planning" loading="lazy"><span class="service-icon" aria-hidden="true">🏛️</span></div>
+            <div class="service-copy"><h3>Estate Planning</h3><p>Comprehensive strategies to protect, grow, and transfer your wealth to future generations with precision and care.</p><a class="service-more" href="#contact">Learn more <span aria-hidden="true">›</span></a></div>
+          </article>
+          <article class="service-card reveal delay-1">
+            <div class="service-image"><img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&auto=format&fit=crop&q=80" alt="Family spending time together" loading="lazy"><span class="service-icon" aria-hidden="true">🛡️</span></div>
+            <div class="service-copy"><h3>Life &amp; Risk Insurance</h3><p>Tailored life, disability, and dread disease cover that ensures your family's financial security no matter what.</p><a class="service-more" href="#contact">Learn more <span aria-hidden="true">›</span></a></div>
+          </article>
+          <article class="service-card reveal delay-2">
+            <div class="service-image"><img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=600&auto=format&fit=crop&q=80" alt="Business team planning together" loading="lazy"><span class="service-icon" aria-hidden="true">💼</span></div>
+            <div class="service-copy"><h3>Business Financial Planning</h3><p>Structured financial planning for business owners — from buy-and-sell agreements to key-person cover.</p><a class="service-more" href="#contact">Learn more <span aria-hidden="true">›</span></a></div>
+          </article>
+          <article class="service-card reveal">
+            <div class="service-image"><img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600&auto=format&fit=crop&q=80" alt="Planning retirement and future goals" loading="lazy"><span class="service-icon" aria-hidden="true">🌅</span></div>
+            <div class="service-copy"><h3>Retirement Planning</h3><p>Strategic retirement solutions to ensure you live comfortably and confidently in your golden years.</p><a class="service-more" href="#contact">Learn more <span aria-hidden="true">›</span></a></div>
+          </article>
+          <article class="service-card reveal delay-1">
+            <div class="service-image"><img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&auto=format&fit=crop&q=80" alt="Financial documents and calculator" loading="lazy"><span class="service-icon" aria-hidden="true">💚</span></div>
+            <div class="service-copy"><h3>General Financial Wellness</h3><p>Holistic financial coaching and planning to put you in control of your money and your future.</p><a class="service-more" href="#contact">Learn more <span aria-hidden="true">›</span></a></div>
+          </article>
+          <div class="service-cta reveal delay-2">
+            <span class="service-cta-mark" aria-hidden="true">↗</span>
+            <p>Ready to take control of your financial future?</p>
+            <a class="button" href="#services">View All Services</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="about">
+      <div class="container about-grid">
+        <figure class="about-visual reveal">
+          <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=800&auto=format&fit=crop&q=85" alt="Financial advisers working together" loading="lazy">
+          <figcaption class="experience-badge"><strong>15+</strong><span>Years of Excellence</span></figcaption>
+        </figure>
+        <div class="about-copy reveal delay-1">
+          <p class="section-kicker">Why Choose Us</p>
+          <h2>We combine deep expertise with genuine care</h2>
+          <p>At MyIFA Financial Services, we believe every South African deserves access to expert, personalised financial guidance. Our independent advisors have no allegiance to any single product provider — only to you.</p>
+          <ul class="benefits">
+            <li><span class="check" aria-hidden="true">✓</span><span>Personalised advice tailored to your unique goals and life stage</span></li>
+            <li><span class="check" aria-hidden="true">✓</span><span>Fully licensed and regulated by the FSCA</span></li>
+            <li><span class="check" aria-hidden="true">✓</span><span>Independent advisors — no obligation to any single product provider</span></li>
+            <li><span class="check" aria-hidden="true">✓</span><span>Annual reviews that evolve with your changing circumstances</span></li>
+            <li><span class="check" aria-hidden="true">✓</span><span>Free, no-obligation initial consultation</span></li>
+            <li><span class="check" aria-hidden="true">✓</span><span>Transparent fee structure with no hidden costs</span></li>
+          </ul>
+          <div class="about-action"><button class="button button-navy button-large" type="button" data-open="booking">Book Your Free Consultation <span aria-hidden="true">→</span></button></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-soft">
+      <div class="container">
+        <div class="section-heading reveal">
+          <p class="section-kicker">The People Behind the Plan</p>
+          <h2>Meet Our Team</h2>
+          <p>Experienced professionals dedicated to your financial success.</p>
+        </div>
+        <div class="team-grid">
+          <article class="team-card reveal"><div class="team-initials">LH</div><div><p class="team-name">Lance Heynes</p><p class="team-title">Director of Operations</p></div></article>
+          <article class="team-card reveal delay-1"><div class="team-initials">KM</div><div><p class="team-name">Kyle McBryne</p><p class="team-title">Systems Developer</p></div></article>
+          <article class="team-card reveal delay-2"><div class="team-initials">WK</div><div><p class="team-name">Wessel Krige</p><p class="team-title">Social Media Manager</p></div></article>
+          <article class="team-card reveal delay-3"><div class="team-initials">MB</div><div><p class="team-name">Mic-Shane Brown</p><p class="team-title">Head of Admin</p></div></article>
+          <article class="team-card reveal delay-4"><div class="team-initials">JR</div><div><p class="team-name">Jodie Rensburg</p><p class="team-title">Client Services</p></div></article>
+          <article class="team-card reveal"><div class="team-initials">LL</div><div><p class="team-name">Lionel Lottering</p><p class="team-title">Head of Investor Matters</p></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container testimonial-wrap">
+        <div class="section-heading reveal">
+          <p class="section-kicker">Client Stories</p>
+          <h2>Real results for real South Africans</h2>
+        </div>
+        <div class="testimonial reveal delay-1">
+          <span class="quote-mark" aria-hidden="true">“</span>
+          <blockquote>
+            <p>Lance and the MyIFA team transformed my financial outlook. Their estate planning advice gave me complete peace of mind about my family's future.</p>
+            <footer class="quote-author">
+              <span class="quote-avatar" aria-hidden="true">SV</span>
+              <span><strong>Sarah van der Merwe</strong><small>Business Owner, Cape Town</small></span>
+            </footer>
+          </blockquote>
+        </div>
+      </div>
+    </section>
+
+    <section class="contact" id="contact">
+      <div class="contact-content reveal">
+        <p class="section-kicker">Take the First Step</p>
+        <h2>Ready to Prosper?</h2>
+        <p>Book a free, no-obligation consultation with one of our expert advisers. One conversation can change your financial future.</p>
+        <div class="contact-actions">
+          <button class="button button-large" type="button" data-open="booking">Book Free Consultation <span aria-hidden="true">→</span></button>
+          <a class="button button-large contact-phone" href="tel:+27861263346"><span aria-hidden="true">☎</span> +27 86 126 3346</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <a class="wordmark footer-logo" href="#home" aria-label="MyIFA home">MY<span class="accent">IFA</span></a>
+      <p class="footer-copy">© <span id="currentYear"></span> MyIFA Financial Services. Authorised Financial Services Provider (FSP No. XXXXX). All rights reserved.</p>
+      <nav class="footer-links" aria-label="Footer links">
+        <button class="footer-button" type="button" data-open="signin">Sign In</button>
+        <button class="footer-button" type="button" data-open="signin">Advisor Portal</button>
+        <a href="mailto:info@myifa.co.za"><span aria-hidden="true">✉</span> info@myifa.co.za</a>
+      </nav>
+    </div>
+  </footer>
+
+  <div class="modal-backdrop" id="modalBackdrop" aria-hidden="true">
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalIntro">
+      <div class="modal-head">
+        <div>
+          <p class="modal-kicker" id="modalKicker">MyIFA Financial Services</p>
+          <h2 id="modalTitle">Book a consultation</h2>
+          <p class="modal-intro" id="modalIntro">Share your details and our team will be ready to help plan your next step.</p>
+        </div>
+        <button class="modal-close" type="button" id="modalClose" aria-label="Close dialog">×</button>
+      </div>
+      <form class="modal-form" id="modalForm">
+        <div class="modal-field"><label for="modalName">Full name</label><input id="modalName" name="name" autocomplete="name" required placeholder="Your name"></div>
+        <div class="modal-field"><label for="modalEmail">Email address</label><input id="modalEmail" name="email" type="email" autocomplete="email" required placeholder="you@example.com"></div>
+        <div class="modal-field" id="phoneField"><label for="modalPhone">Phone number</label><input id="modalPhone" name="phone" type="tel" autocomplete="tel" placeholder="+27"></div>
+        <p class="form-feedback" id="formFeedback" role="status"></p>
+        <p class="modal-note" id="modalNote">Standalone preview only. Your details will not be sent or stored.</p>
+        <button class="button modal-submit" type="submit" id="modalSubmit">Prepare consultation request</button>
+      </form>
+    </section>
+  </div>
+
+  <script>
+    (() => {
+      const header = document.getElementById("siteHeader");
+      const menuButton = document.getElementById("menuToggle");
+      const mobileMenu = document.getElementById("mobileMenu");
+      const backdrop = document.getElementById("modalBackdrop");
+      const modalForm = document.getElementById("modalForm");
+      const modalTitle = document.getElementById("modalTitle");
+      const modalIntro = document.getElementById("modalIntro");
+      const modalKicker = document.getElementById("modalKicker");
+      const modalSubmit = document.getElementById("modalSubmit");
+      const modalNote = document.getElementById("modalNote");
+      const phoneField = document.getElementById("phoneField");
+      const feedback = document.getElementById("formFeedback");
+      const nameField = document.getElementById("modalName");
+      let modalMode = "booking";
+      let previousFocus = null;
+
+      document.getElementById("currentYear").textContent = new Date().getFullYear();
+
+      const updateHeader = () => header.classList.toggle("scrolled", window.scrollY > 20);
+      updateHeader();
+      window.addEventListener("scroll", updateHeader, { passive: true });
+
+      const closeMenu = () => {
+        mobileMenu.classList.remove("open");
+        menuButton.setAttribute("aria-expanded", "false");
+        menuButton.setAttribute("aria-label", "Open menu");
+        menuButton.textContent = "☰";
+      };
+      menuButton.addEventListener("click", () => {
+        const open = !mobileMenu.classList.contains("open");
+        mobileMenu.classList.toggle("open", open);
+        menuButton.setAttribute("aria-expanded", String(open));
+        menuButton.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+        menuButton.textContent = open ? "×" : "☰";
+      });
+      mobileMenu.querySelectorAll("a").forEach(link => link.addEventListener("click", closeMenu));
+
+      const openModal = mode => {
+        modalMode = mode;
+        previousFocus = document.activeElement;
+        feedback.classList.remove("show");
+        feedback.textContent = "";
+        modalForm.reset();
+        if (mode === "signin") {
+          modalKicker.textContent = "MyIFA Client Portal";
+          modalTitle.textContent = "Welcome back";
+          modalIntro.textContent = "Sign in to access your MyIFA portal. Account access is not connected in this standalone page.";
+          modalSubmit.textContent = "Preview sign in";
+          modalNote.textContent = "This is a visual-only sign-in form. No credentials are sent or stored.";
+          phoneField.hidden = true;
+          document.getElementById("modalPhone").required = false;
+        } else {
+          modalKicker.textContent = "MyIFA Financial Services";
+          modalTitle.textContent = "Book a consultation";
+          modalIntro.textContent = "Share your details and our team will be ready to help plan your next step.";
+          modalSubmit.textContent = "Prepare consultation request";
+          modalNote.textContent = "Standalone preview only. Your details will not be sent or stored.";
+          phoneField.hidden = false;
+        }
+        backdrop.classList.add("open");
+        backdrop.setAttribute("aria-hidden", "false");
+        document.body.classList.add("no-scroll");
+        nameField.focus();
+      };
+      const closeModal = () => {
+        backdrop.classList.remove("open");
+        backdrop.setAttribute("aria-hidden", "true");
+        document.body.classList.remove("no-scroll");
+        if (previousFocus && typeof previousFocus.focus === "function") previousFocus.focus();
+      };
+
+      document.querySelectorAll("[data-open]").forEach(button => {
+        button.addEventListener("click", () => {
+          closeMenu();
+          openModal(button.dataset.open);
+        });
+      });
+      document.getElementById("modalClose").addEventListener("click", closeModal);
+      backdrop.addEventListener("click", event => { if (event.target === backdrop) closeModal(); });
+      document.addEventListener("keydown", event => {
+        if (event.key === "Escape") {
+          closeModal();
+          closeMenu();
+        }
+      });
+      modalForm.addEventListener("submit", event => {
+        event.preventDefault();
+        feedback.textContent = modalMode === "signin"
+          ? "Sign-in is not connected in this standalone preview. No credentials were sent or saved."
+          : "Your request is ready for the MyIFA team. This standalone preview does not send or save your details.";
+        feedback.classList.add("show");
+      });
+
+      const revealItems = document.querySelectorAll(".reveal");
+      if ("IntersectionObserver" in window) {
+        const observer = new IntersectionObserver(entries => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("visible");
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12, rootMargin: "0px 0px -28px 0px" });
+        revealItems.forEach(item => observer.observe(item));
+      } else {
+        revealItems.forEach(item => item.classList.add("visible"));
+      }
+    })();
+  </script>
+</body>
+</html>

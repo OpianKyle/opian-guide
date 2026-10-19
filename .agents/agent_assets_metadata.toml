@@ -14,3 +14,17 @@ mtime_ms = 1792418100448
 storage_uri = "gcs://replit-rams-assets-worf/rams/assets/repl:8afed5a7-3ee2-4747-8190-ae5f666a40ad/6ace049d-bf59-405c-8c20-63ba3e6a2c5e/fb1c58a0-2f15-4af2-a99c-68820c3138df"
 storage_version_token = "1792418171385519"
 content_type = "text/html"
+
+[[outputs]]
+id = "hchYKyJBK09GPvY6n3pq-"
+uri = "file://myifa-landing-standalone.html"
+type = "html"
+title = "MyIFA Financial Services — Standalone Landing Page"
+description = "Single-file recreation of the MyIFA home page with responsive navigation, hero, services, about, team, testimonial, and consultation sections. Sign-in and booking dialogs are visual previews only; no data is sent or stored. Stock photos load from the original Unsplash image URLs."
+logical_id = "ce74b81b-ef88-4bb6-9dc8-768232945dec"
+content_hash = "sha256:d9092b33b6a63768d4f757b15c9d2489e6ea3a4cbd96e4a006031fed37a62698"
+size = 42327
+mtime_ms = 1792418924350
+storage_uri = "gcs://replit-rams-assets-worf/rams/assets/repl:8afed5a7-3ee2-4747-8190-ae5f666a40ad/ce74b81b-ef88-4bb6-9dc8-768232945dec/aaaf502c-d16d-4749-a71c-8fad04663144"
+storage_version_token = "1792419011061425"
+content_type = "text/html"
