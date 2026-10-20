@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
-import { Mail, Edit2, RotateCcw, Save, X, Check, Eye } from "lucide-react";
+import { Mail, Edit2, RotateCcw, Save, X, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { EmailHtmlEditor } from "@/components/email-html-editor";
 
 const API = (path: string) =>
   `${import.meta.env.BASE_URL.replace(/\/$/, "")}/../api${path}`;
@@ -39,9 +40,7 @@ export default function EmailCampaigns() {
   const [editBodyHtml, setEditBodyHtml] = useState("");
   const [saving, setSaving] = useState(false);
   const [resetting, setResetting] = useState(false);
-  const [previewMode, setPreviewMode] = useState<"code" | "preview">("preview");
   const [saveSuccess, setSaveSuccess] = useState(false);
-  const iframeRef = useRef<HTMLIFrameElement>(null);
   const previewKey = useRef(0);
 
   const fetchList = async () => {
@@ -79,12 +78,10 @@ export default function EmailCampaigns() {
     setEditSubject(selected.subject);
     setEditBodyHtml(selected.bodyHtml);
     setEditing(true);
-    setPreviewMode("code");
   };
 
   const cancelEditing = () => {
     setEditing(false);
-    setPreviewMode("preview");
     if (selected) {
       setEditSubject(selected.subject);
       setEditBodyHtml(selected.bodyHtml);
@@ -110,7 +107,6 @@ export default function EmailCampaigns() {
           )
         );
         setEditing(false);
-        setPreviewMode("preview");
         setSaveSuccess(true);
         previewKey.current++;
         setTimeout(() => setSaveSuccess(false), 3000);
@@ -282,48 +278,23 @@ export default function EmailCampaigns() {
               )}
             </div>
 
-            {/* Toggle: preview / code */}
-            <div className="flex items-center gap-1 mb-3 border-b border-border pb-2">
-              <button
-                onClick={() => setPreviewMode("preview")}
-                className={`flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md font-medium transition-colors ${previewMode === "preview" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}
-              >
-                <Eye className="w-3.5 h-3.5" />
-                Preview
-              </button>
-              <button
-                onClick={() => setPreviewMode("code")}
-                className={`flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md font-medium transition-colors ${previewMode === "code" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}
-              >
-                <Edit2 className="w-3.5 h-3.5" />
-                HTML
-              </button>
-              {editing && previewMode === "code" && (
-                <span className="ml-2 text-xs text-muted-foreground">
-                  Use <code className="bg-muted px-1 rounded">{"{{firstName}}"}</code> where the recipient's name should appear
-                </span>
-              )}
-            </div>
-
             {/* Content area */}
             <div className="flex-1 min-h-0 rounded-lg border border-border overflow-hidden">
-              {previewMode === "preview" && (
+              {editing ? (
+                <EmailHtmlEditor
+                  key={selected.day}
+                  value={editBodyHtml}
+                  onChange={setEditBodyHtml}
+                  title={`Visual editor for day ${selected.day} email`}
+                  className="h-full"
+                />
+              ) : (
                 <iframe
                   key={`${selected.day}-${previewKey.current}`}
-                  ref={iframeRef}
                   src={previewUrl}
                   className="w-full h-full border-0 bg-white"
                   title={`Email preview for day ${selected.day}`}
                   sandbox="allow-same-origin"
-                />
-              )}
-              {previewMode === "code" && (
-                <textarea
-                  value={editing ? editBodyHtml : selected.bodyHtml}
-                  onChange={(e) => editing && setEditBodyHtml(e.target.value)}
-                  readOnly={!editing}
-                  className={`w-full h-full p-4 text-xs font-mono resize-none focus:outline-none bg-background text-foreground leading-relaxed ${!editing ? "opacity-70 cursor-default" : ""}`}
-                  spellCheck={false}
                 />
               )}
             </div>

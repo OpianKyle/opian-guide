@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Code2, Eye, Mail, RotateCcw, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { EmailHtmlEditor } from "@/components/email-html-editor";
 
 type CampaignSummary = {
   day: number;
@@ -294,7 +295,7 @@ export default function EmailCampaigns() {
                       variant={showPreview ? "outline" : "default"}
                       onClick={() => setShowPreview(false)}
                     >
-                      <Code2 className="mr-2 h-4 w-4" /> HTML
+                      <Code2 className="mr-2 h-4 w-4" /> Visual editor
                     </Button>
                     <Button
                       type="button"
@@ -316,20 +317,13 @@ export default function EmailCampaigns() {
                       />
                     </div>
                   ) : (
-                    <div className="space-y-2">
-                      <label htmlFor="campaign-html" className="text-sm font-medium">Email HTML</label>
-                      <textarea
-                        id="campaign-html"
-                        rows={18}
-                        spellCheck={false}
-                        value={bodyHtml}
-                        onChange={(event) => setBodyHtml(event.target.value)}
-                        className="w-full resize-y rounded-md border border-input bg-background p-3 font-mono text-xs leading-relaxed focus:outline-none focus:ring-2 focus:ring-ring"
-                      />
-                      <p className="text-xs text-muted-foreground">
-                        Use <code>{"{{firstName}}"}</code> where the recipient’s first name should appear.
-                      </p>
-                    </div>
+                    <EmailHtmlEditor
+                      key={selected.day}
+                      value={bodyHtml}
+                      onChange={setBodyHtml}
+                      title={`Visual editor for day ${selected.day} email`}
+                      className="h-[480px] rounded-lg border"
+                    />
                   )}
                 </div>
               )}
