@@ -24,7 +24,7 @@ const clientFields = {
 router.get("/admin/clients", requireAdmin, async (req, res): Promise<void> => {
   try {
     const clients = await db.select(clientFields).from(usersTable).orderBy(sql`${usersTable.createdAt} desc`);
-    res.json(AdminListClientsResponse.parse(clients));
+    res.json(AdminListClientsResponse.parse(serializeDates(clients)));
   } catch (err) {
     req.log.error({ err }, "Admin list clients error");
     res.status(500).json({ error: "Internal server error" });
@@ -46,7 +46,7 @@ router.get("/admin/clients/:id", requireAdmin, async (req, res): Promise<void> =
       res.status(404).json({ error: "Client not found" });
       return;
     }
-    res.json(AdminGetClientResponse.parse(client));
+    res.json(AdminGetClientResponse.parse(serializeDates(client)));
   } catch (err) {
     req.log.error({ err }, "Admin get client error");
     res.status(500).json({ error: "Internal server error" });

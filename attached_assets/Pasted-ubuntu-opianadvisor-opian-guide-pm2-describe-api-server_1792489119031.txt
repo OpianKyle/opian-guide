@@ -1,0 +1,65 @@
+ubuntu@opianadvisor:~/opian-guide$ pm2 describe api-server
+ Describing process with id 0 - name api-server
+┌───────────────────┬──────────────────────────────────────────────────────────────┐
+│ status            │ online                                                       │
+│ name              │ api-server                                                   │
+│ namespace         │ default                                                      │
+│ version           │ N/A                                                          │
+│ restarts          │ 13                                                           │
+│ uptime            │ 25m                                                          │
+│ script path       │ /home/ubuntu/opian-guide/artifacts/api-server/dist/index.mjs │
+│ script args       │ N/A                                                          │
+│ error log path    │ /home/ubuntu/.pm2/logs/api-server-error.log                  │
+│ out log path      │ /home/ubuntu/.pm2/logs/api-server-out.log                    │
+│ pid path          │ /home/ubuntu/.pm2/pids/api-server-0.pid                      │
+│ interpreter       │ /usr/bin/node                                                │
+│ interpreter args  │ N/A                                                          │
+│ script id         │ 0                                                            │
+│ exec cwd          │ /home/ubuntu/opian-guide                                     │
+│ exec mode         │ fork_mode                                                    │
+│ node.js version   │ 20.20.2                                                      │
+│ node env          │ N/A                                                          │
+│ watch & reload    │ ✘                                                            │
+│ unstable restarts │ 0                                                            │
+│ created at        │ 2026-10-20T09:12:31.460Z                                     │
+└───────────────────┴──────────────────────────────────────────────────────────────┘
+ Actions available
+┌────────────────────────┐
+│ km:heapdump            │
+│ km:cpu:profiling:start │
+│ km:cpu:profiling:stop  │
+│ km:heap:sampling:start │
+│ km:heap:sampling:stop  │
+└────────────────────────┘
+ Trigger via: pm2 trigger api-server <action_name>
+
+ Code metrics value
+┌────────────────────────┬───────────┐
+│ Heap Size              │ 41.01 MiB │
+│ Heap Usage             │ 96.55 %   │
+│ Used Heap Size         │ 39.59 MiB │
+│ Active requests        │ 0         │
+│ Active handles         │ 2         │
+│ Event Loop Latency     │ 0.36 ms   │
+│ Event Loop Latency p95 │ 0.97 ms   │
+└────────────────────────┴───────────┘
+ Divergent env variables from local env
+┌────────────────┬──────────────────────┐
+│ SSH_CONNECTION │ 102.39.215.42 52187  │
+│ XDG_SESSION_ID │ 2                    │
+│ SSH_CLIENT     │ 102.39.215.42 52187  │
+│ OLDPWD         │ /home/ubuntu         │
+└────────────────┴──────────────────────┘
+
+ Add your own code metrics: http://bit.ly/code-metrics
+ Use `pm2 logs api-server [--lines 1000]` to display logs
+ Use `pm2 env 0` to display environment variables
+ Use `pm2 monit` to monitor CPU and Memory usage api-server
+ubuntu@opianadvisor:~/opian-guide$ cd /home/ubuntu/opian-guide/opian-guide
+grep -nE 'DATABASE_URL|DB_HOST|DB_NAME|DB_USER|DB_PASSWORD' lib/db/src/index.ts
+5:const required = ["DB_HOST", "DB_NAME", "DB_USER", "DB_PASSWORD"] as const;
+13:  host: process.env.DB_HOST,
+15:  database: process.env.DB_NAME,
+16:  user: process.env.DB_USER,
+17:  password: process.env.DB_PASSWORD,
+ubuntu@opianadvisor:~/opian-guide/opi

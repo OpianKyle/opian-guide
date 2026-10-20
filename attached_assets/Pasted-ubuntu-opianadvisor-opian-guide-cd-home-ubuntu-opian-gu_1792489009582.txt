@@ -1,0 +1,75 @@
+ubuntu@opianadvisor:~/opian-guide$ cd /home/ubuntu/opian-guide
+git status --short
+git branch --show-current
+?? .env
+?? artifacts/admin-portal-bak/node_modules/
+?? artifacts/admin-portal/
+?? artifacts/api-server-bak/node_modules/
+?? artifacts/api-server/node_modules/
+?? artifacts/mockup-sandbox/node_modules/
+?? artifacts/opian-portal/node_modules/
+?? lib/api-client-react/node_modules/
+?? lib/api-spec/
+?? lib/api-zod/node_modules/
+?? lib/db/node_modules/
+?? node_modules/
+?? scripts/node_modules/
+main
+ubuntu@opianadvisor:~/opian-guide$ git pull --ff-only
+Already up to date.
+ubuntu@opianadvisor:~/opian-guide$ ^C
+ubuntu@opianadvisor:~/opian-guide$ pnpm install --frozen-lockfile
+pnpm --filter @workspace/api-server run build
+pm2 status
+pm2 restart <api-name-from-pm2-status> --update-env
+ ERR_PNPM_NO_PKG_MANIFEST  No package.json found in /home/ubuntu/opian-guide
+
+> @workspace/api-server@0.0.0 build /home/ubuntu/opian-guide/opian-guide/artifacts/api-server-bak
+> node ./build.mjs
+
+
+  dist/index.mjs                       2.7mb ⚠️
+  dist/pino-worker.mjs               153.4kb
+  dist/pino-file.mjs                 142.1kb
+  dist/pino-pretty.mjs               114.4kb
+  dist/thread-stream-worker.mjs        7.3kb
+  dist/index.mjs.map                   4.6mb
+  dist/pino-worker.mjs.map           256.9kb
+  dist/pino-file.mjs.map             229.1kb
+  dist/pino-pretty.mjs.map           203.6kb
+  dist/thread-stream-worker.mjs.map   12.0kb
+
+⚡ Done in 1108ms
+┌────┬───────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name          │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼───────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ api-server    │ fork     │ 13   │ online    │ 0%       │ 91.0mb   │
+└────┴───────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+host metrics | cpu: 0.2% | ram usage: 44.7% | ens3: ⇓ 0.038mb/s ⇑ 0mb/s |
+-bash: api-name-from-pm2-status: No such file or directory
+ubuntu@opianadvisor:~/opian-guide$ lib/db/src/index.ts
+-bash: lib/db/src/index.ts: No such file or directory
+ubuntu@opianadvisor:~/opian-guide$ cd /home/ubuntu/opian-guide
+pnpm --filter @workspace/api-server run build
+pm2 restart <api-name-from-pm2-status> --update-env
+pm2 logs <api-name-from-pm2-status> --lines 50
+
+> @workspace/api-server@0.0.0 build /home/ubuntu/opian-guide/opian-guide/artifacts/api-server-bak
+> node ./build.mjs
+
+
+  dist/index.mjs                       2.7mb ⚠️
+  dist/pino-worker.mjs               153.4kb
+  dist/pino-file.mjs                 142.1kb
+  dist/pino-pretty.mjs               114.4kb
+  dist/thread-stream-worker.mjs        7.3kb
+  dist/index.mjs.map                   4.6mb
+  dist/pino-worker.mjs.map           256.9kb
+  dist/pino-file.mjs.map             229.1kb
+  dist/pino-pretty.mjs.map           203.6kb
+  dist/thread-stream-worker.mjs.map   12.0kb
+
+⚡ Done in 453ms
+-bash: api-name-from-pm2-status: No such file or directory
+-bash: api-name-from-pm2-status: No such file or directory
+ubuntu@opianadvisor:~/opian-guide$
