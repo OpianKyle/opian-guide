@@ -26,8 +26,8 @@ channel = "stable-25_05"
 
 [userenv.shared]
 NODE_ENV = "development"
-SMTP_FROM_EMAIL = "info@opianfinancialservices.co.za"
-SMTP_FROM_NAME = "Opian"
-SMTP_HOST = "mail.myifa.co.za"
-SMTP_PORT = "993"
+SMTP_FROM_EMAIL = "admin@myifa.co.za"
+SMTP_FROM_NAME = "Moventum"
+SMTP_HOST = "smtp.myifa.co.za"
+SMTP_PORT = "465"
 SMTP_USER = "admin@myifa.co.za"
