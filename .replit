@@ -31,6 +31,22 @@ SMTP_HOST = "smtp.myifa.co.za"
 SMTP_PORT = "465"
 SMTP_USER = "admin@myifa.co.za"
 
+[[ports]]
+localPort = 5000
+externalPort = 80
+
+[[ports]]
+localPort = 19167
+externalPort = 3003
+
+[[ports]]
+localPort = 22729
+externalPort = 3001
+
+[[ports]]
+localPort = 25580
+externalPort = 3002
+
 [[workflows.workflow]]
 name = "Project"
 mode = "parallel"
@@ -51,19 +67,3 @@ waitForPort = 5000
 
 [workflows.workflow.metadata]
 outputType = "webview"
-
-[[ports]]
-localPort = 5000
-externalPort = 80
-
-[[ports]]
-localPort = 19167
-externalPort = 3003
-
-[[ports]]
-localPort = 22729
-externalPort = 3001
-
-[[ports]]
-localPort = 25580
-externalPort = 3002

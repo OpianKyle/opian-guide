@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { memo, useEffect, useRef } from "react";
 import {
   AlignCenter,
   AlignLeft,
@@ -64,7 +64,7 @@ function safeLink(value: string): string | null {
   }
 }
 
-export function EmailHtmlEditor({
+function EmailHtmlEditorBase({
   value,
   onChange,
   className = "",
@@ -174,3 +174,14 @@ export function EmailHtmlEditor({
     </div>
   );
 }
+
+// The iframe is an uncontrolled contenteditable surface. Its value prop is used
+// only to initialize the document; re-rendering it for every keystroke can
+// interrupt typing and reset the caret inside the iframe.
+export const EmailHtmlEditor = memo(
+  EmailHtmlEditorBase,
+  (previous, next) =>
+    previous.className === next.className &&
+    previous.title === next.title &&
+    previous.onChange === next.onChange,
+);
