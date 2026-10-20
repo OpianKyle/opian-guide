@@ -24,10 +24,6 @@ timeoutMs = 20000
 [nix]
 channel = "stable-25_05"
 
-[workflows]
-runButton = "Project"
-
-
 [userenv.shared]
 NODE_ENV = "development"
 SMTP_FROM_EMAIL = "admin@myifa.co.za"
@@ -72,4 +68,3 @@ externalPort = 3001
 [[ports]]
 localPort = 25580
 externalPort = 3002
-

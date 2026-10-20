@@ -46,20 +46,13 @@ const FORMAT_ACTIONS: FormatAction[] = [
 const EMPTY_EMAIL = "<!DOCTYPE html><html><head><meta charset=\"utf-8\"></head><body></body></html>";
 
 function serializeDocument(doc: Document): string {
-  const body = doc.body;
-  const oldEditable = body.getAttribute("contenteditable");
-  const oldSpellcheck = body.getAttribute("spellcheck");
-  body.removeAttribute("contenteditable");
-  body.removeAttribute("spellcheck");
+  const serializedRoot = doc.documentElement.cloneNode(true) as HTMLElement;
+  const body = serializedRoot.querySelector("body");
+  body?.removeAttribute("contenteditable");
+  body?.removeAttribute("spellcheck");
 
   const doctype = doc.doctype ? `<!DOCTYPE ${doc.doctype.name}>` : "<!DOCTYPE html>";
-  const html = `${doctype}\n${doc.documentElement.outerHTML}`;
-
-  if (oldEditable === null) body.setAttribute("contenteditable", "true");
-  else body.setAttribute("contenteditable", oldEditable);
-  if (oldSpellcheck === null) body.setAttribute("spellcheck", "true");
-  else body.setAttribute("spellcheck", oldSpellcheck);
-  return html;
+  return `${doctype}\n${serializedRoot.outerHTML}`;
 }
 
 function safeLink(value: string): string | null {

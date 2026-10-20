@@ -126,10 +126,12 @@ export async function createLead(
     };
   }
 
-  const template = await getCampaignTemplate(0);
+  let emailSubject: string | null = null;
   let emailError: unknown;
 
   try {
+    const template = await getCampaignTemplate(0);
+    emailSubject = template.subject;
     await sendMail({
       to: createdLead.email,
       subject: template.subject,
@@ -145,7 +147,7 @@ export async function createLead(
       await db.insert(leadEmailLogsTable).values({
         leadId: createdLead.id,
         day: 0,
-        subject: template.subject,
+        subject: emailSubject,
         status: "failed",
         error: emailError instanceof Error ? emailError.message : "Email delivery failed",
       });
@@ -156,7 +158,8 @@ export async function createLead(
     return {
       lead: createdLead,
       emailSent: false,
-      emailMessage: "Lead created, but the welcome email could not be sent. Check the email settings.",
+      emailMessage:
+        "Lead created, but the welcome email could not be prepared or sent. Check the campaign and email settings.",
       emailError,
       trackingError,
     };
@@ -167,7 +170,7 @@ export async function createLead(
     await db.insert(leadEmailLogsTable).values({
       leadId: createdLead.id,
       day: 0,
-      subject: template.subject,
+      subject: emailSubject,
       status: "sent",
       error: null,
     });

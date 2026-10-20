@@ -1,0 +1,52 @@
+ubuntu@opianadvisor:~/opian-guide/opian-guide$ git pull --ff-only origin main
+git rev-parse --short HEAD
+pm2 describe api-server | sed -n '1,25p'
+ls -l /home/ubuntu/opian-guide/artifacts/api-server/dist/index.mjs \
+      /home/ubuntu/opian-guide/opian-guide/artifacts/api-server-bak/dist/index.mjs
+remote: Enumerating objects: 22, done.
+remote: Counting objects: 100% (22/22), done.
+remote: Compressing objects: 100% (6/6), done.
+remote: Total 13 (delta 7), reused 13 (delta 7), pack-reused 0 (from 0)
+Unpacking objects: 100% (13/13), 4.71 KiB | 438.00 KiB/s, done.
+From https://github.com/OpianKyle/opian-guide
+ * branch            main       -> FETCH_HEAD
+   2510eec..aaf58b2  main       -> origin/main
+Updating 2510eec..aaf58b2
+Fast-forward
+ ...guide-cd-home-ubuntu-opian-gu_1792489009582.txt | 75 ++++++++++++++++++++
+ ...guide-opian-guide-chmod-600-h_1792489227670.txt | 79 ++++++++++++++++++++++
+ ...guide-pm2-describe-api-server_1792489119031.txt | 65 ++++++++++++++++++
+ .../api-server-bak/src/routes/admin/clients.ts     |  4 +-
+ 4 files changed, 221 insertions(+), 2 deletions(-)
+ create mode 100644 attached_assets/Pasted-ubuntu-opianadvisor-opian-guide-cd-home-ubuntu-opian-gu_1792489009582.txt
+ create mode 100644 attached_assets/Pasted-ubuntu-opianadvisor-opian-guide-opian-guide-chmod-600-h_1792489227670.txt
+ create mode 100644 attached_assets/Pasted-ubuntu-opianadvisor-opian-guide-pm2-describe-api-server_1792489119031.txt
+aaf58b2
+ Describing process with id 0 - name api-server
+┌───────────────────┬──────────────────────────────────────────────────────────────┐
+│ status            │ online                                                       │
+│ name              │ api-server                                                   │
+│ namespace         │ default                                                      │
+│ version           │ N/A                                                          │
+│ restarts          │ 14                                                           │
+│ uptime            │ 7m                                                           │
+│ script path       │ /home/ubuntu/opian-guide/artifacts/api-server/dist/index.mjs │
+│ script args       │ N/A                                                          │
+│ error log path    │ /home/ubuntu/.pm2/logs/api-server-error.log                  │
+│ out log path      │ /home/ubuntu/.pm2/logs/api-server-out.log                    │
+│ pid path          │ /home/ubuntu/.pm2/pids/api-server-0.pid                      │
+│ interpreter       │ /usr/bin/node                                                │
+│ interpreter args  │ N/A                                                          │
+│ script id         │ 0                                                            │
+│ exec cwd          │ /home/ubuntu/opian-guide                                     │
+│ exec mode         │ fork_mode                                                    │
+│ node.js version   │ 20.20.2                                                      │
+│ node env          │ N/A                                                          │
+│ watch & reload    │ ✘                                                            │
+│ unstable restarts │ 0                                                            │
+│ created at        │ 2026-10-20T09:40:12.723Z                                     │
+└───────────────────┴──────────────────────────────────────────────────────────────┘
+ Actions available
+-rw-rw-r-- 1 ubuntu ubuntu 2281343 Oct 20 08:58 /home/ubuntu/opian-guide/artifacts/api-server/dist/index.mjs
+-rw-rw-r-- 1 ubuntu ubuntu 2831055 Oct 20 09:36 /home/ubuntu/opian-guide/opian-guide/artifacts/api-server-bak/dist/index.mjs
+ubuntu@opianadvisor:~/opian-guide/opian-guide$
