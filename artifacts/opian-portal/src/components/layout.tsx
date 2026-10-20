@@ -2,7 +2,7 @@ import { Link, useLocation } from "wouter";
 import {
   LayoutDashboard, FileText, ClipboardList, CalendarDays, FolderOpen,
   Contact, Settings, LogOut, Users, Briefcase, UserCog, Shield,
-  UserPlus, Upload,
+  UserPlus, Upload, Mail,
 } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useAuth } from "@/contexts/auth";
@@ -10,6 +10,7 @@ import { useAuth } from "@/contexts/auth";
 const advisorNavItems = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { name: "My Leads", href: "/leads", icon: UserPlus },
+  { name: "Email Campaigns", href: "/email-campaigns", icon: Mail },
   { name: "My Policies", href: "/policies", icon: ClipboardList },
   { name: "Appointments", href: "/appointments", icon: CalendarDays },
   { name: "Documents", href: "/documents", icon: FolderOpen },
@@ -31,6 +32,7 @@ const adminNavItems = [
   { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
   { name: "Leads", href: "/admin/leads", icon: UserPlus },
   { name: "Import Leads", href: "/admin/import-leads", icon: Upload },
+  { name: "Email Campaigns", href: "/admin/email-campaigns", icon: Mail },
   { name: "Advisors", href: "/admin/advisors", icon: Briefcase },
   { name: "Clients", href: "/admin/clients", icon: Users },
   { name: "FNA Submissions", href: "/admin/fna", icon: FileText },

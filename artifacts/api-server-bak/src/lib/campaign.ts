@@ -1,3 +1,6 @@
+import { db, campaignTemplatesTable } from "@workspace/db";
+import { eq } from "drizzle-orm";
+
 export interface EmailTemplate {
   subject: string;
   html: (firstName: string) => string;
@@ -394,5 +397,40 @@ export function getTemplate(day: number): EmailTemplate {
       ${p("Our initial consultation is free, personalised, and carries zero obligation. We simply have a conversation about your goals and how we might help.")}
       ${cta("Let's Talk — Free Consultation")}
     `)
+  };
+}
+
+export function escapeCampaignText(value: string): string {
+  return value.replace(/[&<>"']/g, (character) => {
+    const entities: Record<string, string> = {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;",
+    };
+    return entities[character];
+  });
+}
+
+/** Loads the saved editor override when present, otherwise the default campaign email. */
+export async function getCampaignTemplate(day: number): Promise<EmailTemplate> {
+  const [override] = await db
+    .select()
+    .from(campaignTemplatesTable)
+    .where(eq(campaignTemplatesTable.day, day));
+
+  if (override) {
+    return {
+      subject: override.subject,
+      html: (firstName) =>
+        override.bodyHtml.replace(/\{\{firstName\}\}/g, escapeCampaignText(firstName)),
+    };
+  }
+
+  const template = getTemplate(day);
+  return {
+    subject: template.subject,
+    html: (firstName) => template.html(escapeCampaignText(firstName)),
   };
 }

@@ -324,3 +324,56 @@ export interface Client {
   createdAt: string;
 }
 
+export interface Lead {
+  id: number;
+  /** @nullable */
+  firstName: string | null;
+  /** @nullable */
+  lastName: string | null;
+  email: string;
+  /** @nullable */
+  phone: string | null;
+  /** @nullable */
+  company: string | null;
+  /** @nullable */
+  jobTitle: string | null;
+  status: string;
+  /** @nullable */
+  source: string | null;
+  /** @nullable */
+  advisorId: number | null;
+  emailDay: number;
+  campaignActive: boolean;
+  /** @nullable */
+  notes: string | null;
+  /** @nullable */
+  importBatch: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface LeadInput {
+  /** @minLength 1 */
+  firstName: string;
+  /** @minLength 1 */
+  lastName: string;
+  email: string;
+  /** @nullable */
+  phone?: string | null;
+  /** @nullable */
+  company?: string | null;
+  /** @nullable */
+  jobTitle?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  /** @nullable */
+  advisorId?: number | null;
+  sendWelcomeEmail?: boolean;
+}
+
+export interface LeadCreateResponse {
+  lead: Lead;
+  emailSent: boolean;
+  emailMessage: string;
+}
+

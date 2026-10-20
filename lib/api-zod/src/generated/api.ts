@@ -35,6 +35,92 @@ export const GetDashboardSummaryResponse = zod.object({
 
 
 /**
+ * @summary Create a lead assigned to the authenticated advisor
+ */
+
+
+
+
+export const CreateAdvisorLeadBody = zod.object({
+  "firstName": zod.string().min(1),
+  "lastName": zod.string().min(1),
+  "email": zod.string().email(),
+  "phone": zod.string().nullish(),
+  "company": zod.string().nullish(),
+  "jobTitle": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "advisorId": zod.number().nullish(),
+  "sendWelcomeEmail": zod.boolean().optional()
+})
+
+export const CreateAdvisorLeadResponse = zod.object({
+  "lead": zod.object({
+  "id": zod.number(),
+  "firstName": zod.string().nullable(),
+  "lastName": zod.string().nullable(),
+  "email": zod.string().email(),
+  "phone": zod.string().nullable(),
+  "company": zod.string().nullable(),
+  "jobTitle": zod.string().nullable(),
+  "status": zod.string(),
+  "source": zod.string().nullable(),
+  "advisorId": zod.number().nullable(),
+  "emailDay": zod.number(),
+  "campaignActive": zod.boolean(),
+  "notes": zod.string().nullable(),
+  "importBatch": zod.string().nullable(),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+}),
+  "emailSent": zod.boolean(),
+  "emailMessage": zod.string()
+})
+
+
+/**
+ * @summary Create a lead from the admin portal
+ */
+
+
+
+
+export const CreateAdminLeadBody = zod.object({
+  "firstName": zod.string().min(1),
+  "lastName": zod.string().min(1),
+  "email": zod.string().email(),
+  "phone": zod.string().nullish(),
+  "company": zod.string().nullish(),
+  "jobTitle": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "advisorId": zod.number().nullish(),
+  "sendWelcomeEmail": zod.boolean().optional()
+})
+
+export const CreateAdminLeadResponse = zod.object({
+  "lead": zod.object({
+  "id": zod.number(),
+  "firstName": zod.string().nullable(),
+  "lastName": zod.string().nullable(),
+  "email": zod.string().email(),
+  "phone": zod.string().nullable(),
+  "company": zod.string().nullable(),
+  "jobTitle": zod.string().nullable(),
+  "status": zod.string(),
+  "source": zod.string().nullable(),
+  "advisorId": zod.number().nullable(),
+  "emailDay": zod.number(),
+  "campaignActive": zod.boolean(),
+  "notes": zod.string().nullable(),
+  "importBatch": zod.string().nullable(),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+}),
+  "emailSent": zod.boolean(),
+  "emailMessage": zod.string()
+})
+
+
+/**
  * @summary List FNA submissions
  */
 export const ListFnaSubmissionsResponseItem = zod.object({

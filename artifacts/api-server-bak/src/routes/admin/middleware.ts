@@ -11,6 +11,18 @@ export function requireAdmin(req: Request, res: Response, next: NextFunction): v
   next();
 }
 
+export function requireCampaignEditor(req: Request, res: Response, next: NextFunction): void {
+  const session = req.session as unknown as SessionData;
+  const isAdmin = Boolean(session["adminId"]);
+  const isAdvisor = Boolean(session["userId"]) && session["userRole"] === "advisor";
+
+  if (!isAdmin && !isAdvisor) {
+    res.status(401).json({ error: "Unauthorized" });
+    return;
+  }
+  next();
+}
+
 export function requireSuperAdmin(req: Request, res: Response, next: NextFunction): void {
   const session = req.session as unknown as SessionData;
   if (!session["adminId"]) {

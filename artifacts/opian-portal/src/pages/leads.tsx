@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import { Search, Eye, Mail, Phone, Building2, Filter, X, RefreshCw } from "lucide-react";
+import { Search, Eye, Mail, Phone, Building2, Filter, X, RefreshCw, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { CreateLeadDialog } from "@/components/create-lead-dialog";
 
 type Lead = {
   id: number;
@@ -9,6 +10,7 @@ type Lead = {
   email: string;
   phone: string | null;
   company: string | null;
+  jobTitle: string | null;
   status: string;
   source: string | null;
   advisorId: number | null;
@@ -66,6 +68,8 @@ export default function Leads() {
   const [updatingStatus, setUpdatingStatus] = useState(false);
   const [editNotes, setEditNotes] = useState("");
   const [savingNotes, setSavingNotes] = useState(false);
+  const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const [createFeedback, setCreateFeedback] = useState<{ emailSent: boolean; emailMessage: string } | null>(null);
 
   const fetchLeads = async () => {
     setLoading(true);
@@ -162,10 +166,38 @@ export default function Leads() {
           <h1 className="text-2xl font-bold tracking-tight text-foreground">My Leads</h1>
           <p className="text-muted-foreground">{leads.length} lead{leads.length !== 1 ? "s" : ""} assigned to you</p>
         </div>
-        <Button variant="outline" size="icon" onClick={fetchLeads}>
-          <RefreshCw className="w-4 h-4" />
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="icon" onClick={fetchLeads} aria-label="Refresh leads">
+            <RefreshCw className="w-4 h-4" />
+          </Button>
+          <Button onClick={() => setShowCreateDialog(true)} className="gap-2">
+            <Plus className="w-4 h-4" />
+            Create Lead
+          </Button>
+        </div>
       </div>
+
+      {createFeedback && (
+        <div
+          role="status"
+          className={`rounded-lg border px-4 py-3 text-sm ${
+            createFeedback.emailSent
+              ? "border-green-500/30 bg-green-500/10 text-green-700"
+              : "border-amber-500/30 bg-amber-500/10 text-amber-800"
+          }`}
+        >
+          {createFeedback.emailMessage}
+        </div>
+      )}
+      <CreateLeadDialog
+        open={showCreateDialog}
+        onOpenChange={setShowCreateDialog}
+        endpoint="/api/leads"
+        onCreated={(result) => {
+          setCreateFeedback(result);
+          void fetchLeads();
+        }}
+      />
 
       {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-3">
@@ -340,6 +372,10 @@ export default function Leads() {
                     <div>
                       <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Company</div>
                       <div className="text-sm text-foreground">{selectedLead.company || "—"}</div>
+                    </div>
+                    <div>
+                      <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Job Title</div>
+                      <div className="text-sm text-foreground">{selectedLead.jobTitle || "—"}</div>
                     </div>
                     <div>
                       <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Source</div>

@@ -1,15 +1,17 @@
-import { useAdminGetDashboard } from "@workspace/api-client-react";
+import { useAdminGetDashboard, useAdminGetSession } from "@workspace/api-client-react";
 import { Users, Briefcase, FileText, Calendar, Shield, FolderOpen } from "lucide-react";
 import { format } from "date-fns";
 import { Link } from "wouter";
 
 export default function Dashboard() {
   const { data: dashboard, isLoading } = useAdminGetDashboard();
+  const { data: session } = useAdminGetSession();
+  const firstName = session?.admin?.name?.trim().split(/\s+/)[0] || "there";
 
   if (isLoading || !dashboard) {
     return (
       <div className="space-y-6">
-        <h1 className="text-2xl font-bold">Dashboard</h1>
+        <h1 className="text-2xl font-bold">Welcome back, {firstName}</h1>
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {[1, 2, 3, 4, 5, 6].map(i => (
             <div key={i} className="h-28 bg-card border rounded-xl animate-pulse"></div>
@@ -31,7 +33,7 @@ export default function Dashboard() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-foreground">Platform Overview</h1>
+        <h1 className="text-2xl font-bold tracking-tight text-foreground">Welcome back, {firstName}</h1>
         <p className="text-muted-foreground">Command centre metrics and recent activity.</p>
       </div>
 

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Plus, Search, Eye, Trash2, Mail, Phone, Building2, Filter, X, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { CreateLeadDialog } from "@/components/create-lead-dialog";
 
 type Lead = {
   id: number;
@@ -9,6 +10,7 @@ type Lead = {
   email: string;
   phone: string | null;
   company: string | null;
+  jobTitle: string | null;
   status: string;
   source: string | null;
   advisorId: number | null;
@@ -64,8 +66,7 @@ export default function AdminLeads() {
   const [emailLogs, setEmailLogs] = useState<EmailLog[]>([]);
   const [emailLogsLoading, setEmailLogsLoading] = useState(false);
   const [showCreateForm, setShowCreateForm] = useState(false);
-  const [createForm, setCreateForm] = useState({ firstName: "", lastName: "", email: "", phone: "", company: "", notes: "" });
-  const [creating, setCreating] = useState(false);
+  const [createFeedback, setCreateFeedback] = useState<{ emailSent: boolean; emailMessage: string } | null>(null);
   const [updatingStatus, setUpdatingStatus] = useState(false);
   const [editNotes, setEditNotes] = useState("");
   const [savingNotes, setSavingNotes] = useState(false);
@@ -154,26 +155,6 @@ export default function AdminLeads() {
     if (selectedLead?.id === id) setSelectedLead(null);
   };
 
-  const createLead = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setCreating(true);
-    try {
-      const r = await fetch("/api/admin/leads", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(createForm),
-      });
-      if (r.ok) {
-        setShowCreateForm(false);
-        setCreateForm({ firstName: "", lastName: "", email: "", phone: "", company: "", notes: "" });
-        fetchLeads();
-      }
-    } finally {
-      setCreating(false);
-    }
-  };
-
   const filtered = leads.filter((l) => {
     const matchStatus = statusFilter === "all" || l.status === statusFilter;
     const matchSearch =
@@ -200,52 +181,27 @@ export default function AdminLeads() {
         </div>
       </div>
 
-      {/* Create form */}
-      {showCreateForm && (
-        <div className="bg-card border rounded-xl p-6 shadow-sm animate-in slide-in-from-top-4 fade-in duration-200">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold">Create New Lead</h2>
-            <button onClick={() => setShowCreateForm(false)} className="p-2 text-muted-foreground hover:bg-muted rounded-md">
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-          <form onSubmit={createLead} className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {[
-              { name: "firstName", label: "First Name", placeholder: "Jane" },
-              { name: "lastName", label: "Last Name", placeholder: "Smith" },
-              { name: "email", label: "Email *", placeholder: "jane@example.com", required: true },
-              { name: "phone", label: "Phone", placeholder: "+27 xx xxx xxxx" },
-              { name: "company", label: "Company", placeholder: "Acme Ltd" },
-            ].map((f) => (
-              <div key={f.name} className="space-y-1">
-                <label className="text-sm font-medium text-foreground">{f.label}</label>
-                <input
-                  type={f.name === "email" ? "email" : "text"}
-                  required={f.required}
-                  placeholder={f.placeholder}
-                  value={(createForm as Record<string, string>)[f.name]}
-                  onChange={(e) => setCreateForm((prev) => ({ ...prev, [f.name]: e.target.value }))}
-                  className="w-full px-3 py-2 border border-input rounded-md text-sm bg-background focus:outline-none focus:ring-2 focus:ring-ring"
-                />
-              </div>
-            ))}
-            <div className="space-y-1 md:col-span-2">
-              <label className="text-sm font-medium text-foreground">Notes</label>
-              <textarea
-                rows={2}
-                placeholder="Optional notes..."
-                value={createForm.notes}
-                onChange={(e) => setCreateForm((prev) => ({ ...prev, notes: e.target.value }))}
-                className="w-full px-3 py-2 border border-input rounded-md text-sm bg-background focus:outline-none focus:ring-2 focus:ring-ring resize-none"
-              />
-            </div>
-            <div className="md:col-span-2 flex gap-3">
-              <Button type="submit" disabled={creating}>{creating ? "Creating..." : "Create Lead"}</Button>
-              <Button type="button" variant="outline" onClick={() => setShowCreateForm(false)}>Cancel</Button>
-            </div>
-          </form>
+      {createFeedback && (
+        <div
+          role="status"
+          className={`rounded-lg border px-4 py-3 text-sm ${
+            createFeedback.emailSent
+              ? "border-green-500/30 bg-green-500/10 text-green-700"
+              : "border-amber-500/30 bg-amber-500/10 text-amber-800"
+          }`}
+        >
+          {createFeedback.emailMessage}
         </div>
       )}
+      <CreateLeadDialog
+        open={showCreateForm}
+        onOpenChange={setShowCreateForm}
+        endpoint="/api/admin/leads"
+        onCreated={(result) => {
+          setCreateFeedback(result);
+          void fetchLeads();
+        }}
+      />
 
       {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-3">
@@ -409,6 +365,10 @@ export default function AdminLeads() {
                     <div>
                       <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Company</div>
                       <div className="text-sm text-foreground">{selectedLead.company || "—"}</div>
+                    </div>
+                    <div>
+                      <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Job Title</div>
+                      <div className="text-sm text-foreground">{selectedLead.jobTitle || "—"}</div>
                     </div>
                     <div>
                       <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Source</div>

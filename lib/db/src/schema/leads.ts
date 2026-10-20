@@ -9,6 +9,7 @@ export const leadsTable = mysqlTable("leads", {
   email: varchar("email", { length: 255 }).notNull(),
   phone: varchar("phone", { length: 50 }),
   company: varchar("company", { length: 255 }),
+  jobTitle: varchar("job_title", { length: 255 }),
   status: varchar("status", { length: 50 }).notNull().default("new"), // new, contacted, qualified, booked, converted, lost
   source: varchar("source", { length: 100 }).default("manual"), // manual, import
   advisorId: int("advisor_id"),

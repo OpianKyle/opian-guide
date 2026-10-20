@@ -1,7 +1,7 @@
 import nodemailer from "nodemailer";
 
 const host = process.env["SMTP_HOST"];
-const port = Number(process.env["SMTP_PORT"] || 993);
+const port = Number(process.env["SMTP_PORT"] || 465);
 const user = process.env["SMTP_USER"];
 const pass = process.env["SMTP_PASS"];
 const fromName = process.env["SMTP_FROM_NAME"] || "Opian";
@@ -19,7 +19,7 @@ function getTransporter(): nodemailer.Transporter {
   _transporter = nodemailer.createTransport({
     host,
     port,
-    secure: true,
+    secure: port === 465,
     auth: { user, pass },
     tls: {
       rejectUnauthorized: false,

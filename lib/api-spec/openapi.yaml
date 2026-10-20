@@ -39,6 +39,8 @@ tags:
     description: Admin document management
   - name: admin-clients
     description: Admin client management
+  - name: advisor-leads
+    description: Advisor lead management
   - name: admin-leads
     description: Admin lead management and email campaigns
 paths:
@@ -67,6 +69,56 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/DashboardSummary"
+
+  /leads:
+    post:
+      operationId: createAdvisorLead
+      tags: [advisor-leads]
+      summary: Create a lead assigned to the authenticated advisor
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LeadInput"
+      responses:
+        "201":
+          description: Lead created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeadCreateResponse"
+        "400":
+          description: Invalid lead details
+        "401":
+          description: Advisor authentication required
+        "409":
+          description: A lead with this email already exists
+
+  /admin/leads:
+    post:
+      operationId: createAdminLead
+      tags: [admin-leads]
+      summary: Create a lead from the admin portal
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LeadInput"
+      responses:
+        "201":
+          description: Lead created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeadCreateResponse"
+        "400":
+          description: Invalid lead details
+        "401":
+          description: Admin authentication required
+        "409":
+          description: A lead with this email already exists
 
   /fna:
     get:
@@ -1587,3 +1639,102 @@ components:
         - name
         - email
         - createdAt
+
+    Lead:
+      type: object
+      properties:
+        id:
+          type: integer
+        firstName:
+          type: ["string", "null"]
+        lastName:
+          type: ["string", "null"]
+        email:
+          type: string
+          format: email
+        phone:
+          type: ["string", "null"]
+        company:
+          type: ["string", "null"]
+        jobTitle:
+          type: ["string", "null"]
+        status:
+          type: string
+        source:
+          type: ["string", "null"]
+        advisorId:
+          type: ["integer", "null"]
+        emailDay:
+          type: integer
+        campaignActive:
+          type: boolean
+        notes:
+          type: ["string", "null"]
+        importBatch:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - firstName
+        - lastName
+        - email
+        - phone
+        - company
+        - jobTitle
+        - status
+        - source
+        - advisorId
+        - emailDay
+        - campaignActive
+        - notes
+        - importBatch
+        - createdAt
+        - updatedAt
+
+    LeadInput:
+      type: object
+      properties:
+        firstName:
+          type: string
+          minLength: 1
+        lastName:
+          type: string
+          minLength: 1
+        email:
+          type: string
+          format: email
+        phone:
+          type: ["string", "null"]
+        company:
+          type: ["string", "null"]
+        jobTitle:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+        advisorId:
+          type: ["integer", "null"]
+        sendWelcomeEmail:
+          type: boolean
+      required:
+        - firstName
+        - lastName
+        - email
+
+    LeadCreateResponse:
+      type: object
+      properties:
+        lead:
+          $ref: "#/components/schemas/Lead"
+        emailSent:
+          type: boolean
+        emailMessage:
+          type: string
+      required:
+        - lead
+        - emailSent
+        - emailMessage

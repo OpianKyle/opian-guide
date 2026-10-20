@@ -9,9 +9,12 @@ import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useAuth } from "@/contexts/auth";
 
 export default function Dashboard() {
   const { data: summary, isLoading } = useGetDashboardSummary();
+  const { user } = useAuth();
+  const firstName = user?.name.trim().split(/\s+/)[0] || "there";
 
   return (
     <div className="max-w-6xl mx-auto space-y-8 pb-12">
@@ -21,7 +24,7 @@ export default function Dashboard() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
       >
-        <h1 className="text-3xl font-serif font-bold text-foreground">Welcome back, Kyle</h1>
+        <h1 className="text-3xl font-serif font-bold text-foreground">Welcome back, {firstName}</h1>
         <p className="text-muted-foreground mt-1">Your financial overview at a glance</p>
       </motion.div>
 

@@ -43,6 +43,8 @@ import type {
   FnaStatusUpdate,
   FnaSubmission,
   HealthStatus,
+  LeadCreateResponse,
+  LeadInput,
   Policy,
   PolicyInput,
   PolicyUpdate
@@ -228,6 +230,146 @@ export function useGetDashboardSummary<TData = Awaited<ReturnType<typeof getDash
 
 
 
+
+export const getCreateAdvisorLeadUrl = () => {
+
+
+
+
+  return `/api/leads`
+}
+
+/**
+ * @summary Create a lead assigned to the authenticated advisor
+ */
+export const createAdvisorLead = async (leadInput: LeadInput, options?: RequestInit): Promise<LeadCreateResponse> => {
+
+  return customFetch<LeadCreateResponse>(getCreateAdvisorLeadUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(leadInput)
+  }
+);}
+
+
+
+
+export const getCreateAdvisorLeadMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createAdvisorLead>>, TError,{data: BodyType<LeadInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createAdvisorLead>>, TError,{data: BodyType<LeadInput>}, TContext> => {
+
+const mutationKey = ['createAdvisorLead'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createAdvisorLead>>, {data: BodyType<LeadInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createAdvisorLead(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateAdvisorLeadMutationResult = NonNullable<Awaited<ReturnType<typeof createAdvisorLead>>>
+    export type CreateAdvisorLeadMutationBody = BodyType<LeadInput>
+    export type CreateAdvisorLeadMutationError = ErrorType<void>
+
+    /**
+ * @summary Create a lead assigned to the authenticated advisor
+ */
+export const useCreateAdvisorLead = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createAdvisorLead>>, TError,{data: BodyType<LeadInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createAdvisorLead>>,
+        TError,
+        {data: BodyType<LeadInput>},
+        TContext
+      > => {
+      return useMutation(getCreateAdvisorLeadMutationOptions(options));
+    }
+
+export const getCreateAdminLeadUrl = () => {
+
+
+
+
+  return `/api/admin/leads`
+}
+
+/**
+ * @summary Create a lead from the admin portal
+ */
+export const createAdminLead = async (leadInput: LeadInput, options?: RequestInit): Promise<LeadCreateResponse> => {
+
+  return customFetch<LeadCreateResponse>(getCreateAdminLeadUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(leadInput)
+  }
+);}
+
+
+
+
+export const getCreateAdminLeadMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createAdminLead>>, TError,{data: BodyType<LeadInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createAdminLead>>, TError,{data: BodyType<LeadInput>}, TContext> => {
+
+const mutationKey = ['createAdminLead'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createAdminLead>>, {data: BodyType<LeadInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createAdminLead(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateAdminLeadMutationResult = NonNullable<Awaited<ReturnType<typeof createAdminLead>>>
+    export type CreateAdminLeadMutationBody = BodyType<LeadInput>
+    export type CreateAdminLeadMutationError = ErrorType<void>
+
+    /**
+ * @summary Create a lead from the admin portal
+ */
+export const useCreateAdminLead = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createAdminLead>>, TError,{data: BodyType<LeadInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createAdminLead>>,
+        TError,
+        {data: BodyType<LeadInput>},
+        TContext
+      > => {
+      return useMutation(getCreateAdminLeadMutationOptions(options));
+    }
 
 export const getListFnaSubmissionsUrl = () => {
 

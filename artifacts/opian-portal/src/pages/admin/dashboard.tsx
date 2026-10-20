@@ -2,9 +2,12 @@ import { useAdminGetDashboard } from "@workspace/api-client-react";
 import { Users, Briefcase, FileText, Calendar, Shield, FolderOpen } from "lucide-react";
 import { format } from "date-fns";
 import { Link } from "wouter";
+import { useAuth } from "@/contexts/auth";
 
 export default function Dashboard() {
   const { data: dashboard, isLoading } = useAdminGetDashboard();
+  const { adminUser } = useAuth();
+  const firstName = adminUser?.name.trim().split(/\s+/)[0] || "there";
 
   if (isLoading || !dashboard) {
     return (
@@ -31,7 +34,7 @@ export default function Dashboard() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-foreground">Platform Overview</h1>
+        <h1 className="text-2xl font-bold tracking-tight text-foreground">Welcome back, {firstName}</h1>
         <p className="text-muted-foreground">Command centre metrics and recent activity.</p>
       </div>
 

@@ -4,7 +4,7 @@ import { leadsTable, leadEmailLogsTable } from "@workspace/db";
 import { eq, and } from "drizzle-orm";
 import { requireAdmin } from "./middleware";
 import { sendMail } from "../../lib/mailer";
-import { getTemplate } from "../../lib/campaign";
+import { getCampaignTemplate } from "../../lib/campaign";
 
 const router = Router();
 
@@ -20,10 +20,15 @@ router.post("/admin/email/process-queue", requireAdmin, async (req, res) => {
     let sent = 0;
     let failed = 0;
     let completed = 0;
+    const templates = new Map<number, Awaited<ReturnType<typeof getCampaignTemplate>>>();
 
     for (const lead of activeLeads) {
       const day = lead.emailDay;
-      const template = getTemplate(day);
+      let template = templates.get(day);
+      if (!template) {
+        template = await getCampaignTemplate(day);
+        templates.set(day, template);
+      }
       const firstName = lead.firstName || lead.email.split("@")[0];
 
       let status: "sent" | "failed" = "sent";

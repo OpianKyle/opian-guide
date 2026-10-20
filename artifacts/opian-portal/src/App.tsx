@@ -9,6 +9,7 @@ import Landing from '@/pages/landing';
 import Auth from '@/pages/auth';
 import Dashboard from '@/pages/dashboard';
 import Leads from '@/pages/leads';
+import EmailCampaigns from '@/pages/email-campaigns';
 import FnaForm from '@/pages/fna';
 import FnaList from '@/pages/fna-list';
 import Policies from '@/pages/policies';
@@ -62,6 +63,9 @@ function ProtectedApp() {
       <Switch>
         <Route path="/dashboard" component={Dashboard} />
         <Route path="/leads" component={Leads} />
+        <Route path="/email-campaigns">
+          {() => user.role === "advisor" ? <EmailCampaigns /> : <Redirect to="/dashboard" />}
+        </Route>
         <Route path="/fna" component={FnaForm} />
         <Route path="/fna/list" component={FnaList} />
         <Route path="/policies" component={Policies} />
@@ -87,6 +91,7 @@ function AdminProtectedApp() {
       <Switch>
         <Route path="/admin/dashboard" component={AdminDashboard} />
         <Route path="/admin/leads" component={AdminLeads} />
+        <Route path="/admin/email-campaigns" component={EmailCampaigns} />
         <Route path="/admin/import-leads" component={AdminImportLeads} />
         <Route path="/admin/advisors" component={AdminAdvisors} />
         <Route path="/admin/admins" component={AdminAdmins} />

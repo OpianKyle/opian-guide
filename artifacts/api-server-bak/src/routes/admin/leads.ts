@@ -3,8 +3,11 @@ import { db } from "@workspace/db";
 import { leadsTable, leadImportHistoryTable } from "@workspace/db";
 import { eq, like, desc, and, or } from "drizzle-orm";
 import { requireAdmin } from "./middleware";
-import { sendMail } from "../../lib/mailer";
-import { getTemplate } from "../../lib/campaign";
+import {
+  createLead as createLeadRecord,
+  DuplicateLeadError,
+  parseLeadCreationRequest,
+} from "../../lib/lead-creation";
 
 const router = Router();
 
@@ -72,44 +75,67 @@ router.get("/admin/leads", requireAdmin, async (req, res) => {
 });
 
 // POST /admin/leads
-router.post("/admin/leads", requireAdmin, async (req, res) => {
+router.post("/admin/leads", requireAdmin, async (req, res): Promise<void> => {
   try {
-    const { firstName, lastName, email, phone, company, notes, advisorId } = req.body;
-    if (!email) return res.status(400).json({ error: "email is required" });
+    const body = req.body as Record<string, unknown>;
+    const advisorValue = body?.advisorId;
+    const advisorId =
+      advisorValue === undefined || advisorValue === null || advisorValue === ""
+        ? null
+        : Number(advisorValue);
+    if (advisorId !== null && (!Number.isSafeInteger(advisorId) || advisorId <= 0)) {
+      res.status(400).json({ error: "advisorId must be a valid advisor id" });
+      return;
+    }
 
-    await db.insert(leadsTable).values({
-      firstName: firstName || null,
-      lastName: lastName || null,
-      email,
-      phone: phone || null,
-      company: company || null,
-      notes: notes || null,
-      advisorId: advisorId || null,
-      source: "manual",
-      status: "new",
-      emailDay: 0,
-      campaignActive: true,
+    const parsed = parseLeadCreationRequest(body, advisorId);
+    if ("error" in parsed) {
+      res.status(400).json({ error: parsed.error });
+      return;
+    }
+
+    const result = await createLeadRecord(parsed.input, parsed.sendWelcomeEmail);
+    if (result.emailError) {
+      req.log.warn({ err: result.emailError, leadId: result.lead.id }, "Lead created but welcome email failed");
+    }
+    if (result.trackingError) {
+      req.log.error({ err: result.trackingError, leadId: result.lead.id }, "Failed to save lead email tracking");
+    }
+    res.status(201).json({
+      lead: result.lead,
+      emailSent: result.emailSent,
+      emailMessage: result.emailMessage,
     });
-
-    const [lead] = await db.select().from(leadsTable).where(eq(leadsTable.email, email));
-    res.status(201).json(lead);
   } catch (err: any) {
-    if (err?.code === "ER_DUP_ENTRY") return res.status(409).json({ error: "A lead with this email already exists" });
+    if (err instanceof DuplicateLeadError || err?.code === "ER_DUP_ENTRY") {
+      res.status(409).json({ error: "A lead with this email already exists." });
+      return;
+    }
+    req.log.error({ err }, "Failed to create admin lead");
     res.status(500).json({ error: "Failed to create lead" });
   }
 });
 
 // POST /admin/leads/import — must come before /:id
-router.post("/admin/leads/import", requireAdmin, async (req, res) => {
+router.post("/admin/leads/import", requireAdmin, async (req, res): Promise<void> => {
   try {
     const { url } = req.body;
-    if (!url) return res.status(400).json({ error: "url is required" });
+    if (!url) {
+      res.status(400).json({ error: "url is required" });
+      return;
+    }
 
     const csvUrl = toCSVUrl(url);
-    if (!csvUrl) return res.status(400).json({ error: "Invalid Google Sheets URL" });
+    if (!csvUrl) {
+      res.status(400).json({ error: "Invalid Google Sheets URL" });
+      return;
+    }
 
     const response = await fetch(csvUrl);
-    if (!response.ok) return res.status(400).json({ error: "Could not fetch sheet — ensure it is publicly accessible (Anyone with link)" });
+    if (!response.ok) {
+      res.status(400).json({ error: "Could not fetch sheet — ensure it is publicly accessible (Anyone with link)" });
+      return;
+    }
 
     const text = await response.text();
     const rows = parseCSV(text);
@@ -130,6 +156,7 @@ router.post("/admin/leads/import", requireAdmin, async (req, res) => {
           lastName: resolveField(row, ["last_name", "lastname", "last name"]) || null,
           phone: resolveField(row, ["phone", "mobile", "cell"]) || null,
           company: resolveField(row, ["company", "organisation", "organization"]) || null,
+          jobTitle: resolveField(row, ["job_title", "job title", "title", "position"]) || null,
           source: "import",
           status: "new",
           emailDay: 0,
@@ -182,11 +209,14 @@ router.get("/admin/leads/import-history", requireAdmin, async (req, res) => {
 });
 
 // GET /admin/leads/:id
-router.get("/admin/leads/:id", requireAdmin, async (req, res) => {
+router.get("/admin/leads/:id", requireAdmin, async (req, res): Promise<void> => {
   try {
     const id = Number(req.params.id);
     const [lead] = await db.select().from(leadsTable).where(eq(leadsTable.id, id));
-    if (!lead) return res.status(404).json({ error: "Lead not found" });
+    if (!lead) {
+      res.status(404).json({ error: "Lead not found" });
+      return;
+    }
     res.json(lead);
   } catch {
     res.status(500).json({ error: "Failed to fetch lead" });
@@ -194,10 +224,10 @@ router.get("/admin/leads/:id", requireAdmin, async (req, res) => {
 });
 
 // PATCH /admin/leads/:id
-router.patch("/admin/leads/:id", requireAdmin, async (req, res) => {
+router.patch("/admin/leads/:id", requireAdmin, async (req, res): Promise<void> => {
   try {
     const id = Number(req.params.id);
-    const { firstName, lastName, email, phone, company, status, notes, advisorId, campaignActive } = req.body;
+    const { firstName, lastName, email, phone, company, jobTitle, status, notes, advisorId, campaignActive } = req.body;
 
     const updateData: Partial<typeof leadsTable.$inferInsert> = {};
     if (firstName !== undefined) updateData.firstName = firstName;
@@ -205,6 +235,7 @@ router.patch("/admin/leads/:id", requireAdmin, async (req, res) => {
     if (email !== undefined) updateData.email = email;
     if (phone !== undefined) updateData.phone = phone;
     if (company !== undefined) updateData.company = company;
+    if (jobTitle !== undefined) updateData.jobTitle = jobTitle;
     if (status !== undefined) updateData.status = status;
     if (notes !== undefined) updateData.notes = notes;
     if (advisorId !== undefined) updateData.advisorId = advisorId;
@@ -212,7 +243,10 @@ router.patch("/admin/leads/:id", requireAdmin, async (req, res) => {
 
     await db.update(leadsTable).set(updateData).where(eq(leadsTable.id, id));
     const [lead] = await db.select().from(leadsTable).where(eq(leadsTable.id, id));
-    if (!lead) return res.status(404).json({ error: "Lead not found" });
+    if (!lead) {
+      res.status(404).json({ error: "Lead not found" });
+      return;
+    }
     res.json(lead);
   } catch {
     res.status(500).json({ error: "Failed to update lead" });

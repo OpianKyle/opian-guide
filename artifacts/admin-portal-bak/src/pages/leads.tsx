@@ -12,6 +12,7 @@ type Lead = {
   email: string;
   phone: string | null;
   company: string | null;
+  jobTitle: string | null;
   status: string;
   source: string | null;
   advisorId: number | null;
@@ -67,8 +68,10 @@ export default function Leads() {
   const [emailLogs, setEmailLogs] = useState<EmailLog[]>([]);
   const [emailLogsLoading, setEmailLogsLoading] = useState(false);
   const [showCreateForm, setShowCreateForm] = useState(false);
-  const [createForm, setCreateForm] = useState({ firstName: "", lastName: "", email: "", phone: "", company: "", notes: "" });
+  const [createForm, setCreateForm] = useState({ firstName: "", lastName: "", email: "", phone: "", company: "", jobTitle: "", notes: "" });
   const [creating, setCreating] = useState(false);
+  const [createError, setCreateError] = useState("");
+  const [createFeedback, setCreateFeedback] = useState<{ emailSent: boolean; emailMessage: string } | null>(null);
   const [updatingStatus, setUpdatingStatus] = useState(false);
   const [editNotes, setEditNotes] = useState("");
   const [savingNotes, setSavingNotes] = useState(false);
@@ -161,18 +164,25 @@ export default function Leads() {
   const createLead = async (e: React.FormEvent) => {
     e.preventDefault();
     setCreating(true);
+    setCreateError("");
     try {
       const r = await fetch("/api/admin/leads", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify(createForm),
+        body: JSON.stringify({ ...createForm, sendWelcomeEmail: true }),
       });
-      if (r.ok) {
-        setShowCreateForm(false);
-        setCreateForm({ firstName: "", lastName: "", email: "", phone: "", company: "", notes: "" });
-        fetchLeads();
-      }
+      const result = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(result.error || "Could not create this lead.");
+      setShowCreateForm(false);
+      setCreateForm({ firstName: "", lastName: "", email: "", phone: "", company: "", jobTitle: "", notes: "" });
+      setCreateFeedback({
+        emailSent: result.emailSent === true,
+        emailMessage: result.emailMessage || "Lead created.",
+      });
+      void fetchLeads();
+    } catch (error) {
+      setCreateError(error instanceof Error ? error.message : "Could not create this lead.");
     } finally {
       setCreating(false);
     }
@@ -203,24 +213,45 @@ export default function Leads() {
         </div>
       </div>
 
+      {createFeedback && (
+        <div
+          role="status"
+          className={`rounded-lg border px-4 py-3 text-sm ${
+            createFeedback.emailSent
+              ? "border-green-500/30 bg-green-50 text-green-800"
+              : "border-amber-500/30 bg-amber-50 text-amber-900"
+          }`}
+        >
+          {createFeedback.emailMessage}
+        </div>
+      )}
+
       {/* Create form */}
       {showCreateForm && (
-        <div className="bg-card border rounded-xl p-6 shadow-sm animate-in slide-in-from-top-4 fade-in duration-200">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold">Create New Lead</h2>
-            <button onClick={() => setShowCreateForm(false)} className="p-2 text-muted-foreground hover:bg-muted rounded-md"><X className="w-4 h-4" /></button>
-          </div>
-          <form onSubmit={createLead} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 p-4 backdrop-blur-sm">
+          <div role="dialog" aria-modal="true" aria-labelledby="create-lead-title" className="w-full max-w-xl overflow-hidden rounded-2xl border bg-card shadow-2xl">
+            <div className="flex items-center justify-between border-b px-6 py-5">
+              <h2 id="create-lead-title" className="text-xl font-serif font-bold">Create New Lead</h2>
+              <button type="button" disabled={creating} onClick={() => setShowCreateForm(false)} className="rounded-md p-2 text-muted-foreground hover:bg-muted disabled:opacity-50" aria-label="Close">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <form onSubmit={createLead}>
+              <div className="grid grid-cols-1 gap-x-4 gap-y-4 px-6 py-5 md:grid-cols-2">
             {[
-              { name: "firstName", label: "First Name", placeholder: "Jane" },
-              { name: "lastName", label: "Last Name", placeholder: "Smith" },
+              { name: "firstName", label: "First Name", placeholder: "Jane", required: true },
+              { name: "lastName", label: "Last Name", placeholder: "Smith", required: true },
               { name: "email", label: "Email *", placeholder: "jane@example.com", required: true },
               { name: "phone", label: "Phone", placeholder: "+27 xx xxx xxxx" },
               { name: "company", label: "Company", placeholder: "Acme Ltd" },
+              { name: "jobTitle", label: "Job Title", placeholder: "Financial Manager" },
             ].map(f => (
               <div key={f.name} className="space-y-1">
-                <label className="text-sm font-medium text-foreground">{f.label}</label>
+                <label className="text-sm font-medium text-foreground">
+                  {f.label}{f.required ? " *" : ""}
+                </label>
                 <input
+                  aria-label={f.label}
                   type={f.name === "email" ? "email" : "text"}
                   required={f.required}
                   placeholder={f.placeholder}
@@ -233,18 +264,21 @@ export default function Leads() {
             <div className="space-y-1 md:col-span-2">
               <label className="text-sm font-medium text-foreground">Notes</label>
               <textarea
-                rows={2}
+                rows={3}
                 placeholder="Optional notes..."
                 value={createForm.notes}
                 onChange={e => setCreateForm(prev => ({ ...prev, notes: e.target.value }))}
                 className="w-full px-3 py-2 border border-input rounded-md text-sm bg-background focus:outline-none focus:ring-2 focus:ring-ring resize-none"
               />
             </div>
-            <div className="md:col-span-2 flex gap-3">
-              <Button type="submit" disabled={creating}>{creating ? "Creating..." : "Create Lead"}</Button>
-              <Button type="button" variant="outline" onClick={() => setShowCreateForm(false)}>Cancel</Button>
+                {createError && <p role="alert" className="text-sm text-destructive md:col-span-2">{createError}</p>}
+              </div>
+              <div className="flex justify-end gap-3 border-t bg-muted/20 px-6 py-4">
+                <Button type="button" variant="outline" disabled={creating} onClick={() => setShowCreateForm(false)}>Cancel</Button>
+                <Button type="submit" disabled={creating}>{creating ? "Creating..." : "Create & Send Email"}</Button>
+              </div>
+            </form>
             </div>
-          </form>
         </div>
       )}
 
@@ -411,6 +445,10 @@ export default function Leads() {
                     <div>
                       <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Company</div>
                       <div className="text-sm text-foreground">{selectedLead.company || "—"}</div>
+                    </div>
+                    <div>
+                      <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Job Title</div>
+                      <div className="text-sm text-foreground">{selectedLead.jobTitle || "—"}</div>
                     </div>
                     <div>
                       <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Source</div>
