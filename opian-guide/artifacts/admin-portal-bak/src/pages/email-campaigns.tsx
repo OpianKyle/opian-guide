@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Mail, Edit2, RotateCcw, Save, X, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EmailHtmlEditor } from "@/components/email-html-editor";
@@ -38,10 +38,15 @@ export default function EmailCampaigns() {
   const [editing, setEditing] = useState(false);
   const [editSubject, setEditSubject] = useState("");
   const [editBodyHtml, setEditBodyHtml] = useState("");
+  const editBodyHtmlRef = useRef("");
   const [saving, setSaving] = useState(false);
   const [resetting, setResetting] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const previewKey = useRef(0);
+
+  const handleBodyChange = useCallback((html: string) => {
+    editBodyHtmlRef.current = html;
+  }, []);
 
   const fetchList = async () => {
     setLoading(true);
@@ -66,6 +71,7 @@ export default function EmailCampaigns() {
         const data = await r.json();
         setSelected(data);
         setEditSubject(data.subject);
+        editBodyHtmlRef.current = data.bodyHtml;
         setEditBodyHtml(data.bodyHtml);
       }
     } finally {
@@ -76,6 +82,7 @@ export default function EmailCampaigns() {
   const startEditing = () => {
     if (!selected) return;
     setEditSubject(selected.subject);
+    editBodyHtmlRef.current = selected.bodyHtml;
     setEditBodyHtml(selected.bodyHtml);
     setEditing(true);
   };
@@ -84,22 +91,25 @@ export default function EmailCampaigns() {
     setEditing(false);
     if (selected) {
       setEditSubject(selected.subject);
+      editBodyHtmlRef.current = selected.bodyHtml;
       setEditBodyHtml(selected.bodyHtml);
     }
   };
 
   const save = async () => {
     if (!selected) return;
+    const bodyHtmlToSave = editBodyHtmlRef.current;
     setSaving(true);
     try {
       const r = await fetch(API(`/admin/campaigns/${selected.day}`), {
         method: "PUT",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ subject: editSubject, bodyHtml: editBodyHtml }),
+        body: JSON.stringify({ subject: editSubject, bodyHtml: bodyHtmlToSave }),
       });
       if (r.ok) {
-        const updated = { ...selected, subject: editSubject, bodyHtml: editBodyHtml, isCustomized: true };
+        setEditBodyHtml(bodyHtmlToSave);
+        const updated = { ...selected, subject: editSubject, bodyHtml: bodyHtmlToSave, isCustomized: true };
         setSelected(updated);
         setCampaigns((prev) =>
           prev.map((c) =>
@@ -130,6 +140,7 @@ export default function EmailCampaigns() {
         const data = await r.json();
         setSelected(data);
         setEditSubject(data.subject);
+        editBodyHtmlRef.current = data.bodyHtml;
         setEditBodyHtml(data.bodyHtml);
         setCampaigns((prev) =>
           prev.map((c) =>
@@ -284,7 +295,7 @@ export default function EmailCampaigns() {
                 <EmailHtmlEditor
                   key={selected.day}
                   value={editBodyHtml}
-                  onChange={setEditBodyHtml}
+                  onChange={handleBodyChange}
                   title={`Visual editor for day ${selected.day} email`}
                   className="h-full"
                 />

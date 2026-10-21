@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Code2, Eye, Mail, RotateCcw, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EmailHtmlEditor } from "@/components/email-html-editor";
@@ -38,6 +38,7 @@ export default function EmailCampaigns() {
   const [selected, setSelected] = useState<CampaignDetail | null>(null);
   const [subject, setSubject] = useState("");
   const [bodyHtml, setBodyHtml] = useState("");
+  const bodyHtmlRef = useRef("");
   const [editing, setEditing] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const [loadingDetail, setLoadingDetail] = useState(false);
@@ -46,6 +47,10 @@ export default function EmailCampaigns() {
   const [previewVersion, setPreviewVersion] = useState(0);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
+
+  const handleBodyChange = useCallback((html: string) => {
+    bodyHtmlRef.current = html;
+  }, []);
 
   const loadCampaigns = async () => {
     setLoadingList(true);
@@ -77,6 +82,7 @@ export default function EmailCampaigns() {
       const detail: CampaignDetail = await response.json();
       setSelected(detail);
       setSubject(detail.subject);
+      bodyHtmlRef.current = detail.bodyHtml;
       setBodyHtml(detail.bodyHtml);
     } catch (loadError) {
       setError(loadError instanceof Error ? loadError.message : "Could not load this email.");
@@ -87,6 +93,7 @@ export default function EmailCampaigns() {
 
   const save = async () => {
     if (!selected) return;
+    const bodyHtmlToSave = bodyHtmlRef.current;
     setSaving(true);
     setError("");
     setNotice("");
@@ -95,10 +102,11 @@ export default function EmailCampaigns() {
         method: "PUT",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ subject, bodyHtml }),
+        body: JSON.stringify({ subject, bodyHtml: bodyHtmlToSave }),
       });
       if (!response.ok) throw new Error(await getError(response));
-      setSelected({ ...selected, subject, bodyHtml, isCustomized: true });
+      setBodyHtml(bodyHtmlToSave);
+      setSelected({ ...selected, subject, bodyHtml: bodyHtmlToSave, isCustomized: true });
       setCampaigns((items) =>
         items.map((item) =>
           item.day === selected.day ? { ...item, subject, isCustomized: true } : item,
@@ -142,6 +150,7 @@ export default function EmailCampaigns() {
   const startEditing = () => {
     if (!selected) return;
     setSubject(selected.subject);
+    bodyHtmlRef.current = selected.bodyHtml;
     setBodyHtml(selected.bodyHtml);
     setEditing(true);
     setShowPreview(false);
@@ -152,6 +161,7 @@ export default function EmailCampaigns() {
   const cancelEditing = () => {
     if (!selected) return;
     setSubject(selected.subject);
+    bodyHtmlRef.current = selected.bodyHtml;
     setBodyHtml(selected.bodyHtml);
     setEditing(false);
     setShowPreview(true);
@@ -301,7 +311,10 @@ export default function EmailCampaigns() {
                       type="button"
                       size="sm"
                       variant={showPreview ? "default" : "outline"}
-                      onClick={() => setShowPreview(true)}
+                      onClick={() => {
+                        setBodyHtml(bodyHtmlRef.current);
+                        setShowPreview(true);
+                      }}
                     >
                       <Eye className="mr-2 h-4 w-4" /> Preview
                     </Button>
@@ -320,7 +333,7 @@ export default function EmailCampaigns() {
                     <EmailHtmlEditor
                       key={selected.day}
                       value={bodyHtml}
-                      onChange={setBodyHtml}
+                      onChange={handleBodyChange}
                       title={`Visual editor for day ${selected.day} email`}
                       className="h-[480px] rounded-lg border"
                     />
