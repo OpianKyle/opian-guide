@@ -64,8 +64,6 @@ function safeLink(value: string): string | null {
   }
 }
 
-export const EmailHtmlEditor = memo(function EmailHtmlEditor({
-
 function EmailHtmlEditorBase({
 
   value,
@@ -176,17 +174,6 @@ function EmailHtmlEditorBase({
       />
     </div>
   );
-
-}, (previous, next) => {
-  // The iframe is the live editing surface; value updates are already reflected
-  // inside it. Avoid rerendering the iframe on each keystroke so its caret stays put.
-  return (
-    previous.onChange === next.onChange &&
-    previous.className === next.className &&
-    previous.title === next.title
-  );
-});
-
 }
 
 // The iframe is an uncontrolled contenteditable surface. Its value prop is used
