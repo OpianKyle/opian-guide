@@ -1,0 +1,1 @@
+- [Iframe editor focus](email-editor-focus.md) — keep editable iframe documents stable across React state updates so typing does not lose the caret.

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { memo, useEffect, useRef } from "react";
 import {
   AlignCenter,
   AlignLeft,
@@ -64,7 +64,7 @@ function safeLink(value: string): string | null {
   }
 }
 
-export function EmailHtmlEditor({
+export const EmailHtmlEditor = memo(function EmailHtmlEditor({
   value,
   onChange,
   className = "",
@@ -173,4 +173,12 @@ export function EmailHtmlEditor({
       />
     </div>
   );
-}
+}, (previous, next) => {
+  // The iframe is the live editing surface; value updates are already reflected
+  // inside it. Avoid rerendering the iframe on each keystroke so its caret stays put.
+  return (
+    previous.onChange === next.onChange &&
+    previous.className === next.className &&
+    previous.title === next.title
+  );
+});
