@@ -1,0 +1,71 @@
+ubuntu@opianadvisor:~/opian-guide/opian-guide$ cp -p /home/ubuntu/opian-guide/.env /home/ubuntu/opian-guide/opian-guide/.env
+chmod 600 /home/ubuntu/opian-guide/opian-guide/.env
+
+cd /home/ubuntu/opian-guide/opian-guide
+pnpm --filter @workspace/api-server run build
+ls -l artifacts/api-server-bak/dist/index.mjs
+
+> @workspace/api-server@0.0.0 build /home/ubuntu/opian-guide/opian-guide/artifacts/api-server-bak
+> node ./build.mjs
+
+
+  dist/index.mjs                       2.7mb ⚠️
+  dist/pino-worker.mjs               153.4kb
+  dist/pino-file.mjs                 142.1kb
+  dist/pino-pretty.mjs               114.4kb
+  dist/thread-stream-worker.mjs        7.3kb
+  dist/index.mjs.map                   4.6mb
+  dist/pino-worker.mjs.map           256.9kb
+  dist/pino-file.mjs.map             229.1kb
+  dist/pino-pretty.mjs.map           203.6kb
+  dist/thread-stream-worker.mjs.map   12.0kb
+
+⚡ Done in 532ms
+-rw-rw-r-- 1 ubuntu ubuntu 2831087 Oct 20 09:53 artifacts/api-server-bak/dist/index.mjs
+ubuntu@opianadvisor:~/opian-guide/opian-guide$ cd /home/ubuntu/opian-guide/opian-guide
+pm2 delete api-server
+pm2 start artifacts/api-server-bak/dist/index.mjs --name api-server
+pm2 save
+pm2 describe api-server | sed -n '1,25p'
+[PM2] Applying action deleteProcessId on app [api-server](ids: [ 0 ])
+[PM2] [api-server](0) ✓
+┌────┬───────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name      │ mode     │ ↺    │ status    │ cpu      │ memory   │
+└────┴───────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+host metrics | cpu: 0.2% | ram usage: 45.9% | ens3: ⇓ 0.036mb/s ⇑ 0mb/s |
+[PM2] Starting /home/ubuntu/opian-guide/opian-guide/artifacts/api-server-bak/di…
+[PM2] Done.
+┌────┬───────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name          │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼───────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ api-server    │ fork     │ 0    │ online    │ 0%       │ 4.0kb    │
+└────┴───────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+host metrics | cpu: 0.2% | ram usage: 45.9% | ens3: ⇓ 0.036mb/s ⇑ 0mb/s |
+[PM2] Saving current process list...
+[PM2] Successfully saved in /home/ubuntu/.pm2/dump.pm2
+ Describing process with id 0 - name api-server
+┌───────────────────┬──────────────────────────────────────────────────────────────────────────────┐
+│ status            │ online                                                                       │
+│ name              │ api-server                                                                   │
+│ namespace         │ default                                                                      │
+│ version           │ 0.0.0                                                                        │
+│ restarts          │ 0                                                                            │
+│ uptime            │ 0s                                                                           │
+│ script path       │ /home/ubuntu/opian-guide/opian-guide/artifacts/api-server-bak/dist/index.mjs │
+│ script args       │ N/A                                                                          │
+│ error log path    │ /home/ubuntu/.pm2/logs/api-server-error.log                                  │
+│ out log path      │ /home/ubuntu/.pm2/logs/api-server-out.log                                    │
+│ pid path          │ /home/ubuntu/.pm2/pids/api-server-0.pid                                      │
+│ interpreter       │ /usr/bin/node                                                                │
+│ interpreter args  │ N/A                                                                          │
+│ script id         │ 0                                                                            │
+│ exec cwd          │ /home/ubuntu/opian-guide/opian-guide                                         │
+│ exec mode         │ fork_mode                                                                    │
+│ node.js version   │ 20.20.2                                                                      │
+│ node env          │ N/A                                                                          │
+│ watch & reload    │ ✘                                                                            │
+│ unstable restarts │ 0                                                                            │
+│ created at        │ 2026-10-20T09:53:50.771Z                                                     │
+└───────────────────┴──────────────────────────────────────────────────────────────────────────────┘
+ Actions available
+ubuntu@opianadvisor:~/opian-guide/opian-guide$

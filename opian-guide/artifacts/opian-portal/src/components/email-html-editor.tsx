@@ -65,6 +65,9 @@ function safeLink(value: string): string | null {
 }
 
 export const EmailHtmlEditor = memo(function EmailHtmlEditor({
+
+function EmailHtmlEditorBase({
+
   value,
   onChange,
   className = "",
@@ -173,6 +176,7 @@ export const EmailHtmlEditor = memo(function EmailHtmlEditor({
       />
     </div>
   );
+
 }, (previous, next) => {
   // The iframe is the live editing surface; value updates are already reflected
   // inside it. Avoid rerendering the iframe on each keystroke so its caret stays put.
@@ -182,3 +186,17 @@ export const EmailHtmlEditor = memo(function EmailHtmlEditor({
     previous.title === next.title
   );
 });
+
+}
+
+// The iframe is an uncontrolled contenteditable surface. Its value prop is used
+// only to initialize the document; re-rendering it for every keystroke can
+// interrupt typing and reset the caret inside the iframe.
+export const EmailHtmlEditor = memo(
+  EmailHtmlEditorBase,
+  (previous, next) =>
+    previous.className === next.className &&
+    previous.title === next.title &&
+    previous.onChange === next.onChange,
+);
+
