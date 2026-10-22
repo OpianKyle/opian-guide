@@ -1,6 +1,7 @@
-import { Router, type IRouter, type Request, type Response, type NextFunction } from "express";
+import { Router, type IRouter } from "express";
 import { db, leadsTable, leadEmailLogsTable } from "@workspace/db";
 import { eq, desc, and, like, or } from "drizzle-orm";
+import { requireAdvisor } from "./middleware";
 import {
   createLead as createLeadRecord,
   DuplicateLeadError,
@@ -8,15 +9,6 @@ import {
 } from "../lib/lead-creation";
 
 const router: IRouter = Router();
-
-function requireAdvisor(req: Request, res: Response, next: NextFunction): void {
-  const session = req.session as unknown as Record<string, unknown>;
-  if (!session["userId"] || session["userRole"] !== "advisor") {
-    res.status(401).json({ error: "Unauthorized" });
-    return;
-  }
-  next();
-}
 
 // GET /leads — returns leads assigned to the authenticated advisor
 router.get("/leads", requireAdvisor, async (req, res): Promise<void> => {

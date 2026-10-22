@@ -11,6 +11,7 @@ import {
   UpdateFnaStatusBody,
   UpdateFnaStatusResponse,
 } from "@workspace/api-zod";
+import { requireAdvisor } from "./middleware";
 
 const router: IRouter = Router();
 
@@ -43,7 +44,7 @@ function mapRow(r: typeof fnaTable.$inferSelect) {
   };
 }
 
-router.get("/fna", async (req, res): Promise<void> => {
+router.get("/fna", requireAdvisor, async (req, res): Promise<void> => {
   const rows = await db.select().from(fnaTable).orderBy(desc(fnaTable.createdAt));
   res.json(ListFnaSubmissionsResponse.parse(rows.map(mapRow)));
 });
@@ -111,7 +112,7 @@ router.post("/fna", async (req, res): Promise<void> => {
   res.status(201).json(CreateFnaSubmissionResponse.parse(mapRow(row)));
 });
 
-router.get("/fna/:id", async (req, res): Promise<void> => {
+router.get("/fna/:id", requireAdvisor, async (req, res): Promise<void> => {
   const raw = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
   const params = GetFnaSubmissionParams.safeParse({ id: parseInt(raw, 10) });
   if (!params.success) {
@@ -132,7 +133,7 @@ router.get("/fna/:id", async (req, res): Promise<void> => {
   res.json(GetFnaSubmissionResponse.parse(mapRow(row)));
 });
 
-router.patch("/fna/:id", async (req, res): Promise<void> => {
+router.patch("/fna/:id", requireAdvisor, async (req, res): Promise<void> => {
   const raw = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
   const params = UpdateFnaStatusParams.safeParse({ id: parseInt(raw, 10) });
   if (!params.success) {

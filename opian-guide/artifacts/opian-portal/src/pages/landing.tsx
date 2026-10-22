@@ -64,6 +64,12 @@ function Nav() {
               {link.label}
             </button>
           ))}
+          <Link
+            href="/fna"
+            className={`text-sm font-medium transition-colors ${scrolled ? "text-gray-600 hover:text-gray-900" : "text-white/80 hover:text-white"}`}
+          >
+            FNA Form
+          </Link>
         </nav>
 
         <div className="hidden md:flex items-center gap-3">
@@ -98,6 +104,13 @@ function Nav() {
               {link.label}
             </button>
           ))}
+          <Link
+            href="/fna"
+            onClick={() => setMenuOpen(false)}
+            className="block w-full py-2 text-left text-sm font-medium text-gray-700 hover:text-gray-900"
+          >
+            FNA Form
+          </Link>
           <div className="flex gap-3 pt-2 border-t border-gray-100">
             <Link href="/auth" className="flex-1">
               <button className="w-full text-gray-700 border border-gray-200 text-sm font-medium px-4 py-2 rounded-lg">Sign In</button>

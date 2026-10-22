@@ -134,6 +134,8 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/FnaSubmission"
+        "401":
+          description: Advisor authentication required
     post:
       operationId: createFnaSubmission
       tags: [fna]
@@ -172,6 +174,8 @@ paths:
                 $ref: "#/components/schemas/FnaSubmission"
         "404":
           description: Not found
+        "401":
+          description: Advisor authentication required
     patch:
       operationId: updateFnaStatus
       tags: [fna]
@@ -195,6 +199,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/FnaSubmission"
+        "401":
+          description: Advisor authentication required
 
   /policies:
     get:

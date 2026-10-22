@@ -1,35 +1,13 @@
 import { useState, useCallback } from "react";
 import { useCreateFnaSubmission, getListFnaSubmissionsQueryKey } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
-import { useLocation } from "wouter";
 import { useToast } from "@/hooks/use-toast";
-import { Check, ChevronRight, ChevronLeft } from "lucide-react";
-
-// ─── Types ────────────────────────────────────────────────────────────────────
-interface FnaData {
-  // Step 1
-  firstName: string; lastName: string; email: string; phone: string;
-  dob: string; gender: string; smoker: string; maritalStatus: string;
-  dependants: number; currentAge: number;
-  // Step 2
-  grossMonthlyIncome: number; netMonthlyIncome: number; spouseIncome: number;
-  employmentType: string; occupation: string; hasGroupBenefits: string;
-  // Step 3
-  monthlyExpenses: number; homeLoans: number; vehicleFinance: number;
-  personalLoans: number; creditCards: number; otherDebts: number;
-  // Step 4
-  savings: number; investments: number; retirementFunds: number;
-  propertyValue: number; existingLifeCover: number;
-  existingDisabilityCover: number; existingDreadDiseaseCover: number;
-  // Step 5
-  targetRetirementAge: number; monthlyRetirementIncome: number;
-  currentRetirementSavings: number;
-  // Step 6
-  monthlyInvestmentBudget: number; investmentGoal: string;
-  riskProfile: string; investmentHorizon: number; priorities: string[];
-  // Meta
-  notes: string;
-}
+import { Check, ChevronRight, ChevronLeft, Download, Printer } from "lucide-react";
+import {
+  downloadFnaPdf,
+  openFnaPdfForPrint,
+  type FnaData,
+} from "@/lib/fna-pdf";
 
 const DEFAULTS: FnaData = {
   firstName: "", lastName: "", email: "", phone: "",
@@ -207,13 +185,13 @@ function validateStep(step: number, d: FnaData): string[] {
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 export default function FnaForm() {
-  const [, setLocation] = useLocation();
   const { toast } = useToast();
   const createMutation = useCreateFnaSubmission();
   const queryClient = useQueryClient();
   const [step, setStep] = useState(0);
   const [errors, setErrors] = useState<string[]>([]);
   const [data, setData] = useState<FnaData>(DEFAULTS);
+  const [submitted, setSubmitted] = useState(false);
 
   const set = useCallback((field: keyof FnaData, value: unknown) => {
     setData(prev => ({ ...prev, [field]: value }));
@@ -288,7 +266,8 @@ export default function FnaForm() {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: getListFnaSubmissionsQueryKey() });
           toast({ title: "FNA Submitted", description: "Financial Needs Analysis saved successfully." });
-          setLocation("/fna/list");
+          setSubmitted(true);
+          window.scrollTo(0, 0);
         },
         onError: () => {
           toast({ title: "Error", description: "Failed to submit FNA. Please try again.", variant: "destructive" });
@@ -299,6 +278,34 @@ export default function FnaForm() {
 
   const calc = calcFna(data);
   const progress = Math.round(((step + 1) / STEPS.length) * 100);
+  const handlePrint = async (blank: boolean) => {
+    try {
+      if (await openFnaPdfForPrint(data, blank)) return;
+      toast({
+        title: "Allow pop-ups to print",
+        description: "Your browser blocked the PDF print window. Allow pop-ups for this site and try again.",
+        variant: "destructive",
+      });
+    } catch {
+      toast({
+        title: "Could not prepare the PDF",
+        description: "Please try again or use Download PDF.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleDownload = async (blank: boolean) => {
+    try {
+      await downloadFnaPdf(blank ? DEFAULTS : data, blank);
+    } catch {
+      toast({
+        title: "Could not download the PDF",
+        description: "Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#f0f4f8]">
@@ -334,6 +341,62 @@ export default function FnaForm() {
 
       {/* Form body */}
       <div className="max-w-3xl mx-auto px-4 py-6">
+        <section className="mb-5 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm" aria-label="Print and download FNA forms">
+          <div className="mb-3">
+            <h2 className="font-bold text-[#1B2A4A]">Print or download this FNA</h2>
+            <p className="mt-1 text-xs text-[#718096]">
+              Filled PDFs are generated in your browser from your current answers.
+            </p>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div className="rounded-xl bg-[#f7f8fa] p-3">
+              <p className="mb-2 text-xs font-bold uppercase tracking-wide text-[#1B2A4A]">Current answers</p>
+              <div className="flex flex-wrap gap-2">
+                <button type="button" onClick={() => void handlePrint(false)} className="inline-flex items-center gap-2 rounded-lg bg-[#1B2A4A] px-3 py-2 text-xs font-semibold text-white hover:bg-[#0f1e36]">
+                  <Printer className="h-4 w-4" /> Print filled FNA
+                </button>
+                <button type="button" onClick={() => void handleDownload(false)} className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-2 text-xs font-semibold text-[#1B2A4A] hover:bg-gray-50">
+                  <Download className="h-4 w-4" /> Download PDF
+                </button>
+              </div>
+            </div>
+            <div className="rounded-xl bg-[#f7f8fa] p-3">
+              <p className="mb-2 text-xs font-bold uppercase tracking-wide text-[#1B2A4A]">Blank paper form</p>
+              <div className="flex flex-wrap gap-2">
+                <button type="button" onClick={() => void handlePrint(true)} className="inline-flex items-center gap-2 rounded-lg bg-[#1B2A4A] px-3 py-2 text-xs font-semibold text-white hover:bg-[#0f1e36]">
+                  <Printer className="h-4 w-4" /> Print blank form
+                </button>
+                <button type="button" onClick={() => void handleDownload(true)} className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-2 text-xs font-semibold text-[#1B2A4A] hover:bg-gray-50">
+                  <Download className="h-4 w-4" /> Download blank PDF
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {submitted ? (
+          <section className="rounded-2xl border border-gray-100 bg-white p-8 text-center shadow-sm">
+            <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-50 text-green-700">
+              <Check className="h-6 w-6" />
+            </span>
+            <h1 className="mt-4 text-2xl font-bold text-[#1B2A4A]">Thank you, {data.firstName}</h1>
+            <p className="mx-auto mt-2 max-w-lg text-sm text-[#718096]">
+              Your Financial Needs Analysis has been submitted. You can download or print a copy above.
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                setData(DEFAULTS);
+                setStep(0);
+                setSubmitted(false);
+              }}
+              className="mt-6 rounded-xl border border-gray-200 px-5 py-3 text-sm font-semibold text-[#1B2A4A] hover:bg-gray-50"
+            >
+              Start another FNA
+            </button>
+          </section>
+        ) : (
+          <>
         {errors.length > 0 && (
           <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-xl text-sm text-red-700 space-y-1">
             {errors.map((e, i) => <div key={i}>• {e}</div>)}
@@ -830,6 +893,8 @@ export default function FnaForm() {
             <div className="w-28" /> /* spacer so Back stays left */
           )}
         </div>
+          </>
+        )}
       </div>
     </div>
   );
