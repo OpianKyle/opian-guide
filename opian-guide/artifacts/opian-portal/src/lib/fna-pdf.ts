@@ -382,7 +382,7 @@ export async function openFnaPdfForPrint(data: FnaData, blank = false): Promise<
   try {
     const doc = await buildFnaPdf(data, blank);
     doc.autoPrint({ variant: "javascript" });
-    printWindow.location.href = doc.output("bloburl");
+    printWindow.location.href = doc.output("bloburl").toString();
     return true;
   } catch (error) {
     printWindow.close();

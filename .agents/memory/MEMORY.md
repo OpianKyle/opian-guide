@@ -1,2 +1,3 @@
 - [Iframe editor focus](email-editor-focus.md) — keep editable iframe documents stable across React state updates so typing does not lose the caret.
 - [OpenAPI generation on Node 20](api-codegen-runtime.md) — Orval 8.43 needs `Map.groupBy`; failed clean runs can remove generated Zod files.
+- [FNA review access](fna-review-access.md) — clients can submit without signing in; full saved answers are for advisors and admins only.

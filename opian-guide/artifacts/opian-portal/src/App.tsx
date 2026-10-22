@@ -66,7 +66,9 @@ function ProtectedApp() {
         <Route path="/email-campaigns">
           {() => user.role === "advisor" ? <EmailCampaigns /> : <Redirect to="/dashboard" />}
         </Route>
-        <Route path="/fna/list" component={FnaList} />
+        <Route path="/fna/list">
+          {() => user.role === "advisor" ? <FnaList /> : <Redirect to="/dashboard" />}
+        </Route>
         <Route path="/policies" component={Policies} />
         <Route path="/appointments" component={Appointments} />
         <Route path="/documents" component={Documents} />

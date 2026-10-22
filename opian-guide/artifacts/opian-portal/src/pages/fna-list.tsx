@@ -1,8 +1,11 @@
+import { useState } from "react";
 import { useListFnaSubmissions, useUpdateFnaStatus, getListFnaSubmissionsQueryKey } from "@workspace/api-client-react";
+import type { FnaSubmission } from "@workspace/api-client-react";
 import { format } from "date-fns";
 import { useQueryClient } from "@tanstack/react-query";
 import { Link } from "wouter";
 import { FileText, Search, Plus, Eye, CheckCircle, Clock } from "lucide-react";
+import { FnaSubmissionDetails } from "@/components/fna-submission-details";
 import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
@@ -10,11 +13,13 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 export default function FnaList() {
   const { data: submissions, isLoading } = useListFnaSubmissions();
   const updateStatusMutation = useUpdateFnaStatus();
   const queryClient = useQueryClient();
+  const [selectedSubmission, setSelectedSubmission] = useState<FnaSubmission | null>(null);
 
   const handleStatusUpdate = (id: number, newStatus: string) => {
     updateStatusMutation.mutate({ id, data: { status: newStatus } }, {
@@ -60,7 +65,7 @@ export default function FnaList() {
             <TableHeader className="bg-muted/30">
               <TableRow>
                 <TableHead>Client Name</TableHead>
-                <TableHead>ID Number</TableHead>
+                <TableHead>Phone Number</TableHead>
                 <TableHead>Submission Date</TableHead>
                 <TableHead>Risk Profile</TableHead>
                 <TableHead>Status</TableHead>
@@ -108,7 +113,10 @@ export default function FnaList() {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                          <DropdownMenuItem className="cursor-pointer">
+                          <DropdownMenuItem
+                            className="cursor-pointer"
+                            onSelect={() => setSelectedSubmission(sub)}
+                          >
                             <Eye className="mr-2 h-4 w-4" /> View Details
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
@@ -137,6 +145,32 @@ export default function FnaList() {
           </Table>
         </CardContent>
       </Card>
+
+      <Dialog
+        open={selectedSubmission !== null}
+        onOpenChange={(open) => {
+          if (!open) setSelectedSubmission(null);
+        }}
+      >
+        <DialogContent className="flex max-h-[90vh] max-w-5xl flex-col overflow-hidden">
+          {selectedSubmission && (
+            <>
+              <DialogHeader>
+                <DialogTitle>
+                  {selectedSubmission.firstName} {selectedSubmission.lastName}
+                </DialogTitle>
+                <DialogDescription>
+                  Submitted {format(new Date(selectedSubmission.createdAt), "dd MMM yyyy")} ·{" "}
+                  {getStatusBadge(selectedSubmission.status)}
+                </DialogDescription>
+              </DialogHeader>
+              <div className="min-h-0 flex-1 overflow-y-auto pr-2">
+                <FnaSubmissionDetails submission={selectedSubmission} />
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

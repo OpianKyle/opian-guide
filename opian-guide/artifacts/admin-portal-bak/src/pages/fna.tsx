@@ -10,6 +10,7 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { FileText, Eye, Trash2, Loader2 } from "lucide-react";
+import { FnaSubmissionDetails } from "@/components/fna-submission-details";
 
 export default function Fna() {
   const queryClient = useQueryClient();
@@ -230,45 +231,8 @@ export default function Fna() {
                 </div>
               </div>
               
-              <div className="flex-1 overflow-y-auto p-6 space-y-6">
-                <div>
-                  <h3 className="text-sm font-semibold border-b pb-2 mb-3">Client Information</h3>
-                  <div className="grid grid-cols-2 gap-y-3 text-sm">
-                    <div><span className="text-muted-foreground block text-xs">DOB</span> {selectedFna.dob || '—'}</div>
-                    <div><span className="text-muted-foreground block text-xs">Gender</span> {selectedFna.gender || '—'}</div>
-                    <div><span className="text-muted-foreground block text-xs">Smoker</span> {selectedFna.smoker || '—'}</div>
-                    <div><span className="text-muted-foreground block text-xs">Marital Status</span> {selectedFna.maritalStatus || '—'}</div>
-                    <div><span className="text-muted-foreground block text-xs">Dependants</span> {selectedFna.dependants || '0'}</div>
-                  </div>
-                </div>
-
-                <div>
-                  <h3 className="text-sm font-semibold border-b pb-2 mb-3">Financial Profile</h3>
-                  <div className="grid grid-cols-2 gap-y-3 text-sm">
-                    <div><span className="text-muted-foreground block text-xs">Gross Income</span> ${selectedFna.grossMonthlyIncome?.toLocaleString() || '0'}</div>
-                    <div><span className="text-muted-foreground block text-xs">Net Income</span> ${selectedFna.netMonthlyIncome?.toLocaleString() || '0'}</div>
-                    <div><span className="text-muted-foreground block text-xs">Monthly Expenses</span> ${selectedFna.monthlyExpenses?.toLocaleString() || '0'}</div>
-                    <div><span className="text-muted-foreground block text-xs">Savings</span> ${selectedFna.savings?.toLocaleString() || '0'}</div>
-                    <div><span className="text-muted-foreground block text-xs">Investments</span> ${selectedFna.investments?.toLocaleString() || '0'}</div>
-                    <div><span className="text-muted-foreground block text-xs">Total Debts</span> ${(selectedFna.homeLoans + selectedFna.personalLoans + selectedFna.creditCards)?.toLocaleString() || '0'}</div>
-                  </div>
-                </div>
-                
-                <div>
-                  <h3 className="text-sm font-semibold border-b pb-2 mb-3">Goals & Priorities</h3>
-                  <div className="space-y-3 text-sm">
-                    <div><span className="text-muted-foreground block text-xs">Risk Profile</span> <span className="capitalize">{selectedFna.riskProfile || '—'}</span></div>
-                    <div><span className="text-muted-foreground block text-xs">Investment Horizon</span> {selectedFna.investmentHorizon} years</div>
-                    <div><span className="text-muted-foreground block text-xs">Primary Priorities</span> {selectedFna.priorities || '—'}</div>
-                  </div>
-                </div>
-                
-                {selectedFna.notes && (
-                  <div>
-                    <h3 className="text-sm font-semibold border-b pb-2 mb-3">Notes</h3>
-                    <p className="text-sm bg-muted/20 p-3 rounded-md border">{selectedFna.notes}</p>
-                  </div>
-                )}
+              <div className="min-h-0 flex-1 overflow-y-auto p-6">
+                <FnaSubmissionDetails submission={selectedFna} />
               </div>
             </div>
           ) : null}
