@@ -273,6 +273,58 @@ export interface UnifiedLoginResult {
   user?: UnifiedLoginResultUser;
 }
 
+export type ClientSignupInputRole = typeof ClientSignupInputRole[keyof typeof ClientSignupInputRole];
+
+
+export const ClientSignupInputRole = {
+  client: 'client',
+} as const;
+
+export interface ClientSignupInput {
+  role: ClientSignupInputRole;
+  /** @minLength 1 */
+  name: string;
+  email: string;
+  /** @minLength 8 */
+  password: string;
+}
+
+export interface EmailVerificationInput {
+  email: string;
+  /** @pattern ^[0-9]{6}$ */
+  code: string;
+}
+
+export interface EmailVerificationResendInput {
+  email: string;
+}
+
+export interface SignupPendingResponse {
+  message: string;
+}
+
+export interface VerificationResendResponse {
+  message: string;
+}
+
+export type EmailVerificationResponseUserRole = typeof EmailVerificationResponseUserRole[keyof typeof EmailVerificationResponseUserRole];
+
+
+export const EmailVerificationResponseUserRole = {
+  client: 'client',
+} as const;
+
+export type EmailVerificationResponseUser = {
+  id: number;
+  name: string;
+  email: string;
+  role: EmailVerificationResponseUserRole;
+};
+
+export interface EmailVerificationResponse {
+  user: EmailVerificationResponseUser;
+}
+
 /**
  * @nullable
  */

@@ -40,10 +40,14 @@ import type {
   AppointmentInput,
   AppointmentUpdate,
   Client,
+  ClientSignupInput,
   DashboardSummary,
   Document,
   DocumentInput,
   DocumentUpdate,
+  EmailVerificationInput,
+  EmailVerificationResendInput,
+  EmailVerificationResponse,
   FnaInput,
   FnaStatusUpdate,
   FnaSubmission,
@@ -53,8 +57,10 @@ import type {
   Policy,
   PolicyInput,
   PolicyUpdate,
+  SignupPendingResponse,
   UnifiedLoginInput,
-  UnifiedLoginResult
+  UnifiedLoginResult,
+  VerificationResendResponse
 } from './api.schemas';
 
 import { customFetch } from '../custom-fetch';
@@ -1608,6 +1614,270 @@ export const useUnifiedLogin = <TError = ErrorType<void>,
         TContext
       > => {
       return useMutation(getUnifiedLoginMutationOptions(options), queryClient);
+    }
+
+export const getSignupClientUrl = () => {
+
+
+
+
+  return `/api/auth/signup`
+}
+
+/**
+ * @summary Start client signup and email a verification code
+ */
+export const signupClient = async (clientSignupInput: ClientSignupInput, options?: Parameters<typeof customFetch>[1]): Promise<SignupPendingResponse> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return customFetch<SignupPendingResponse>(getSignupClientUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(clientSignupInput)
+  }
+);}
+
+
+
+
+
+export const getSignupClientMutationKey = () => ['signupClient'] as const;
+
+export const getSignupClientMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof signupClient>>, TError,SignupClientMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof signupClient>>, TError,SignupClientMutationVariables, TContext> => {
+
+const mutationKey = getSignupClientMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof signupClient>>, SignupClientMutationVariables> = (props) => {
+          const {data} = props ?? {};
+
+          return  signupClient(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SignupClientMutationResult = NonNullable<Awaited<ReturnType<typeof signupClient>>>
+    export type SignupClientMutationBody = BodyType<ClientSignupInput>
+    export type SignupClientMutationError = ErrorType<void>
+    export type SignupClientMutationVariables = {data: BodyType<ClientSignupInput>}
+
+    /**
+ * @summary Start client signup and email a verification code
+ */
+export const useSignupClient = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof signupClient>>, TError,SignupClientMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof signupClient>>,
+        TError,
+        SignupClientMutationVariables,
+        TContext
+      > => {
+      return useMutation(getSignupClientMutationOptions(options), queryClient);
+    }
+
+export const getVerifyClientEmailUrl = () => {
+
+
+
+
+  return `/api/auth/verify-email`
+}
+
+/**
+ * @summary Verify a client signup with its emailed one-time code
+ */
+export const verifyClientEmail = async (emailVerificationInput: EmailVerificationInput, options?: Parameters<typeof customFetch>[1]): Promise<EmailVerificationResponse> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return customFetch<EmailVerificationResponse>(getVerifyClientEmailUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(emailVerificationInput)
+  }
+);}
+
+
+
+
+
+export const getVerifyClientEmailMutationKey = () => ['verifyClientEmail'] as const;
+
+export const getVerifyClientEmailMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof verifyClientEmail>>, TError,VerifyClientEmailMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof verifyClientEmail>>, TError,VerifyClientEmailMutationVariables, TContext> => {
+
+const mutationKey = getVerifyClientEmailMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof verifyClientEmail>>, VerifyClientEmailMutationVariables> = (props) => {
+          const {data} = props ?? {};
+
+          return  verifyClientEmail(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type VerifyClientEmailMutationResult = NonNullable<Awaited<ReturnType<typeof verifyClientEmail>>>
+    export type VerifyClientEmailMutationBody = BodyType<EmailVerificationInput>
+    export type VerifyClientEmailMutationError = ErrorType<void>
+    export type VerifyClientEmailMutationVariables = {data: BodyType<EmailVerificationInput>}
+
+    /**
+ * @summary Verify a client signup with its emailed one-time code
+ */
+export const useVerifyClientEmail = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof verifyClientEmail>>, TError,VerifyClientEmailMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof verifyClientEmail>>,
+        TError,
+        VerifyClientEmailMutationVariables,
+        TContext
+      > => {
+      return useMutation(getVerifyClientEmailMutationOptions(options), queryClient);
+    }
+
+export const getResendClientVerificationUrl = () => {
+
+
+
+
+  return `/api/auth/resend-verification`
+}
+
+/**
+ * @summary Resend a client signup verification code
+ */
+export const resendClientVerification = async (emailVerificationResendInput: EmailVerificationResendInput, options?: Parameters<typeof customFetch>[1]): Promise<VerificationResendResponse> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return customFetch<VerificationResendResponse>(getResendClientVerificationUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(emailVerificationResendInput)
+  }
+);}
+
+
+
+
+
+export const getResendClientVerificationMutationKey = () => ['resendClientVerification'] as const;
+
+export const getResendClientVerificationMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof resendClientVerification>>, TError,ResendClientVerificationMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof resendClientVerification>>, TError,ResendClientVerificationMutationVariables, TContext> => {
+
+const mutationKey = getResendClientVerificationMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof resendClientVerification>>, ResendClientVerificationMutationVariables> = (props) => {
+          const {data} = props ?? {};
+
+          return  resendClientVerification(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ResendClientVerificationMutationResult = NonNullable<Awaited<ReturnType<typeof resendClientVerification>>>
+    export type ResendClientVerificationMutationBody = BodyType<EmailVerificationResendInput>
+    export type ResendClientVerificationMutationError = ErrorType<unknown>
+    export type ResendClientVerificationMutationVariables = {data: BodyType<EmailVerificationResendInput>}
+
+    /**
+ * @summary Resend a client signup verification code
+ */
+export const useResendClientVerification = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof resendClientVerification>>, TError,ResendClientVerificationMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof resendClientVerification>>,
+        TError,
+        ResendClientVerificationMutationVariables,
+        TContext
+      > => {
+      return useMutation(getResendClientVerificationMutationOptions(options), queryClient);
     }
 
 export const getAdminGetSessionUrl = () => {

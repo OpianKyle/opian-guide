@@ -340,6 +340,75 @@ paths:
         "401":
           description: Invalid credentials
 
+  /auth/signup:
+    post:
+      operationId: signupClient
+      tags: [auth]
+      summary: Start client signup and email a verification code
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ClientSignupInput"
+      responses:
+        "202":
+          description: Verification code sent
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SignupPendingResponse"
+        "400":
+          description: Invalid signup details
+        "409":
+          description: An account or pending signup already exists
+        "503":
+          description: Verification email could not be sent
+
+  /auth/verify-email:
+    post:
+      operationId: verifyClientEmail
+      tags: [auth]
+      summary: Verify a client signup with its emailed one-time code
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmailVerificationInput"
+      responses:
+        "200":
+          description: Email verified and client signed in
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmailVerificationResponse"
+        "400":
+          description: Invalid verification code
+        "410":
+          description: Verification code expired
+        "429":
+          description: Too many verification attempts
+
+  /auth/resend-verification:
+    post:
+      operationId: resendClientVerification
+      tags: [auth]
+      summary: Resend a client signup verification code
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmailVerificationResendInput"
+      responses:
+        "200":
+          description: Resend request accepted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VerificationResendResponse"
+
   /admin/auth/session:
     get:
       operationId: adminGetSession
@@ -1490,6 +1559,75 @@ components:
           required: [id, name, email, role]
       required:
         - kind
+
+    ClientSignupInput:
+      type: object
+      properties:
+        role:
+          type: string
+          enum: [client]
+        name:
+          type: string
+          minLength: 1
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 8
+      required: [role, name, email, password]
+
+    EmailVerificationInput:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        code:
+          type: string
+          pattern: "^[0-9]{6}$"
+      required: [email, code]
+
+    EmailVerificationResendInput:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+      required: [email]
+
+    SignupPendingResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required: [message]
+
+    VerificationResendResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required: [message]
+
+    EmailVerificationResponse:
+      type: object
+      properties:
+        user:
+          type: object
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+            email:
+              type: string
+              format: email
+            role:
+              type: string
+              enum: [client]
+          required: [id, name, email, role]
+      required: [user]
 
     # ─── Admin schemas ──────────────────────────────────────────────────────────
 

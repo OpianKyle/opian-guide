@@ -25,6 +25,8 @@ interface AuthContextValue {
   unifiedLogin: (email: string, password: string) => Promise<UnifiedLoginResult>;
   login: (role: UserRole, email: string, password: string) => Promise<void>;
   signup: (role: UserRole, name: string, email: string, password: string) => Promise<void>;
+  verifyEmail: (email: string, code: string) => Promise<void>;
+  resendVerification: (email: string) => Promise<void>;
   logout: () => Promise<void>;
   adminLogin: (email: string, password: string) => Promise<void>;
   adminLogout: () => Promise<void>;
@@ -85,11 +87,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const signup = useCallback(async (role: UserRole, name: string, email: string, password: string) => {
-    const data = await apiFetch("/auth/signup", {
+    await apiFetch("/auth/signup", {
       method: "POST",
       body: JSON.stringify({ role, name, email, password }),
     });
+  }, []);
+
+  const verifyEmail = useCallback(async (email: string, code: string) => {
+    const data = await apiFetch("/auth/verify-email", {
+      method: "POST",
+      body: JSON.stringify({ email, code }),
+    });
     setUser(data.user);
+    setAdminUser(null);
+  }, []);
+
+  const resendVerification = useCallback(async (email: string) => {
+    await apiFetch("/auth/resend-verification", {
+      method: "POST",
+      body: JSON.stringify({ email }),
+    });
   }, []);
 
   const logout = useCallback(async () => {
@@ -111,7 +128,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, adminUser, isLoading, unifiedLogin, login, signup, logout, adminLogin, adminLogout }}>
+    <AuthContext.Provider value={{ user, adminUser, isLoading, unifiedLogin, login, signup, verifyEmail, resendVerification, logout, adminLogin, adminLogout }}>
       {children}
     </AuthContext.Provider>
   );

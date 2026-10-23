@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
-import { Eye, EyeOff, ArrowLeft, Loader2 } from "lucide-react";
+import { Eye, EyeOff, ArrowLeft, Loader2, MailCheck } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,16 +11,20 @@ import { useAuth } from "@/contexts/auth";
 type Mode = "login" | "signup";
 
 export default function Auth() {
-  const { user, adminUser, unifiedLogin, signup, isLoading: authLoading } = useAuth();
+  const { user, adminUser, unifiedLogin, signup, verifyEmail, resendVerification, isLoading: authLoading } = useAuth();
   const [, setLocation] = useLocation();
 
   const [mode, setMode] = useState<Mode>("login");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [verificationPending, setVerificationPending] = useState(false);
+  const [verificationCode, setVerificationCode] = useState("");
+  const [verificationMessage, setVerificationMessage] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isResending, setIsResending] = useState(false);
 
   // Redirect if already logged in
   useEffect(() => {
@@ -36,12 +40,18 @@ export default function Auth() {
     setIsSubmitting(true);
 
     try {
-      if (mode === "login") {
+      if (verificationPending) {
+        await verifyEmail(email, verificationCode);
+        setLocation("/dashboard");
+      } else if (mode === "login") {
         const result = await unifiedLogin(email, password);
         setLocation(result.kind === "admin" ? "/admin/dashboard" : "/dashboard");
       } else {
         await signup("client", name, email, password);
-        setLocation("/dashboard");
+        setPassword("");
+        setVerificationCode("");
+        setVerificationPending(true);
+        setVerificationMessage(`We sent a 6-digit verification code to ${email}. It expires in 10 minutes.`);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
@@ -50,17 +60,35 @@ export default function Auth() {
     }
   };
 
+  const handleResend = async () => {
+    setError(null);
+    setIsResending(true);
+    try {
+      await resendVerification(email);
+      setVerificationMessage("If an unverified signup exists for this email, a new code will be sent.");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "We could not resend the code. Please try again.");
+    } finally {
+      setIsResending(false);
+    }
+  };
+
   const toggleMode = () => {
     setMode((m) => (m === "login" ? "signup" : "login"));
+    setVerificationPending(false);
+    setVerificationCode("");
+    setVerificationMessage(null);
     setError(null);
     setName("");
     setEmail("");
     setPassword("");
   };
 
-  const hintText = mode === "signup"
-    ? "Create your account to access your policies and appointments."
-    : "Use your email address and password to sign in.";
+  const hintText = verificationPending
+    ? "Enter the 6-digit code we emailed to finish creating your account."
+    : mode === "signup"
+      ? "Create your account to access your policies and appointments."
+      : "Use your email address and password to sign in.";
 
   return (
     <div className="min-h-screen bg-sidebar flex flex-col font-sans">
@@ -104,11 +132,17 @@ export default function Auth() {
           <div className="bg-white/5 border border-white/10 rounded-2xl p-8 backdrop-blur-sm shadow-xl shadow-black/20">
             {/* Heading */}
             <h1 className="text-white font-semibold text-xl text-center mb-1">
-              {mode === "login" ? "Welcome back" : "Create your account"}
+              {verificationPending ? "Check your email" : mode === "login" ? "Welcome back" : "Create your account"}
             </h1>
             <p className="text-white/40 text-sm text-center mb-6">
-              {mode === "login" ? "Sign in to access your portal" : "Join MyIFAPortal today"}
+              {verificationPending ? "Verify your email address" : mode === "login" ? "Sign in to access your portal" : "Join MyIFAPortal today"}
             </p>
+
+            {verificationPending && (
+              <div className="flex justify-center mb-4 text-primary">
+                <MailCheck className="h-8 w-8" aria-hidden="true" />
+              </div>
+            )}
 
             {/* Hint */}
             <AnimatePresence mode="wait">
@@ -126,7 +160,7 @@ export default function Auth() {
             {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-4">
               <AnimatePresence>
-                {mode === "signup" && (
+                {mode === "signup" && !verificationPending && (
                   <motion.div
                     key="name-field"
                     initial={{ opacity: 0, height: 0 }}
@@ -158,11 +192,35 @@ export default function Auth() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   autoComplete="email"
+                  readOnly={verificationPending}
                   required
                   className="bg-white/5 border-white/10 text-white placeholder:text-white/20 focus:border-primary/50 focus:ring-primary/20 h-11"
                 />
               </div>
 
+              {verificationPending ? (
+                <>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="verification-code" className="text-white/60 text-xs font-medium">Email verification code</Label>
+                    <Input
+                      id="verification-code"
+                      type="text"
+                      inputMode="numeric"
+                      autoComplete="one-time-code"
+                      pattern="[0-9]{6}"
+                      maxLength={6}
+                      placeholder="000000"
+                      value={verificationCode}
+                      onChange={(e) => setVerificationCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                      required
+                      className="bg-white/5 border-white/10 text-white placeholder:text-white/20 focus:border-primary/50 focus:ring-primary/20 h-12 text-center text-xl tracking-[0.45em]"
+                    />
+                  </div>
+                  {verificationMessage && (
+                    <p className="text-primary/90 text-sm text-center" role="status">{verificationMessage}</p>
+                  )}
+                </>
+              ) : (
               <div className="space-y-1.5">
                 <Label className="text-white/60 text-xs font-medium">Password</Label>
                 <div className="relative">
@@ -185,6 +243,7 @@ export default function Auth() {
                   </button>
                 </div>
               </div>
+              )}
 
               {/* Error */}
               <AnimatePresence>
@@ -207,6 +266,8 @@ export default function Auth() {
               >
                 {isSubmitting ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
+                ) : verificationPending ? (
+                  "Verify email"
                 ) : mode === "login" ? (
                   "Sign In"
                 ) : (
@@ -216,16 +277,47 @@ export default function Auth() {
             </form>
 
             <div className="mt-5 text-center">
-              <span className="text-white/30 text-sm">
-                {mode === "login" ? "Don't have an account? " : "Already have an account? "}
-              </span>
-              <button
-                onClick={toggleMode}
-                className="text-primary hover:text-primary/80 text-sm font-medium transition-colors"
-              >
-                {mode === "login" ? "Sign up" : "Sign in"}
-              </button>
-              </div>
+              {verificationPending ? (
+                <div className="space-y-3">
+                  <p className="text-white/30 text-sm">
+                    Didn&apos;t receive the email?{" "}
+                    <button
+                      type="button"
+                      onClick={handleResend}
+                      disabled={isResending || isSubmitting}
+                      className="text-primary hover:text-primary/80 font-medium disabled:opacity-50"
+                    >
+                      {isResending ? "Sending…" : "Resend code"}
+                    </button>
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setVerificationPending(false);
+                      setVerificationCode("");
+                      setVerificationMessage(null);
+                      setError(null);
+                    }}
+                    className="text-white/40 hover:text-white/70 text-sm"
+                  >
+                    Use a different email
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <span className="text-white/30 text-sm">
+                    {mode === "login" ? "Don't have an account? " : "Already have an account? "}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={toggleMode}
+                    className="text-primary hover:text-primary/80 text-sm font-medium transition-colors"
+                  >
+                    {mode === "login" ? "Sign up" : "Sign in"}
+                  </button>
+                </>
+              )}
+            </div>
           </div>
         </motion.div>
       </div>

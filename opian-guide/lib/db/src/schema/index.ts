@@ -5,6 +5,7 @@ export * from "./policies";
 export * from "./appointments";
 export * from "./documents";
 export * from "./users";
+export * from "./pending-signups";
 export * from "./leads";
 export * from "./lead_import_history";
 export * from "./lead_email_logs";

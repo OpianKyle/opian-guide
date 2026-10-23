@@ -538,6 +538,59 @@ export const UnifiedLoginResponse = zod.object({
 
 
 /**
+ * @summary Start client signup and email a verification code
+ */
+
+export const signupClientBodyPasswordMin = 8;
+
+
+
+export const SignupClientBody = zod.object({
+  "role": zod.enum(['client']),
+  "name": zod.string().min(1),
+  "email": zod.string().email(),
+  "password": zod.string().min(signupClientBodyPasswordMin)
+})
+
+export const SignupClientResponse = zod.object({
+  "message": zod.string()
+})
+
+
+/**
+ * @summary Verify a client signup with its emailed one-time code
+ */
+export const verifyClientEmailBodyCodeRegExp = new RegExp('^[0-9]{6}$');
+
+
+export const VerifyClientEmailBody = zod.object({
+  "email": zod.string().email(),
+  "code": zod.string().regex(verifyClientEmailBodyCodeRegExp)
+})
+
+export const VerifyClientEmailResponse = zod.object({
+  "user": zod.object({
+  "id": zod.number().int(),
+  "name": zod.string(),
+  "email": zod.string().email(),
+  "role": zod.enum(['client'])
+})
+})
+
+
+/**
+ * @summary Resend a client signup verification code
+ */
+export const ResendClientVerificationBody = zod.object({
+  "email": zod.string().email()
+})
+
+export const ResendClientVerificationResponse = zod.object({
+  "message": zod.string()
+})
+
+
+/**
  * @summary Get current admin session
  */
 export const AdminGetSessionResponse = zod.object({
