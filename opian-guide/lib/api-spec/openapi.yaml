@@ -319,6 +319,27 @@ paths:
 
   # ─── Admin Auth ───────────────────────────────────────────────────────────────
 
+  /auth/unified-login:
+    post:
+      operationId: unifiedLogin
+      tags: [auth]
+      summary: Sign in and route to the correct account portal
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UnifiedLoginInput"
+      responses:
+        "200":
+          description: Signed in account and account type
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnifiedLoginResult"
+        "401":
+          description: Invalid credentials
+
   /admin/auth/session:
     get:
       operationId: adminGetSession
@@ -1417,6 +1438,58 @@ components:
         - initials
         - specializations
         - clientCount
+
+    # ─── Auth schemas ───────────────────────────────────────────────────────────
+
+    UnifiedLoginInput:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 1
+      required:
+        - email
+        - password
+
+    UnifiedLoginResult:
+      type: object
+      properties:
+        kind:
+          type: string
+          enum: [admin, user]
+        admin:
+          type: object
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+            email:
+              type: string
+              format: email
+            role:
+              type: string
+              enum: [admin, super_admin]
+          required: [id, name, email, role]
+        user:
+          type: object
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+            email:
+              type: string
+              format: email
+            role:
+              type: string
+              enum: [advisor, client]
+          required: [id, name, email, role]
+      required:
+        - kind
 
     # ─── Admin schemas ──────────────────────────────────────────────────────────
 

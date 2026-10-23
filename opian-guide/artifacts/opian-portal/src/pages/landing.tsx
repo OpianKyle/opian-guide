@@ -78,7 +78,7 @@ function Nav() {
               Sign In
             </button>
           </Link>
-          <Link href="/auth?role=client">
+          <Link href="/auth">
             <button className="bg-[#E07820] hover:bg-[#c96a18] text-white text-sm font-semibold px-5 py-2 rounded-lg transition-colors shadow-md shadow-[#E07820]/25">
               Book Consultation
             </button>
@@ -115,7 +115,7 @@ function Nav() {
             <Link href="/auth" className="flex-1">
               <button className="w-full text-gray-700 border border-gray-200 text-sm font-medium px-4 py-2 rounded-lg">Sign In</button>
             </Link>
-            <Link href="/auth?role=client" className="flex-1">
+            <Link href="/auth" className="flex-1">
               <button className="w-full bg-[#E07820] text-white text-sm font-semibold px-4 py-2 rounded-lg">Book Consultation</button>
             </Link>
           </div>
@@ -249,7 +249,7 @@ export default function Landing() {
               custom={3}
               className="flex flex-wrap gap-4"
             >
-              <Link href="/auth?role=client">
+              <Link href="/auth">
                 <button className="bg-[#E07820] hover:bg-[#c96a18] text-white font-semibold px-8 py-4 rounded-xl text-base transition-colors shadow-2xl shadow-[#E07820]/30 flex items-center gap-2">
                   Book a Free Consultation <ArrowRight className="h-4 w-4" />
                 </button>
@@ -360,7 +360,7 @@ export default function Landing() {
               className="rounded-2xl p-8 flex flex-col items-center justify-center text-center gap-5 bg-gradient-to-br from-[#1B2A4A] to-[#0f1e35] border border-[#1B2A4A]"
             >
               <p className="text-white/60 text-sm leading-relaxed">Ready to take control of your financial future?</p>
-              <Link href="/auth?role=client">
+              <Link href="/auth">
                 <button className="bg-[#E07820] hover:bg-[#c96a18] text-white text-sm font-semibold px-6 py-3 rounded-xl transition-colors shadow-lg">
                   View All Services
                 </button>
@@ -434,7 +434,7 @@ export default function Landing() {
               </ul>
 
               <div className="mt-10">
-                <Link href="/auth?role=client">
+                <Link href="/auth">
                   <button className="bg-[#1B2A4A] hover:bg-[#253d6b] text-white font-semibold px-7 py-3.5 rounded-xl text-sm transition-colors flex items-center gap-2">
                     Book Your Free Consultation <ArrowRight className="h-4 w-4" />
                   </button>
@@ -556,7 +556,7 @@ export default function Landing() {
               One conversation can change your financial future.
             </p>
             <div className="flex flex-wrap items-center justify-center gap-4">
-              <Link href="/auth?role=client">
+              <Link href="/auth">
                 <button className="bg-[#E07820] hover:bg-[#c96a18] text-white font-semibold px-8 py-4 rounded-xl text-base transition-colors shadow-2xl shadow-[#E07820]/30 flex items-center gap-2">
                   Book Free Consultation <ArrowRight className="h-4 w-4" />
                 </button>
@@ -589,9 +589,6 @@ export default function Landing() {
           <div className="flex items-center gap-5">
             <Link href="/auth">
               <span className="text-white/40 hover:text-white/70 text-xs transition-colors cursor-pointer">Sign In</span>
-            </Link>
-            <Link href="/auth?role=advisor">
-              <span className="text-white/40 hover:text-white/70 text-xs transition-colors cursor-pointer">Advisor Portal</span>
             </Link>
             <a href="mailto:info@myifa.co.za" className="text-white/40 hover:text-white/70 text-xs transition-colors flex items-center gap-1">
               <Mail className="h-3 w-3" /> info@myifa.co.za

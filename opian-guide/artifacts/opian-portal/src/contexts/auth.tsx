@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
+import type { UnifiedLoginResult } from "@workspace/api-client-react";
 
 export type UserRole = "advisor" | "client";
 export type AdminRole = "super_admin" | "admin";
@@ -21,6 +22,7 @@ interface AuthContextValue {
   user: AuthUser | null;
   adminUser: AdminUser | null;
   isLoading: boolean;
+  unifiedLogin: (email: string, password: string) => Promise<UnifiedLoginResult>;
   login: (role: UserRole, email: string, password: string) => Promise<void>;
   signup: (role: UserRole, name: string, email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
@@ -71,6 +73,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(data.user);
   }, []);
 
+  const unifiedLogin = useCallback(async (email: string, password: string): Promise<UnifiedLoginResult> => {
+    const data = await apiFetch("/auth/unified-login", {
+      method: "POST",
+      body: JSON.stringify({ email, password }),
+    }) as UnifiedLoginResult;
+
+    setUser(data.user ?? null);
+    setAdminUser(data.admin ?? null);
+    return data;
+  }, []);
+
   const signup = useCallback(async (role: UserRole, name: string, email: string, password: string) => {
     const data = await apiFetch("/auth/signup", {
       method: "POST",
@@ -98,7 +111,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, adminUser, isLoading, login, signup, logout, adminLogin, adminLogout }}>
+    <AuthContext.Provider value={{ user, adminUser, isLoading, unifiedLogin, login, signup, logout, adminLogin, adminLogout }}>
       {children}
     </AuthContext.Provider>
   );

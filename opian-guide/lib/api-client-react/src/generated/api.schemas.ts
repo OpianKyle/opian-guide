@@ -223,6 +223,56 @@ export interface Advisor {
   clientCount: number;
 }
 
+export interface UnifiedLoginInput {
+  email: string;
+  /** @minLength 1 */
+  password: string;
+}
+
+export type UnifiedLoginResultKind = typeof UnifiedLoginResultKind[keyof typeof UnifiedLoginResultKind];
+
+
+export const UnifiedLoginResultKind = {
+  admin: 'admin',
+  user: 'user',
+} as const;
+
+export type UnifiedLoginResultAdminRole = typeof UnifiedLoginResultAdminRole[keyof typeof UnifiedLoginResultAdminRole];
+
+
+export const UnifiedLoginResultAdminRole = {
+  admin: 'admin',
+  super_admin: 'super_admin',
+} as const;
+
+export type UnifiedLoginResultAdmin = {
+  id: number;
+  name: string;
+  email: string;
+  role: UnifiedLoginResultAdminRole;
+};
+
+export type UnifiedLoginResultUserRole = typeof UnifiedLoginResultUserRole[keyof typeof UnifiedLoginResultUserRole];
+
+
+export const UnifiedLoginResultUserRole = {
+  advisor: 'advisor',
+  client: 'client',
+} as const;
+
+export type UnifiedLoginResultUser = {
+  id: number;
+  name: string;
+  email: string;
+  role: UnifiedLoginResultUserRole;
+};
+
+export interface UnifiedLoginResult {
+  kind: UnifiedLoginResultKind;
+  admin?: UnifiedLoginResultAdmin;
+  user?: UnifiedLoginResultUser;
+}
+
 /**
  * @nullable
  */

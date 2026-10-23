@@ -510,6 +510,34 @@ export const GetAdvisorResponse = zod.object({
 
 
 /**
+ * @summary Sign in and route to the correct account portal
+ */
+
+
+
+export const UnifiedLoginBody = zod.object({
+  "email": zod.string().email(),
+  "password": zod.string().min(1)
+})
+
+export const UnifiedLoginResponse = zod.object({
+  "kind": zod.enum(['admin', 'user']),
+  "admin": zod.object({
+  "id": zod.number().int(),
+  "name": zod.string(),
+  "email": zod.string().email(),
+  "role": zod.enum(['admin', 'super_admin'])
+}).optional(),
+  "user": zod.object({
+  "id": zod.number().int(),
+  "name": zod.string(),
+  "email": zod.string().email(),
+  "role": zod.enum(['advisor', 'client'])
+}).optional()
+})
+
+
+/**
  * @summary Get current admin session
  */
 export const AdminGetSessionResponse = zod.object({

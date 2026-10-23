@@ -1,25 +1,19 @@
 import { useState, useEffect } from "react";
-import { Link, useLocation, useSearch } from "wouter";
+import { Link, useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
-import { User, Briefcase, ShieldCheck, Eye, EyeOff, ArrowLeft, Loader2 } from "lucide-react";
+import { Eye, EyeOff, ArrowLeft, Loader2 } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useAuth, type UserRole } from "@/contexts/auth";
+import { useAuth } from "@/contexts/auth";
 
 type Mode = "login" | "signup";
-type Tab = UserRole | "admin";
 
 export default function Auth() {
-  const { user, adminUser, login, signup, adminLogin, isLoading: authLoading } = useAuth();
+  const { user, adminUser, unifiedLogin, signup, isLoading: authLoading } = useAuth();
   const [, setLocation] = useLocation();
-  const search = useSearch();
 
-  const params = new URLSearchParams(search);
-  const initialTab = (params.get("role") === "advisor" ? "advisor" : params.get("role") === "admin" ? "admin" : "client") as Tab;
-
-  const [tab, setTab] = useState<Tab>(initialTab);
   const [mode, setMode] = useState<Mode>("login");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -36,29 +30,17 @@ export default function Auth() {
     }
   }, [user, adminUser, authLoading, setLocation]);
 
-  const handleTabChange = (t: Tab) => {
-    setTab(t);
-    setError(null);
-    setName("");
-    setEmail("");
-    setPassword("");
-    if (t !== "client") setMode("login");
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setIsSubmitting(true);
 
     try {
-      if (tab === "admin") {
-        await adminLogin(email, password);
-        setLocation("/admin/dashboard");
-      } else if (mode === "login" || tab === "advisor") {
-        await login(tab as UserRole, email, password);
-        setLocation("/dashboard");
+      if (mode === "login") {
+        const result = await unifiedLogin(email, password);
+        setLocation(result.kind === "admin" ? "/admin/dashboard" : "/dashboard");
       } else {
-        await signup(tab as UserRole, name, email, password);
+        await signup("client", name, email, password);
         setLocation("/dashboard");
       }
     } catch (err) {
@@ -76,20 +58,9 @@ export default function Auth() {
     setPassword("");
   };
 
-  const tabs: { id: Tab; label: string; icon: React.ReactNode }[] = [
-    { id: "client", label: "Client", icon: <User className="h-4 w-4" /> },
-    { id: "advisor", label: "Advisor", icon: <Briefcase className="h-4 w-4" /> },
-    { id: "admin", label: "Admin", icon: <ShieldCheck className="h-4 w-4" /> },
-  ];
-
-  const hintText =
-    tab === "admin"
-      ? "Sign in with your admin credentials to access the management portal."
-      : tab === "advisor"
-      ? "Sign in with your advisor credentials."
-      : mode === "signup"
-      ? "Create a client account to access your policies and appointments."
-      : "Sign in to view your policies and appointments.";
+  const hintText = mode === "signup"
+    ? "Create your account to access your policies and appointments."
+    : "Use your email address and password to sign in.";
 
   return (
     <div className="min-h-screen bg-sidebar flex flex-col font-sans">
@@ -127,7 +98,7 @@ export default function Auth() {
         >
           {/* Logo */}
           <div className="flex flex-col items-center mb-8">
-            <Logo textClassName="text-xl" markClassName="h-11 w-11" />
+            <Logo className="text-xl" />
           </div>
 
           <div className="bg-white/5 border border-white/10 rounded-2xl p-8 backdrop-blur-sm shadow-xl shadow-black/20">
@@ -139,28 +110,10 @@ export default function Auth() {
               {mode === "login" ? "Sign in to access your portal" : "Join MyIFAPortal today"}
             </p>
 
-            {/* Tab toggle */}
-            <div className="flex rounded-xl border border-white/10 p-1 mb-6 gap-1">
-              {tabs.map((t) => (
-                <button
-                  key={t.id}
-                  onClick={() => handleTabChange(t.id)}
-                  className={`flex-1 flex items-center justify-center gap-2 rounded-lg py-2.5 text-sm font-medium transition-all duration-200 ${
-                    tab === t.id
-                      ? "bg-primary text-white shadow-sm"
-                      : "text-white/40 hover:text-white/70"
-                  }`}
-                >
-                  {t.icon}
-                  {t.label}
-                </button>
-              ))}
-            </div>
-
             {/* Hint */}
             <AnimatePresence mode="wait">
               <motion.p
-                key={tab + mode}
+                key={mode}
                 initial={{ opacity: 0, y: -4 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 4 }}
@@ -173,7 +126,7 @@ export default function Auth() {
             {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-4">
               <AnimatePresence>
-                {mode === "signup" && tab === "client" && (
+                {mode === "signup" && (
                   <motion.div
                     key="name-field"
                     initial={{ opacity: 0, height: 0 }}
@@ -188,6 +141,7 @@ export default function Auth() {
                         placeholder="Kyle Heynes"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
+                        autoComplete="name"
                         required
                         className="bg-white/5 border-white/10 text-white placeholder:text-white/20 focus:border-primary/50 focus:ring-primary/20 h-11"
                       />
@@ -203,6 +157,7 @@ export default function Auth() {
                   placeholder="you@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  autoComplete="email"
                   required
                   className="bg-white/5 border-white/10 text-white placeholder:text-white/20 focus:border-primary/50 focus:ring-primary/20 h-11"
                 />
@@ -216,6 +171,7 @@ export default function Auth() {
                     placeholder={mode === "signup" ? "At least 8 characters" : "••••••••"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    autoComplete={mode === "signup" ? "new-password" : "current-password"}
                     required
                     minLength={mode === "signup" ? 8 : 1}
                     className="bg-white/5 border-white/10 text-white placeholder:text-white/20 focus:border-primary/50 focus:ring-primary/20 h-11 pr-10"
@@ -259,20 +215,17 @@ export default function Auth() {
               </Button>
             </form>
 
-            {/* Toggle login/signup — clients only */}
-            {tab === "client" && (
-              <div className="mt-5 text-center">
-                <span className="text-white/30 text-sm">
-                  {mode === "login" ? "Don't have an account? " : "Already have an account? "}
-                </span>
-                <button
-                  onClick={toggleMode}
-                  className="text-primary hover:text-primary/80 text-sm font-medium transition-colors"
-                >
-                  {mode === "login" ? "Sign up" : "Sign in"}
-                </button>
+            <div className="mt-5 text-center">
+              <span className="text-white/30 text-sm">
+                {mode === "login" ? "Don't have an account? " : "Already have an account? "}
+              </span>
+              <button
+                onClick={toggleMode}
+                className="text-primary hover:text-primary/80 text-sm font-medium transition-colors"
+              >
+                {mode === "login" ? "Sign up" : "Sign in"}
+              </button>
               </div>
-            )}
           </div>
         </motion.div>
       </div>
