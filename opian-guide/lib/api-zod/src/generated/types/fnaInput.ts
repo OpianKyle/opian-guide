@@ -28,6 +28,9 @@ export interface FnaInput {
   vehicleFinance: number;
   personalLoans: number;
   creditCards: number;
+  dstv: number;
+  netflix: number;
+  fuel: number;
   otherDebts: number;
   savings: number;
   investments: number;

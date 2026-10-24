@@ -31,6 +31,9 @@ export const fnaTable = mysqlTable("fna_submissions", {
   vehicleFinance: decimal("vehicle_finance", { precision: 15, scale: 2 }).notNull().default("0"),
   personalLoans: decimal("personal_loans", { precision: 15, scale: 2 }).notNull().default("0"),
   creditCards: decimal("credit_cards", { precision: 15, scale: 2 }).notNull().default("0"),
+  dstv: decimal("dstv", { precision: 15, scale: 2 }).notNull().default("0"),
+  netflix: decimal("netflix", { precision: 15, scale: 2 }).notNull().default("0"),
+  fuel: decimal("fuel", { precision: 15, scale: 2 }).notNull().default("0"),
   otherDebts: decimal("other_debts", { precision: 15, scale: 2 }).notNull().default("0"),
 
   // Step 4 – Assets & Existing Cover

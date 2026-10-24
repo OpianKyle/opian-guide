@@ -22,6 +22,9 @@ export interface FnaData {
   vehicleFinance: number;
   personalLoans: number;
   creditCards: number;
+  dstv: number;
+  netflix: number;
+  fuel: number;
   otherDebts: number;
   savings: number;
   investments: number;
@@ -132,12 +135,23 @@ function sectionsFor(data: FnaData): PdfSection[] {
     {
       title: "3. Expenses and liabilities",
       rows: [
-        { label: "Monthly household expenses", value: money(data.monthlyExpenses) },
+        { label: "Food & General", value: money(data.monthlyExpenses) },
         { label: "Home loans", value: money(data.homeLoans) },
         { label: "Vehicle finance", value: money(data.vehicleFinance) },
         { label: "Personal loans", value: money(data.personalLoans) },
         { label: "Credit cards", value: money(data.creditCards) },
-        { label: "Other debts", value: money(data.otherDebts) },
+        { label: "DSTV", value: money(data.dstv) },
+        { label: "Netflix", value: money(data.netflix) },
+        { label: "Fuel", value: money(data.fuel) },
+        { label: "Other", value: money(data.otherDebts) },
+        {
+          label: "Total expenses",
+          value: money(
+            data.monthlyExpenses + data.homeLoans + data.vehicleFinance
+            + data.personalLoans + data.creditCards + data.dstv + data.netflix
+            + data.fuel + data.otherDebts,
+          ),
+        },
       ],
     },
     {

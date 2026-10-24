@@ -82,12 +82,23 @@ function sectionsFor(submission: FnaSubmission) {
     {
       title: "Expenses and liabilities",
       fields: [
-        { label: "Monthly expenses", value: money(submission.monthlyExpenses) },
+        { label: "Food & General", value: money(submission.monthlyExpenses) },
         { label: "Home loans", value: money(submission.homeLoans) },
         { label: "Vehicle finance", value: money(submission.vehicleFinance) },
         { label: "Personal loans", value: money(submission.personalLoans) },
         { label: "Credit cards", value: money(submission.creditCards) },
-        { label: "Other debts", value: money(submission.otherDebts) },
+        { label: "DSTV", value: money(submission.dstv) },
+        { label: "Netflix", value: money(submission.netflix) },
+        { label: "Fuel", value: money(submission.fuel) },
+        { label: "Other", value: money(submission.otherDebts) },
+        {
+          label: "Total expenses",
+          value: money(
+            submission.monthlyExpenses + submission.homeLoans + submission.vehicleFinance
+            + submission.personalLoans + submission.creditCards + submission.dstv
+            + submission.netflix + submission.fuel + submission.otherDebts,
+          ),
+        },
       ],
     },
     {

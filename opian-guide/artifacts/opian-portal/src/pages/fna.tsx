@@ -16,7 +16,8 @@ const DEFAULTS: FnaData = {
   grossMonthlyIncome: 0, netMonthlyIncome: 0, spouseIncome: 0,
   employmentType: "", occupation: "", hasGroupBenefits: "",
   monthlyExpenses: 0, homeLoans: 0, vehicleFinance: 0,
-  personalLoans: 0, creditCards: 0, otherDebts: 0,
+  personalLoans: 0, creditCards: 0,
+  dstv: 0, netflix: 0, fuel: 0, otherDebts: 0,
   savings: 0, investments: 0, retirementFunds: 0,
   propertyValue: 0, existingLifeCover: 0,
   existingDisabilityCover: 0, existingDreadDiseaseCover: 0,
@@ -30,9 +31,11 @@ const DEFAULTS: FnaData = {
 // ─── Calculations (mirrors the original site) ─────────────────────────────────
 function calcFna(d: FnaData) {
   const totalDebt = d.homeLoans + d.vehicleFinance + d.personalLoans + d.creditCards + d.otherDebts;
+  const totalExpenses = d.monthlyExpenses + d.homeLoans + d.vehicleFinance
+    + d.personalLoans + d.creditCards + d.dstv + d.netflix + d.fuel + d.otherDebts;
   const totalAssets = d.savings + d.investments + d.retirementFunds + d.propertyValue;
   const netIncome = d.netMonthlyIncome || d.grossMonthlyIncome * 0.75;
-  const monthlyShortfall = Math.max(0, netIncome - d.monthlyExpenses);
+  const monthlyShortfall = Math.max(0, netIncome - totalExpenses);
   const yearsMultiplier = d.dependants > 0 ? 15 : 10;
   const dependantNeed = d.dependants * 250000;
   const lifeCoverNeed = netIncome * 12 * yearsMultiplier + totalDebt + dependantNeed;
@@ -59,7 +62,7 @@ function calcFna(d: FnaData) {
   const affordabilityRatio = netIncome > 0 ? totalRecommendedPremium / netIncome : 0;
   const netWorth = totalAssets - totalDebt;
   return {
-    totalDebt, totalAssets, netIncome, monthlyShortfall, netWorth,
+    totalDebt, totalExpenses, totalAssets, netIncome, monthlyShortfall, netWorth,
     lifeCoverNeed, lifeCoverGap, disabilityNeed, disabilityGap,
     dreadDiseaseNeed, dreadDiseaseGap, retirementCorpusNeeded,
     retirementShortfall, monthlyContributionNeeded,
@@ -175,7 +178,7 @@ function validateStep(step: number, d: FnaData): string[] {
     if (d.grossMonthlyIncome <= 0) errors.push("Gross monthly income must be greater than 0");
   }
   if (step === 2) {
-    if (d.monthlyExpenses <= 0) errors.push("Monthly expenses must be greater than 0");
+    if (calcFna(d).totalExpenses <= 0) errors.push("Total expenses must be greater than 0");
   }
   if (step === 5) {
     if (!d.riskProfile) errors.push("Risk profile is required");
@@ -246,6 +249,7 @@ export default function FnaForm() {
           monthlyExpenses: data.monthlyExpenses,
           homeLoans: data.homeLoans, vehicleFinance: data.vehicleFinance,
           personalLoans: data.personalLoans, creditCards: data.creditCards,
+          dstv: data.dstv, netflix: data.netflix, fuel: data.fuel,
           otherDebts: data.otherDebts, savings: data.savings,
           investments: data.investments, retirementFunds: data.retirementFunds,
           propertyValue: data.propertyValue,
@@ -494,7 +498,7 @@ export default function FnaForm() {
           <SectionCard title="Expenses & Liabilities" subtitle="Understanding your financial obligations helps us calculate what you truly need." icon="📊">
             <div className="grid grid-cols-2 gap-4">
               <div className="col-span-2">
-                <Field label="Total Monthly Household Expenses">
+                <Field label="Food & General" help="Monthly food, groceries, and general household costs">
                   <TextInput value={data.monthlyExpenses || ""} onChange={v => setNum("monthlyExpenses", v)} type="number" prefix="R" placeholder="0" />
                 </Field>
               </div>
@@ -510,14 +514,21 @@ export default function FnaForm() {
               <Field label="Credit Cards">
                 <TextInput value={data.creditCards || ""} onChange={v => setNum("creditCards", v)} type="number" prefix="R" placeholder="0" />
               </Field>
-              <div className="col-span-2">
-                <Field label="Other Debts">
-                  <TextInput value={data.otherDebts || ""} onChange={v => setNum("otherDebts", v)} type="number" prefix="R" placeholder="0" />
-                </Field>
-              </div>
+              <Field label="DSTV">
+                <TextInput value={data.dstv || ""} onChange={v => setNum("dstv", v)} type="number" prefix="R" placeholder="0" />
+              </Field>
+              <Field label="Netflix">
+                <TextInput value={data.netflix || ""} onChange={v => setNum("netflix", v)} type="number" prefix="R" placeholder="0" />
+              </Field>
+              <Field label="Fuel">
+                <TextInput value={data.fuel || ""} onChange={v => setNum("fuel", v)} type="number" prefix="R" placeholder="0" />
+              </Field>
+              <Field label="Other">
+                <TextInput value={data.otherDebts || ""} onChange={v => setNum("otherDebts", v)} type="number" prefix="R" placeholder="0" />
+              </Field>
               <div className="col-span-2 bg-[#1B2A4A]/5 rounded-xl p-4 flex justify-between items-center">
-                <span className="text-sm font-semibold text-[#1B2A4A]">Total Liabilities</span>
-                <span className="text-lg font-bold text-[#1B2A4A]">{fmt(calc.totalDebt)}</span>
+                <span className="text-sm font-semibold text-[#1B2A4A]">Total expenses</span>
+                <span className="text-lg font-bold text-[#1B2A4A]">{fmt(calc.totalExpenses)}</span>
               </div>
             </div>
           </SectionCard>

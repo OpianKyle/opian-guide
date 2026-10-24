@@ -1053,6 +1053,12 @@ components:
           type: number
         creditCards:
           type: number
+        dstv:
+          type: number
+        netflix:
+          type: number
+        fuel:
+          type: number
         otherDebts:
           type: number
         savings:
@@ -1118,6 +1124,9 @@ components:
         - vehicleFinance
         - personalLoans
         - creditCards
+        - dstv
+        - netflix
+        - fuel
         - otherDebts
         - savings
         - investments
@@ -1183,6 +1192,12 @@ components:
           type: number
         creditCards:
           type: number
+        dstv:
+          type: number
+        netflix:
+          type: number
+        fuel:
+          type: number
         otherDebts:
           type: number
         savings:
@@ -1241,6 +1256,9 @@ components:
         - vehicleFinance
         - personalLoans
         - creditCards
+        - dstv
+        - netflix
+        - fuel
         - otherDebts
         - savings
         - investments

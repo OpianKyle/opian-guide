@@ -48,6 +48,9 @@ export interface FnaSubmission {
   vehicleFinance: number;
   personalLoans: number;
   creditCards: number;
+  dstv: number;
+  netflix: number;
+  fuel: number;
   otherDebts: number;
   savings: number;
   investments: number;
@@ -95,6 +98,9 @@ export interface FnaInput {
   vehicleFinance: number;
   personalLoans: number;
   creditCards: number;
+  dstv: number;
+  netflix: number;
+  fuel: number;
   otherDebts: number;
   savings: number;
   investments: number;
