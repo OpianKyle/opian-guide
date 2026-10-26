@@ -1,14 +1,18 @@
 .fna-page {
-  --fna-navy: #172b49;
+  --fna-navy: #1b2a4a;
   --fna-navy-deep: #10223b;
-  --fna-gold: #b28e36;
-  --fna-paper: #f5f3ed;
-  --fna-ink: #26364c;
+  --fna-orange: #e07820;
+  --fna-orange-deep: #bd5b12;
+  --fna-orange-soft: #fff0df;
+  --fna-gold: #c9a52a;
+  --fna-paper: #f5f0e8;
+  --fna-ink: #1b2a4a;
   --fna-muted: #718096;
   --fna-line: #e4e5e3;
   min-height: 100dvh;
   background:
-    radial-gradient(ellipse at 50% -24rem, rgba(213, 197, 153, .18), transparent 52rem),
+    radial-gradient(ellipse at 8% -17rem, rgba(224, 120, 32, .14), transparent 36rem),
+    radial-gradient(ellipse at 92% 3rem, rgba(201, 165, 42, .12), transparent 34rem),
     var(--fna-paper) !important;
   color: var(--fna-ink);
   font-family: var(--app-font-sans), sans-serif;
@@ -641,4 +645,166 @@
     animation-iteration-count: 1 !important;
     transition-duration: .01ms !important;
   }
+}
+
+/* Brighter OPIAN brand accents: warm orange and gold against the navy base. */
+.fna-page .fna-brand-mark {
+  border-color: transparent;
+  background: linear-gradient(145deg, var(--fna-orange), #c95e16);
+  box-shadow: 0 4px 12px rgba(224, 120, 32, .2);
+  color: #fff;
+}
+
+.fna-page .fna-step-count {
+  background: var(--fna-orange-soft);
+  color: var(--fna-orange-deep) !important;
+}
+
+.fna-page .fna-progress-copy > div {
+  color: var(--fna-orange) !important;
+}
+
+.fna-page .fna-progress {
+  background: #eadfce !important;
+}
+
+.fna-page .fna-progress-fill {
+  background: linear-gradient(90deg, var(--fna-gold), var(--fna-orange)) !important;
+}
+
+.fna-page .fna-stepnav {
+  box-shadow: 0 5px 16px rgba(27, 42, 74, .035);
+}
+
+.fna-page .fna-step[aria-current="step"] {
+  background: linear-gradient(135deg, #fff3e5, #fff8ed) !important;
+}
+
+.fna-page .fna-step-number.is-current {
+  border-color: var(--fna-orange);
+  background: linear-gradient(145deg, var(--fna-orange), #c95e16);
+  box-shadow: 0 3px 9px rgba(224, 120, 32, .24);
+}
+
+.fna-page .fna-step-number.is-complete {
+  border-color: #e6b87d;
+  background: #fce5c7;
+  color: #a34d11;
+}
+
+.fna-page .fna-step[aria-current="step"] .fna-step-label {
+  color: var(--fna-orange-deep) !important;
+}
+
+.fna-page .fna-step .fna-step-underline {
+  background: linear-gradient(90deg, var(--fna-gold), var(--fna-orange)) !important;
+}
+
+.fna-page .fna-document-tools {
+  border-top: 3px solid var(--fna-orange) !important;
+}
+
+.fna-page .fna-tool-panel {
+  border-color: #f0dfc9;
+  background: linear-gradient(135deg, #fff8ef, #fbf5e9) !important;
+}
+
+.fna-page .fna-tool-panel > p {
+  color: var(--fna-orange-deep) !important;
+}
+
+.fna-page .fna-tool-panel button {
+  background: var(--fna-orange) !important;
+  box-shadow: 0 3px 8px rgba(224, 120, 32, .16);
+}
+
+.fna-page .fna-tool-panel button:hover {
+  background: var(--fna-orange-deep) !important;
+}
+
+.fna-page .fna-tool-panel button.border {
+  border-color: #edcda8 !important;
+  background: #fffefa !important;
+  color: var(--fna-navy) !important;
+  box-shadow: none;
+}
+
+.fna-page .fna-card {
+  position: relative;
+  overflow: hidden;
+  border-color: #e9dfcd !important;
+}
+
+.fna-page .fna-card::before {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 4px;
+  background: linear-gradient(90deg, var(--fna-orange), var(--fna-gold) 55%, #f5dfbd);
+  content: "";
+}
+
+.fna-page .fna-card-icon {
+  border-color: #f1d6b9;
+  background: linear-gradient(145deg, #fff3e5, #fce8d2);
+  color: var(--fna-orange-deep);
+}
+
+.fna-page .fna-input-wrap:focus-within,
+.fna-page .fna-select:focus,
+.fna-page .fna-card textarea:focus {
+  border-color: var(--fna-orange) !important;
+  box-shadow: 0 0 0 3px rgba(224, 120, 32, .16);
+}
+
+.fna-page .fna-card button:hover:not(:disabled) {
+  border-color: var(--fna-orange);
+}
+
+.fna-page .fna-card button:active:not(:disabled) {
+  box-shadow: 0 2px 8px rgba(224, 120, 32, .14);
+}
+
+.fna-page .fna-results .fna-net-worth {
+  border-left: 4px solid var(--fna-orange);
+  background: linear-gradient(120deg, #172b49, #254365) !important;
+}
+
+.fna-page .fna-results .fna-recommendation {
+  border-left: 4px solid var(--fna-orange);
+  background:
+    radial-gradient(ellipse at 100% 0%, rgba(224, 120, 32, .2), transparent 55%),
+    linear-gradient(120deg, #172b49, #254365) !important;
+}
+
+.fna-page .fna-result-card h3 {
+  border-left: 3px solid var(--fna-orange);
+  padding-left: 10px;
+}
+
+.fna-page .fna-result-card h3 svg {
+  color: var(--fna-orange) !important;
+}
+
+.fna-page .fna-navigation button:not(:disabled):last-child {
+  background: var(--fna-orange) !important;
+  box-shadow: 0 5px 12px rgba(224, 120, 32, .2);
+}
+
+.fna-page .fna-navigation button:not(:disabled):last-child:hover {
+  background: var(--fna-orange-deep) !important;
+}
+
+.fna-page .fna-card button[class*="py-4"] {
+  background: var(--fna-orange) !important;
+}
+
+.fna-page .fna-card button[class*="py-4"]:hover {
+  background: var(--fna-orange-deep) !important;
+}
+
+.fna-page button:focus-visible,
+.fna-page input:focus-visible,
+.fna-page select:focus-visible,
+.fna-page textarea:focus-visible {
+  outline-color: rgba(224, 120, 32, .56) !important;
 }
