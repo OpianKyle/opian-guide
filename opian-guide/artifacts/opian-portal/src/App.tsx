@@ -1,11 +1,10 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import { Route, Switch, Router as WouterRouter, useLocation, Redirect } from 'wouter';
+import { Route, Switch, Router as WouterRouter, Redirect } from 'wouter';
 
 import { AuthProvider, useAuth } from '@/contexts/auth';
 import { AppLayout } from '@/components/layout';
-import Landing from '@/pages/landing';
 import Auth from '@/pages/auth';
 import Dashboard from '@/pages/dashboard';
 import Leads from '@/pages/leads';
@@ -111,7 +110,7 @@ function Router() {
   return (
     <Switch>
       {/* Public */}
-      <Route path="/" component={Landing} />
+      <Route path="/" component={Auth} />
       <Route path="/auth" component={Auth} />
       <Route path="/fna" component={FnaForm} />
       {/* Admin */}
