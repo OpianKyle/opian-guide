@@ -1,13 +1,18 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, type ReactNode } from "react";
 import { useCreateFnaSubmission, getListFnaSubmissionsQueryKey } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
-import { Check, ChevronRight, ChevronLeft, Download, Printer } from "lucide-react";
+import {
+  Check, ChevronRight, ChevronLeft, Download, Printer, UserRound,
+  BriefcaseBusiness, BarChart3, Landmark, CalendarClock,
+  TrendingUp, FileText, ClipboardCheck,
+} from "lucide-react";
 import {
   downloadFnaPdf,
   openFnaPdfForPrint,
   type FnaData,
 } from "@/lib/fna-pdf";
+import "./fna.css";
 
 const DEFAULTS: FnaData = {
   firstName: "", lastName: "", email: "", phone: "",
@@ -76,9 +81,9 @@ const fmt = (n: number) => "R " + Math.round(n).toLocaleString("en-ZA");
 const pct = (n: number) => (n * 100).toFixed(1) + "%";
 
 // ─── Reusable Input / Select primitives ──────────────────────────────────────
-function Field({ label, help, children }: { label: string; help?: string; children: React.ReactNode }) {
+function Field({ label, help, children }: { label: string; help?: string; children: ReactNode }) {
   return (
-    <div className="flex flex-col gap-1">
+    <div className="fna-field flex flex-col gap-1">
       <label className="text-xs font-semibold text-[#1B2A4A] uppercase tracking-wide">{label}</label>
       {help && <p className="text-xs text-[#718096] -mt-0.5 mb-0.5">{help}</p>}
       {children}
@@ -91,20 +96,20 @@ function TextInput({ value, onChange, placeholder, type = "text", prefix }: {
   placeholder?: string; type?: string; prefix?: string;
 }) {
   return (
-    <div className="flex items-center border border-gray-200 rounded-lg bg-white focus-within:border-[#1B2A4A] transition-colors">
+    <div className="fna-input-wrap flex items-center border border-gray-200 rounded-lg bg-white focus-within:border-[#1B2A4A] transition-colors">
       {prefix && <span className="px-3 text-sm text-[#718096] border-r border-gray-200 py-3 bg-gray-50 rounded-l-lg">{prefix}</span>}
       <input
         type={type}
         value={value}
         onChange={e => onChange(e.target.value)}
         placeholder={placeholder}
-        className="flex-1 px-4 py-3 text-sm bg-transparent outline-none text-[#1B2A4A]"
+         className="fna-input flex-1 px-4 py-3 text-sm bg-transparent outline-none text-[#1B2A4A]"
       />
     </div>
   );
 }
 
-function SelectInput({ value, onChange, options, placeholder = "— Select —" }: {
+function SelectInput({ value, onChange, options, placeholder = "Select an option" }: {
   value: string; onChange: (v: string) => void;
   options: { value: string; label: string }[]; placeholder?: string;
 }) {
@@ -112,7 +117,7 @@ function SelectInput({ value, onChange, options, placeholder = "— Select —" 
     <select
       value={value}
       onChange={e => onChange(e.target.value)}
-      className="px-4 py-3 border border-gray-200 rounded-lg bg-white text-sm text-[#1B2A4A] outline-none focus:border-[#1B2A4A] transition-colors"
+      className="fna-select px-4 py-3 border border-gray-200 rounded-lg bg-white text-sm text-[#1B2A4A] outline-none focus:border-[#1B2A4A] transition-colors"
     >
       <option value="">{placeholder}</option>
       {options.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
@@ -121,12 +126,12 @@ function SelectInput({ value, onChange, options, placeholder = "— Select —" 
 }
 
 function SectionCard({ title, subtitle, icon, children }: {
-  title: string; subtitle?: string; icon: string; children: React.ReactNode;
+  title: string; subtitle?: string; icon: ReactNode; children: ReactNode;
 }) {
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-2">
+    <div className="fna-card bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-2">
       <div className="flex items-center gap-3 mb-5">
-        <span className="text-2xl">{icon}</span>
+        <span className="fna-card-icon">{icon}</span>
         <div>
           <h3 className="font-bold text-[#1B2A4A] text-lg">{title}</h3>
           {subtitle && <p className="text-sm text-[#718096]">{subtitle}</p>}
@@ -139,14 +144,14 @@ function SectionCard({ title, subtitle, icon, children }: {
 
 // ─── Steps config ─────────────────────────────────────────────────────────────
 const STEPS = [
-  { id: "personal", label: "Personal\nDetails", icon: "👤" },
-  { id: "income", label: "Income &\nEmployment", icon: "💼" },
-  { id: "expenses", label: "Expenses &\nLiabilities", icon: "📊" },
-  { id: "assets", label: "Assets &\nExisting Cover", icon: "🏦" },
-  { id: "retirement", label: "Retirement\nPlanning", icon: "🎯" },
-  { id: "investment", label: "Investment\nGoals", icon: "📈" },
-  { id: "results", label: "Your FNA\nResults", icon: "✅" },
-  { id: "submit", label: "Review &\nSubmit", icon: "🎉" },
+  { id: "personal", label: "Personal details", icon: UserRound },
+  { id: "income", label: "Income & employment", icon: BriefcaseBusiness },
+  { id: "expenses", label: "Expenses & liabilities", icon: BarChart3 },
+  { id: "assets", label: "Assets & cover", icon: Landmark },
+  { id: "retirement", label: "Retirement", icon: CalendarClock },
+  { id: "investment", label: "Investment goals", icon: TrendingUp },
+  { id: "results", label: "Your results", icon: FileText },
+  { id: "submit", label: "Review & submit", icon: ClipboardCheck },
 ];
 
 const PRIORITY_OPTIONS = [
@@ -312,40 +317,45 @@ export default function FnaForm() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f0f4f8]">
+    <div className="fna-page min-h-screen bg-[#f0f4f8]">
       {/* Top bar */}
-      <div className="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between sticky top-0 z-10">
-        <span className="text-xs font-bold uppercase tracking-widest text-[#718096]">Financial Needs Analysis</span>
-        <span className="text-sm font-bold text-[#1B2A4A]">Step {step + 1} of {STEPS.length}</span>
-        <div className="text-right">
+      <div className="fna-topbar bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between sticky top-0 z-10">
+        <div className="fna-brand">
+          <span className="fna-brand-mark">O</span>
+          <span className="text-xs font-bold uppercase tracking-widest text-[#718096]">Financial Needs Analysis</span>
+        </div>
+        <span className="fna-step-count text-sm font-bold text-[#1B2A4A]">Step {step + 1} of {STEPS.length}</span>
+        <div className="fna-progress-copy text-right">
           <span className="text-xs text-[#718096]">Progress</span>
           <div className="text-sm font-bold text-[#C9A52A]">{progress}%</div>
         </div>
       </div>
 
       {/* Progress bar */}
-      <div className="h-1 bg-gray-200">
-        <div className="h-1 bg-[#C9A52A] transition-all duration-500" style={{ width: `${progress}%` }} />
+      <div className="fna-progress h-1 bg-gray-200" role="progressbar" aria-valuenow={progress} aria-valuemin={0} aria-valuemax={100} aria-label="Form completion">
+        <div className="fna-progress-fill h-1 bg-[#C9A52A] transition-all duration-500" style={{ width: `${progress}%` }} />
       </div>
 
       {/* Step nav */}
-      <div className="bg-white border-b border-gray-100 px-4 py-3 overflow-x-auto">
-        <div className="flex gap-1 min-w-max mx-auto max-w-5xl">
+      <div className="fna-stepnav bg-white border-b border-gray-100 px-4 py-3 overflow-x-auto">
+        <div className="fna-step-track flex gap-1 min-w-max mx-auto max-w-5xl">
           {STEPS.map((s, i) => (
-            <div key={s.id} className={`flex flex-col items-center px-3 py-1 rounded-lg transition-colors ${i === step ? "bg-[#1B2A4A]/5" : ""}`}>
-              <span className="text-lg">{s.icon}</span>
-              <span className={`text-[10px] text-center leading-tight mt-0.5 whitespace-pre-line font-medium ${i === step ? "text-[#1B2A4A]" : i < step ? "text-[#C9A52A]" : "text-gray-400"}`}>
-                {i < step ? "✓ " : ""}{s.label}
+            <div key={s.id} aria-current={i === step ? "step" : undefined} className={`fna-step flex flex-col items-center px-3 py-1 rounded-lg transition-colors ${i === step ? "bg-[#1B2A4A]/5" : ""}`}>
+              <span className={`fna-step-number ${i < step ? "is-complete" : i === step ? "is-current" : ""}`}>
+                {i < step ? <Check aria-hidden="true" /> : <span>{String(i + 1).padStart(2, "0")}</span>}
               </span>
-              {i === step && <div className="h-0.5 w-full bg-[#C9A52A] mt-1 rounded-full" />}
+              <span className={`fna-step-label text-[10px] text-center leading-tight mt-0.5 whitespace-pre-line font-medium ${i === step ? "text-[#1B2A4A]" : i < step ? "text-[#C9A52A]" : "text-gray-400"}`}>
+                {s.label}
+              </span>
+              {i === step && <div className="fna-step-underline h-0.5 w-full bg-[#C9A52A] mt-1 rounded-full" />}
             </div>
           ))}
         </div>
       </div>
 
       {/* Form body */}
-      <div className="max-w-3xl mx-auto px-4 py-6">
-        <section className="mb-5 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm" aria-label="Print and download FNA forms">
+      <div className="fna-content max-w-3xl mx-auto px-4 py-6">
+        <section className="fna-document-tools mb-5 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm" aria-label="Print and download FNA forms">
           <div className="mb-3">
             <h2 className="font-bold text-[#1B2A4A]">Print or download this FNA</h2>
             <p className="mt-1 text-xs text-[#718096]">
@@ -353,7 +363,7 @@ export default function FnaForm() {
             </p>
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
-            <div className="rounded-xl bg-[#f7f8fa] p-3">
+            <div className="fna-tool-panel rounded-xl bg-[#f7f8fa] p-3">
               <p className="mb-2 text-xs font-bold uppercase tracking-wide text-[#1B2A4A]">Current answers</p>
               <div className="flex flex-wrap gap-2">
                 <button type="button" onClick={() => void handlePrint(false)} className="inline-flex items-center gap-2 rounded-lg bg-[#1B2A4A] px-3 py-2 text-xs font-semibold text-white hover:bg-[#0f1e36]">
@@ -364,7 +374,7 @@ export default function FnaForm() {
                 </button>
               </div>
             </div>
-            <div className="rounded-xl bg-[#f7f8fa] p-3">
+            <div className="fna-tool-panel rounded-xl bg-[#f7f8fa] p-3">
               <p className="mb-2 text-xs font-bold uppercase tracking-wide text-[#1B2A4A]">Blank paper form</p>
               <div className="flex flex-wrap gap-2">
                 <button type="button" onClick={() => void handlePrint(true)} className="inline-flex items-center gap-2 rounded-lg bg-[#1B2A4A] px-3 py-2 text-xs font-semibold text-white hover:bg-[#0f1e36]">
@@ -379,7 +389,7 @@ export default function FnaForm() {
         </section>
 
         {submitted ? (
-          <section className="rounded-2xl border border-gray-100 bg-white p-8 text-center shadow-sm">
+          <section className="fna-success rounded-2xl border border-gray-100 bg-white p-8 text-center shadow-sm">
             <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-50 text-green-700">
               <Check className="h-6 w-6" />
             </span>
@@ -402,14 +412,14 @@ export default function FnaForm() {
         ) : (
           <>
         {errors.length > 0 && (
-          <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-xl text-sm text-red-700 space-y-1">
+          <div className="fna-page-error mb-4 p-4 bg-red-50 border border-red-200 rounded-xl text-sm space-y-1" role="alert">
             {errors.map((e, i) => <div key={i}>• {e}</div>)}
           </div>
         )}
 
         {/* ── Step 1: Personal Details ─────────────────────────────────── */}
         {step === 0 && (
-          <SectionCard title="Personal Details" subtitle="Tell us about yourself so we can personalise your analysis." icon="👤">
+          <SectionCard title="Personal Details" subtitle="Tell us about yourself so we can personalise your analysis." icon={<UserRound aria-hidden="true" />}>
             <div className="grid grid-cols-2 gap-4">
               <Field label="First Name">
                 <TextInput value={data.firstName} onChange={v => set("firstName", v)} placeholder="John" />
@@ -451,7 +461,7 @@ export default function FnaForm() {
 
         {/* ── Step 2: Income & Employment ──────────────────────────────── */}
         {step === 1 && (
-          <SectionCard title="Income & Employment" subtitle="Your income determines your cover needs and affordability." icon="💼">
+          <SectionCard title="Income & Employment" subtitle="Your income determines your cover needs and affordability." icon={<BriefcaseBusiness aria-hidden="true" />}>
             <div className="grid grid-cols-2 gap-4">
               <div className="col-span-2">
                 <Field label="Employment Type">
@@ -495,7 +505,7 @@ export default function FnaForm() {
 
         {/* ── Step 3: Expenses & Liabilities ───────────────────────────── */}
         {step === 2 && (
-          <SectionCard title="Expenses & Liabilities" subtitle="Understanding your financial obligations helps us calculate what you truly need." icon="📊">
+          <SectionCard title="Expenses & Liabilities" subtitle="Understanding your financial obligations helps us calculate what you truly need." icon={<BarChart3 aria-hidden="true" />}>
             <div className="grid grid-cols-2 gap-4">
               <div className="col-span-2">
                 <Field label="Food & General" help="Monthly food, groceries, and general household costs">
@@ -536,7 +546,7 @@ export default function FnaForm() {
 
         {/* ── Step 4: Assets & Existing Cover ──────────────────────────── */}
         {step === 3 && (
-          <SectionCard title="Assets & Existing Cover" subtitle="Your current cover and savings reduce the gap we need to fill." icon="🏦">
+          <SectionCard title="Assets & Existing Cover" subtitle="Your current cover and savings reduce the gap we need to fill." icon={<Landmark aria-hidden="true" />}>
             <div className="grid grid-cols-2 gap-4">
               <Field label="Savings / Cash (Bank)">
                 <TextInput value={data.savings || ""} onChange={v => setNum("savings", v)} type="number" prefix="R" placeholder="0" />
@@ -574,7 +584,7 @@ export default function FnaForm() {
 
         {/* ── Step 5: Retirement Planning ───────────────────────────────── */}
         {step === 4 && (
-          <SectionCard title="Retirement Planning" subtitle="Let's plan your retirement so you can retire with confidence." icon="🎯">
+          <SectionCard title="Retirement Planning" subtitle="Let's plan your retirement so you can retire with confidence." icon={<CalendarClock aria-hidden="true" />}>
             <div className="grid grid-cols-2 gap-4">
               <Field label="Current Age" help="Calculated from your date of birth">
                 <TextInput value={data.currentAge || ""} onChange={v => setNum("currentAge", v)} type="number" placeholder="35" />
@@ -612,7 +622,7 @@ export default function FnaForm() {
 
         {/* ── Step 6: Investment Goals ──────────────────────────────────── */}
         {step === 5 && (
-          <SectionCard title="Investment Goals & Risk Profile" subtitle="Help us understand your financial priorities and investment style." icon="📈">
+          <SectionCard title="Investment Goals & Risk Profile" subtitle="Help us understand your financial priorities and investment style." icon={<TrendingUp aria-hidden="true" />}>
             <div className="space-y-6">
               {/* Investment Goal */}
               <div>
@@ -718,14 +728,14 @@ export default function FnaForm() {
 
         {/* ── Step 7: FNA Results ───────────────────────────────────────── */}
         {step === 6 && (
-          <div className="space-y-4">
+          <div className="fna-results space-y-4">
             <div className="text-center mb-2">
               <h2 className="text-xl font-bold text-[#1B2A4A]">Your Financial Needs Analysis</h2>
               <p className="text-sm text-[#718096]">Based on the information provided, here is your personalised analysis</p>
             </div>
 
             {/* Net Worth */}
-            <div className="bg-[#1B2A4A] text-white rounded-2xl p-5 grid grid-cols-3 gap-4">
+            <div className="fna-net-worth bg-[#1B2A4A] text-white rounded-2xl p-5 grid grid-cols-3 gap-4">
               <div>
                 <div className="text-xs text-white/60 uppercase font-semibold">Total Assets</div>
                 <div className="text-lg font-bold mt-1">{fmt(calc.totalAssets)}</div>
@@ -741,7 +751,7 @@ export default function FnaForm() {
             </div>
 
             {/* Monthly cash flow */}
-            <div className="bg-white rounded-2xl border border-gray-100 p-5 grid grid-cols-2 gap-4">
+            <div className="fna-result-card bg-white rounded-2xl border border-gray-100 p-5 grid grid-cols-2 gap-4">
               <div>
                 <div className="text-xs text-[#718096] uppercase font-semibold">Net Monthly Income</div>
                 <div className="text-xl font-bold text-[#1B2A4A] mt-1">{fmt(calc.netIncome)}</div>
@@ -753,8 +763,8 @@ export default function FnaForm() {
             </div>
 
             {/* Cover Gaps */}
-            <div className="bg-white rounded-2xl border border-gray-100 p-5 space-y-4">
-              <h3 className="font-bold text-[#1B2A4A] flex items-center gap-2">🛡️ Cover Gaps</h3>
+            <div className="fna-result-card bg-white rounded-2xl border border-gray-100 p-5 space-y-4">
+              <h3 className="font-bold text-[#1B2A4A] flex items-center gap-2"><Landmark className="h-4 w-4 text-[#B18D2C]" aria-hidden="true" />Cover Gaps</h3>
               {[
                 { label: "Life Cover Gap", gap: calc.lifeCoverGap, need: calc.lifeCoverNeed, premium: calc.lifePremium },
                 { label: "Disability Cover Gap", gap: calc.disabilityGap, need: calc.disabilityNeed, premium: calc.disabilityPremium },
@@ -768,7 +778,7 @@ export default function FnaForm() {
                     </div>
                     <div className="text-right">
                       <div className={`text-sm font-bold ${item.gap > 0 ? "text-red-600" : "text-green-600"}`}>
-                        {item.gap > 0 ? `⚠ Shortfall ${fmt(item.gap)}` : "✓ Covered"}
+                        {item.gap > 0 ? `Shortfall ${fmt(item.gap)}` : "Covered"}
                       </div>
                       {item.gap > 0 && <div className="text-xs text-[#718096]">~{fmt(item.premium)}/mo</div>}
                     </div>
@@ -784,8 +794,8 @@ export default function FnaForm() {
             </div>
 
             {/* Retirement */}
-            <div className="bg-white rounded-2xl border border-gray-100 p-5">
-              <h3 className="font-bold text-[#1B2A4A] flex items-center gap-2 mb-3">🎯 Retirement Planning</h3>
+            <div className="fna-result-card bg-white rounded-2xl border border-gray-100 p-5">
+              <h3 className="font-bold text-[#1B2A4A] flex items-center gap-2 mb-3"><CalendarClock className="h-4 w-4 text-[#B18D2C]" aria-hidden="true" />Retirement Planning</h3>
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <div className="text-xs text-[#718096] uppercase font-semibold">Corpus Needed</div>
@@ -794,7 +804,7 @@ export default function FnaForm() {
                 <div>
                   <div className="text-xs text-[#718096] uppercase font-semibold">Shortfall</div>
                   <div className={`text-lg font-bold ${calc.retirementShortfall > 0 ? "text-amber-600" : "text-green-600"}`}>
-                    {calc.retirementShortfall > 0 ? `⚠ ${fmt(calc.retirementShortfall)}` : "✓ On track"}
+                    {calc.retirementShortfall > 0 ? fmt(calc.retirementShortfall) : "On track"}
                   </div>
                 </div>
                 {calc.monthlyContributionNeeded > 0 && (
@@ -807,8 +817,8 @@ export default function FnaForm() {
             </div>
 
             {/* Emergency Fund */}
-            <div className="bg-white rounded-2xl border border-gray-100 p-5">
-              <h3 className="font-bold text-[#1B2A4A] flex items-center gap-2 mb-3">🚨 Emergency Fund</h3>
+            <div className="fna-result-card bg-white rounded-2xl border border-gray-100 p-5">
+              <h3 className="font-bold text-[#1B2A4A] flex items-center gap-2 mb-3"><Check className="h-4 w-4 text-[#B18D2C]" aria-hidden="true" />Emergency Fund</h3>
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <div className="text-xs text-[#718096] uppercase font-semibold">Target (6 months)</div>
@@ -817,15 +827,15 @@ export default function FnaForm() {
                 <div>
                   <div className="text-xs text-[#718096] uppercase font-semibold">Gap</div>
                   <div className={`text-lg font-bold ${calc.emergencyFundGap > 0 ? "text-red-600" : "text-green-600"}`}>
-                    {calc.emergencyFundGap > 0 ? fmt(calc.emergencyFundGap) : "✓ Funded"}
+                    {calc.emergencyFundGap > 0 ? fmt(calc.emergencyFundGap) : "Funded"}
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Recommended Premium */}
-            <div className="bg-[#1B2A4A] text-white rounded-2xl p-5">
-              <h3 className="font-bold flex items-center gap-2 mb-3">💡 Recommended Cover</h3>
+            <div className="fna-recommendation bg-[#1B2A4A] text-white rounded-2xl p-5">
+              <h3 className="font-bold flex items-center gap-2 mb-3"><BriefcaseBusiness className="h-4 w-4 text-[#D7B84D]" aria-hidden="true" />Recommended Cover</h3>
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <div className="text-xs text-white/60 uppercase font-semibold">Total Recommended Premium</div>
@@ -845,7 +855,7 @@ export default function FnaForm() {
 
         {/* ── Step 8: Review & Submit ───────────────────────────────────── */}
         {step === 7 && (
-          <SectionCard title="Review & Submit" subtitle="Please confirm the details below before submitting the Financial Needs Analysis." icon="🎉">
+          <SectionCard title="Review & Submit" subtitle="Please confirm the details below before submitting the Financial Needs Analysis." icon={<ClipboardCheck aria-hidden="true" />}>
             <div className="space-y-3 text-sm">
               <div className="grid grid-cols-2 gap-y-2 gap-x-4">
                 <div className="text-[#718096]">Client</div>
@@ -881,7 +891,7 @@ export default function FnaForm() {
         )}
 
         {/* ── Navigation ───────────────────────────────────────────────── */}
-        <div className="flex items-center justify-between mt-6 pb-8">
+        <div className="fna-navigation flex items-center justify-between mt-6 pb-8">
           <button
             type="button"
             onClick={prev}
