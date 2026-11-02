@@ -25,6 +25,47 @@ export interface DashboardSummary {
   recentActivity: ActivityItem[];
 }
 
+export type ToolkitSubmissionToolkit = typeof ToolkitSubmissionToolkit[keyof typeof ToolkitSubmissionToolkit];
+
+
+export const ToolkitSubmissionToolkit = {
+  personal: 'personal',
+  business: 'business',
+} as const;
+
+export type ToolkitSubmissionAnswers = {[key: string]: string | number | boolean | string[]};
+
+export interface ToolkitSubmission {
+  id: number;
+  toolkit: ToolkitSubmissionToolkit;
+  clientId: number;
+  clientName: string;
+  clientEmail: string;
+  phone: string;
+  /** @nullable */
+  businessName: string | null;
+  /** @nullable */
+  contactTime: string | null;
+  answers: ToolkitSubmissionAnswers;
+  status: string;
+  createdAt: string;
+}
+
+export type ToolkitSubmissionInputToolkit = typeof ToolkitSubmissionInputToolkit[keyof typeof ToolkitSubmissionInputToolkit];
+
+
+export const ToolkitSubmissionInputToolkit = {
+  personal: 'personal',
+  business: 'business',
+} as const;
+
+export type ToolkitSubmissionInputAnswers = {[key: string]: string | number | boolean | string[]};
+
+export interface ToolkitSubmissionInput {
+  toolkit: ToolkitSubmissionInputToolkit;
+  answers: ToolkitSubmissionInputAnswers;
+}
+
 export interface FnaSubmission {
   id: number;
   firstName: string;

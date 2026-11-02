@@ -367,6 +367,9 @@ importers:
       '@workspace/db':
         specifier: workspace:*
         version: link:../../lib/db
+      '@workspace/toolkit-core':
+        specifier: workspace:*
+        version: link:../../lib/toolkit-core
       bcryptjs:
         specifier: ^3.0.3
         version: 3.0.3
@@ -558,6 +561,9 @@ importers:
       '@workspace/api-client-react':
         specifier: workspace:*
         version: link:../../lib/api-client-react
+      '@workspace/toolkit-core':
+        specifier: workspace:*
+        version: link:../../lib/toolkit-core
       class-variance-authority:
         specifier: 'catalog:'
         version: 0.7.1
@@ -670,6 +676,8 @@ importers:
       drizzle-kit:
         specifier: ^0.31.10
         version: 0.31.10
+
+  lib/toolkit-core: {}
 
   scripts:
     devDependencies:

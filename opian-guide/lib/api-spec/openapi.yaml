@@ -202,6 +202,67 @@ paths:
         "401":
           description: Advisor authentication required
 
+  /toolkits/submissions:
+    get:
+      operationId: listToolkitSubmissions
+      tags: [toolkits]
+      summary: List toolkit submissions visible to the signed-in user
+      responses:
+        "200":
+          description: Client-owned submissions or staff submissions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ToolkitSubmission"
+        "401":
+          description: Authentication required
+    post:
+      operationId: createToolkitSubmission
+      tags: [toolkits]
+      summary: Submit a completed personal or business toolkit
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ToolkitSubmissionInput"
+      responses:
+        "201":
+          description: Toolkit submission saved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ToolkitSubmission"
+        "400":
+          description: Invalid toolkit answers
+        "401":
+          description: Client authentication required
+
+  /toolkits/submissions/{id}:
+    get:
+      operationId: getToolkitSubmission
+      tags: [toolkits]
+      summary: Get a toolkit submission visible to the signed-in user
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Toolkit submission
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ToolkitSubmission"
+        "401":
+          description: Authentication required
+        "404":
+          description: Submission not found
+
   /policies:
     get:
       operationId: listPolicies
@@ -1005,6 +1066,73 @@ components:
         - type
         - description
         - timestamp
+
+    ToolkitSubmission:
+      type: object
+      properties:
+        id:
+          type: integer
+        toolkit:
+          type: string
+          enum: [personal, business]
+        clientId:
+          type: integer
+        clientName:
+          type: string
+        clientEmail:
+          type: string
+        phone:
+          type: string
+        businessName:
+          type: [string, "null"]
+        contactTime:
+          type: [string, "null"]
+        answers:
+          type: object
+          additionalProperties:
+            oneOf:
+              - type: string
+              - type: number
+              - type: boolean
+              - type: array
+                items:
+                  type: string
+        status:
+          type: string
+        createdAt:
+          type: string
+      required:
+        - id
+        - toolkit
+        - clientId
+        - clientName
+        - clientEmail
+        - phone
+        - businessName
+        - contactTime
+        - answers
+        - status
+        - createdAt
+
+    ToolkitSubmissionInput:
+      type: object
+      properties:
+        toolkit:
+          type: string
+          enum: [personal, business]
+        answers:
+          type: object
+          additionalProperties:
+            oneOf:
+              - type: string
+              - type: number
+              - type: boolean
+              - type: array
+                items:
+                  type: string
+      required:
+        - toolkit
+        - answers
 
     FnaSubmission:
       type: object

@@ -10,6 +10,7 @@ import { Link } from "wouter";
 import { motion } from "framer-motion";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/contexts/auth";
+import ToolkitDashboardPanel from "@/components/toolkit-dashboard-panel";
 
 export default function Dashboard() {
   const { data: summary, isLoading } = useGetDashboardSummary();
@@ -76,6 +77,12 @@ export default function Dashboard() {
             <CardTitle className="text-xl font-serif">Quick Actions</CardTitle>
           </CardHeader>
           <CardContent className="grid gap-2">
+            {user?.role === "client" && (
+              <ActionRow icon={FileText} label="Complete a Personal or Business Toolkit" href="/toolkits" />
+            )}
+            {user?.role === "advisor" && (
+              <ActionRow icon={FileText} label="Review Client Toolkit Submissions" href="/toolkit-submissions" />
+            )}
             <ActionRow icon={CalendarDays} label="Book an Appointment" href="/appointments" />
             <ActionRow icon={ClipboardList} label="View My Policies" href="/policies" />
             <ActionRow icon={FolderOpen} label="Upload a Document" href="/documents" />
@@ -111,6 +118,8 @@ export default function Dashboard() {
           </CardContent>
         </Card>
       </div>
+
+      {user?.role === "advisor" && <ToolkitDashboardPanel />}
 
       {/* Our Services */}
       <div>

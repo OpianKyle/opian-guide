@@ -3,6 +3,7 @@ import {
   LayoutDashboard, FileText, ClipboardList, CalendarDays, FolderOpen,
   Contact, Settings, LogOut, Users, Briefcase, UserCog, Shield,
   UserPlus, Upload, Mail,
+  ClipboardCheck,
 } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useAuth } from "@/contexts/auth";
@@ -16,6 +17,7 @@ const advisorNavItems = [
   { name: "Documents", href: "/documents", icon: FolderOpen },
   { name: "FNA Form", href: "/fna", icon: FileText },
   { name: "FNA Submissions", href: "/fna/list", icon: FileText },
+  { name: "Client Toolkits", href: "/toolkit-submissions", icon: ClipboardCheck },
   { name: "Contact Adviser", href: "/contact", icon: Contact },
 ];
 
@@ -25,6 +27,7 @@ const clientNavItems = [
   { name: "Appointments", href: "/appointments", icon: CalendarDays },
   { name: "Documents", href: "/documents", icon: FolderOpen },
   { name: "FNA Form", href: "/fna", icon: FileText },
+  { name: "Financial Toolkits", href: "/toolkits", icon: ClipboardCheck },
   { name: "Contact Adviser", href: "/contact", icon: Contact },
 ];
 
@@ -36,6 +39,7 @@ const adminNavItems = [
   { name: "Advisors", href: "/admin/advisors", icon: Briefcase },
   { name: "Clients", href: "/admin/clients", icon: Users },
   { name: "FNA Submissions", href: "/admin/fna", icon: FileText },
+  { name: "Client Toolkits", href: "/admin/toolkit-submissions", icon: ClipboardCheck },
   { name: "Appointments", href: "/admin/appointments", icon: CalendarDays },
   { name: "Policies", href: "/admin/policies", icon: Shield },
   { name: "Documents", href: "/admin/documents", icon: FolderOpen },

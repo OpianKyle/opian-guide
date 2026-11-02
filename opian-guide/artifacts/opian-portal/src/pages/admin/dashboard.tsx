@@ -3,6 +3,7 @@ import { Users, Briefcase, FileText, Calendar, Shield, FolderOpen } from "lucide
 import { format } from "date-fns";
 import { Link } from "wouter";
 import { useAuth } from "@/contexts/auth";
+import ToolkitDashboardPanel from "@/components/toolkit-dashboard-panel";
 
 export default function Dashboard() {
   const { data: dashboard, isLoading } = useAdminGetDashboard();
@@ -145,6 +146,7 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+      <ToolkitDashboardPanel admin />
     </div>
   );
 }

@@ -14,6 +14,8 @@ import FnaList from '@/pages/fna-list';
 import Policies from '@/pages/policies';
 import Appointments from '@/pages/appointments';
 import Documents from '@/pages/documents';
+import Toolkits from '@/pages/toolkits';
+import ToolkitSubmissions from '@/pages/toolkit-submissions';
 import Contact from '@/pages/contact';
 import Settings from '@/pages/settings';
 import NotFound from '@/pages/not-found';
@@ -71,6 +73,12 @@ function ProtectedApp() {
         <Route path="/policies" component={Policies} />
         <Route path="/appointments" component={Appointments} />
         <Route path="/documents" component={Documents} />
+        <Route path="/toolkits">
+          {() => user.role === "client" ? <Toolkits /> : <Redirect to="/dashboard" />}
+        </Route>
+        <Route path="/toolkit-submissions">
+          {() => user.role === "advisor" ? <ToolkitSubmissions /> : <Redirect to="/dashboard" />}
+        </Route>
         <Route path="/contact" component={Contact} />
         <Route path="/settings" component={Settings} />
         <Route component={NotFound} />
@@ -96,6 +104,7 @@ function AdminProtectedApp() {
         <Route path="/admin/advisors" component={AdminAdvisors} />
         <Route path="/admin/admins" component={AdminAdmins} />
         <Route path="/admin/fna" component={AdminFna} />
+        <Route path="/admin/toolkit-submissions" component={ToolkitSubmissions} />
         <Route path="/admin/appointments" component={AdminAppointments} />
         <Route path="/admin/policies" component={AdminPolicies} />
         <Route path="/admin/documents" component={AdminDocuments} />

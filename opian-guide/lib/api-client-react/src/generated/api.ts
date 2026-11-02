@@ -58,6 +58,8 @@ import type {
   PolicyInput,
   PolicyUpdate,
   SignupPendingResponse,
+  ToolkitSubmission,
+  ToolkitSubmissionInput,
   UnifiedLoginInput,
   UnifiedLoginResult,
   VerificationResendResponse
@@ -846,6 +848,296 @@ export const useUpdateFnaStatus = <TError = ErrorType<void>,
       > => {
       return useMutation(getUpdateFnaStatusMutationOptions(options), queryClient);
     }
+
+export const getListToolkitSubmissionsUrl = () => {
+
+
+
+
+  return `/api/toolkits/submissions`
+}
+
+/**
+ * @summary List toolkit submissions visible to the signed-in user
+ */
+export const listToolkitSubmissions = async ( options?: Parameters<typeof customFetch>[1]): Promise<ToolkitSubmission[]> => {
+
+  return customFetch<ToolkitSubmission[]>(getListToolkitSubmissionsUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListToolkitSubmissionsQueryKey = () => {
+    return [
+    `/api/toolkits/submissions`
+    ] as const;
+    }
+
+
+export const getListToolkitSubmissionsQueryOptions = <TData = Awaited<ReturnType<typeof listToolkitSubmissions>>, TError = ErrorType<void>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listToolkitSubmissions>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListToolkitSubmissionsQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listToolkitSubmissions>>> = ({ signal }) => listToolkitSubmissions({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listToolkitSubmissions>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type ListToolkitSubmissionsQueryResult = NonNullable<Awaited<ReturnType<typeof listToolkitSubmissions>>>
+export type ListToolkitSubmissionsQueryError = ErrorType<void>
+
+
+export function useListToolkitSubmissions<TData = Awaited<ReturnType<typeof listToolkitSubmissions>>, TError = ErrorType<void>>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof listToolkitSubmissions>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof listToolkitSubmissions>>,
+          TError,
+          Awaited<ReturnType<typeof listToolkitSubmissions>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useListToolkitSubmissions<TData = Awaited<ReturnType<typeof listToolkitSubmissions>>, TError = ErrorType<void>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listToolkitSubmissions>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof listToolkitSubmissions>>,
+          TError,
+          Awaited<ReturnType<typeof listToolkitSubmissions>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useListToolkitSubmissions<TData = Awaited<ReturnType<typeof listToolkitSubmissions>>, TError = ErrorType<void>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listToolkitSubmissions>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary List toolkit submissions visible to the signed-in user
+ */
+
+export function useListToolkitSubmissions<TData = Awaited<ReturnType<typeof listToolkitSubmissions>>, TError = ErrorType<void>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listToolkitSubmissions>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getListToolkitSubmissionsQueryOptions(options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getCreateToolkitSubmissionUrl = () => {
+
+
+
+
+  return `/api/toolkits/submissions`
+}
+
+/**
+ * @summary Submit a completed personal or business toolkit
+ */
+export const createToolkitSubmission = async (toolkitSubmissionInput: ToolkitSubmissionInput, options?: Parameters<typeof customFetch>[1]): Promise<ToolkitSubmission> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return customFetch<ToolkitSubmission>(getCreateToolkitSubmissionUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(toolkitSubmissionInput)
+  }
+);}
+
+
+
+
+
+export const getCreateToolkitSubmissionMutationKey = () => ['createToolkitSubmission'] as const;
+
+export const getCreateToolkitSubmissionMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createToolkitSubmission>>, TError,CreateToolkitSubmissionMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createToolkitSubmission>>, TError,CreateToolkitSubmissionMutationVariables, TContext> => {
+
+const mutationKey = getCreateToolkitSubmissionMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createToolkitSubmission>>, CreateToolkitSubmissionMutationVariables> = (props) => {
+          const {data} = props ?? {};
+
+          return  createToolkitSubmission(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateToolkitSubmissionMutationResult = NonNullable<Awaited<ReturnType<typeof createToolkitSubmission>>>
+    export type CreateToolkitSubmissionMutationBody = BodyType<ToolkitSubmissionInput>
+    export type CreateToolkitSubmissionMutationError = ErrorType<void>
+    export type CreateToolkitSubmissionMutationVariables = {data: BodyType<ToolkitSubmissionInput>}
+
+    /**
+ * @summary Submit a completed personal or business toolkit
+ */
+export const useCreateToolkitSubmission = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createToolkitSubmission>>, TError,CreateToolkitSubmissionMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof createToolkitSubmission>>,
+        TError,
+        CreateToolkitSubmissionMutationVariables,
+        TContext
+      > => {
+      return useMutation(getCreateToolkitSubmissionMutationOptions(options), queryClient);
+    }
+
+export const getGetToolkitSubmissionUrl = (id: number,) => {
+
+
+
+
+  return `/api/toolkits/submissions/${id}`
+}
+
+/**
+ * @summary Get a toolkit submission visible to the signed-in user
+ */
+export const getToolkitSubmission = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<ToolkitSubmission> => {
+
+  return customFetch<ToolkitSubmission>(getGetToolkitSubmissionUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetToolkitSubmissionQueryKey = (id: number,) => {
+    return [
+    `/api/toolkits/submissions/${id}`
+    ] as const;
+    }
+
+
+export const getGetToolkitSubmissionQueryOptions = <TData = Awaited<ReturnType<typeof getToolkitSubmission>>, TError = ErrorType<void>>(id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getToolkitSubmission>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetToolkitSubmissionQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getToolkitSubmission>>> = ({ signal }) => getToolkitSubmission(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getToolkitSubmission>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetToolkitSubmissionQueryResult = NonNullable<Awaited<ReturnType<typeof getToolkitSubmission>>>
+export type GetToolkitSubmissionQueryError = ErrorType<void>
+
+
+export function useGetToolkitSubmission<TData = Awaited<ReturnType<typeof getToolkitSubmission>>, TError = ErrorType<void>>(
+ id: number, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getToolkitSubmission>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getToolkitSubmission>>,
+          TError,
+          Awaited<ReturnType<typeof getToolkitSubmission>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetToolkitSubmission<TData = Awaited<ReturnType<typeof getToolkitSubmission>>, TError = ErrorType<void>>(
+ id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getToolkitSubmission>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getToolkitSubmission>>,
+          TError,
+          Awaited<ReturnType<typeof getToolkitSubmission>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetToolkitSubmission<TData = Awaited<ReturnType<typeof getToolkitSubmission>>, TError = ErrorType<void>>(
+ id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getToolkitSubmission>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Get a toolkit submission visible to the signed-in user
+ */
+
+export function useGetToolkitSubmission<TData = Awaited<ReturnType<typeof getToolkitSubmission>>, TError = ErrorType<void>>(
+ id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getToolkitSubmission>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetToolkitSubmissionQueryOptions(id,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
 
 export const getListPoliciesUrl = () => {
 

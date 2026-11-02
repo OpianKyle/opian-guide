@@ -392,6 +392,70 @@ export const UpdateFnaStatusResponse = zod.object({
 
 
 /**
+ * @summary List toolkit submissions visible to the signed-in user
+ */
+export const ListToolkitSubmissionsResponseItem = zod.object({
+  "id": zod.number().int(),
+  "toolkit": zod.enum(['personal', 'business']),
+  "clientId": zod.number().int(),
+  "clientName": zod.string(),
+  "clientEmail": zod.string(),
+  "phone": zod.string(),
+  "businessName": zod.string().nullable(),
+  "contactTime": zod.string().nullable(),
+  "answers": zod.record(zod.string(), zod.union([zod.string(),zod.number(),zod.boolean(),zod.array(zod.string())])),
+  "status": zod.string(),
+  "createdAt": zod.string()
+})
+export const ListToolkitSubmissionsResponse = zod.array(ListToolkitSubmissionsResponseItem)
+
+
+/**
+ * @summary Submit a completed personal or business toolkit
+ */
+export const CreateToolkitSubmissionBody = zod.object({
+  "toolkit": zod.enum(['personal', 'business']),
+  "answers": zod.record(zod.string(), zod.union([zod.string(),zod.number(),zod.boolean(),zod.array(zod.string())]))
+})
+
+export const CreateToolkitSubmissionResponse = zod.object({
+  "id": zod.number().int(),
+  "toolkit": zod.enum(['personal', 'business']),
+  "clientId": zod.number().int(),
+  "clientName": zod.string(),
+  "clientEmail": zod.string(),
+  "phone": zod.string(),
+  "businessName": zod.string().nullable(),
+  "contactTime": zod.string().nullable(),
+  "answers": zod.record(zod.string(), zod.union([zod.string(),zod.number(),zod.boolean(),zod.array(zod.string())])),
+  "status": zod.string(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Get a toolkit submission visible to the signed-in user
+ */
+export const GetToolkitSubmissionParams = zod.object({
+  "id": zod.coerce.number().int()
+})
+
+export const GetToolkitSubmissionResponse = zod.object({
+  "id": zod.number().int(),
+  "toolkit": zod.enum(['personal', 'business']),
+  "clientId": zod.number().int(),
+  "clientName": zod.string(),
+  "clientEmail": zod.string(),
+  "phone": zod.string(),
+  "businessName": zod.string().nullable(),
+  "contactTime": zod.string().nullable(),
+  "answers": zod.record(zod.string(), zod.union([zod.string(),zod.number(),zod.boolean(),zod.array(zod.string())])),
+  "status": zod.string(),
+  "createdAt": zod.string()
+})
+
+
+/**
  * @summary List client policies
  */
 export const ListPoliciesResponseItem = zod.object({
