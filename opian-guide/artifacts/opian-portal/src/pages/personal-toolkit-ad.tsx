@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from "react";
-import { Link } from "wouter";
 import {
   useCreateToolkitSubmission,
   type ToolkitSubmission,
@@ -17,23 +16,27 @@ import {
   type ToolkitQuestion,
 } from "@workspace/toolkit-core";
 import {
-  ArrowDown,
   ArrowLeft,
   ArrowRight,
-  Check,
+  BriefcaseBusiness,
+  CalendarDays,
   CheckCircle2,
   ChevronRight,
   Download,
+  FileText,
+  HeartHandshake,
+  House,
   LockKeyhole,
+  PiggyBank,
   ShieldCheck,
-  Sparkles,
   TriangleAlert,
+  UsersRound,
+  Wallet,
 } from "lucide-react";
-import { Logo } from "@/components/logo";
 import { useAuth } from "@/contexts/auth";
 import { downloadToolkitPdf } from "@/lib/toolkit-pdf";
 
-type Flow = "welcome" | "questions" | "account" | "signup" | "verify" | "signin" | "report";
+type Flow = "questions" | "account" | "signup" | "verify" | "signin" | "report";
 
 const KIND: ToolkitKind = "personal";
 
@@ -49,6 +52,17 @@ function Field({
   const selected = answers[question.id];
   const options = getQuestionOptions(question, answers);
   if (question.visibleWhen && !question.visibleWhen(answers)) return null;
+  const OptionIcon = (option: string) => {
+    const label = `${question.id} ${option}`.toLowerCase();
+    if (/age|depend|child|family|people/.test(label)) return UsersRound;
+    if (/single|married|partner|divorced|widowed/.test(label)) return HeartHandshake;
+    if (/employ|business|retired|work/.test(label)) return BriefcaseBusiness;
+    if (/income|budget|r\d|sure|not sure/.test(label)) return Wallet;
+    if (/home|bond|rent|own/.test(label)) return House;
+    if (/will|estate/.test(label)) return FileText;
+    if (/saving|month|none/.test(label)) return PiggyBank;
+    return ShieldCheck;
+  };
 
   return (
     <fieldset className="space-y-3" data-testid={`question-${question.id}`}>
@@ -60,20 +74,21 @@ function Field({
       )}
       {question.help && <p className="-mt-1 text-sm leading-relaxed text-[#66777b]">{question.help}</p>}
       {question.kind === "choice" && (
-        <div className="grid gap-2 sm:grid-cols-2">
+        <div className="grid gap-3 sm:grid-cols-2">
           {options.map((option) => {
             const active = selected === option;
+            const Icon = OptionIcon(option);
             return (
               <label
                 key={option}
-                className={`flex min-h-12 cursor-pointer items-center gap-3 rounded-xl border px-4 py-3 text-sm transition-colors focus-within:ring-2 focus-within:ring-[#287568] focus-within:ring-offset-2 ${
+                className={`group flex min-h-[76px] cursor-pointer items-center gap-3 rounded-2xl border px-4 py-3 text-sm transition-[transform,border-color,background-color,box-shadow] duration-200 hover:-translate-y-0.5 focus-within:ring-2 focus-within:ring-[#287568] focus-within:ring-offset-2 ${
                   active
-                    ? "border-[#287568] bg-[#eaf4ef] text-[#174e46]"
+                    ? "border-[#287568] bg-[#eaf4ef] text-[#174e46] shadow-[0_8px_22px_rgba(40,117,104,.10)]"
                     : "border-[#dce5df] bg-white/75 text-[#344d54] hover:border-[#8fb3a7] hover:bg-[#f8fbf8]"
                 }`}
               >
                 <input
-                  className="h-4 w-4 accent-[#287568]"
+                  className="h-4 w-4 shrink-0 accent-[#287568]"
                   type="radio"
                   name={question.id}
                   value={option}
@@ -81,6 +96,9 @@ function Field({
                   onChange={() => setAnswer(question.id, option)}
                   data-testid={`answer-${question.id}-${option.replace(/[^a-z0-9]+/gi, "-").toLowerCase()}`}
                 />
+                <span aria-hidden="true" className={`grid h-10 w-10 shrink-0 place-items-center rounded-xl transition-colors ${active ? "bg-[#287568] text-white" : "bg-[#eff3eb] text-[#55796e] group-hover:bg-[#e4eee5]"}`}>
+                  <Icon size={19} strokeWidth={1.7} />
+                </span>
                 <span>{getToolkitOptionLabel(KIND, question, option)}</span>
               </label>
             );
@@ -88,18 +106,20 @@ function Field({
         </div>
       )}
       {question.kind === "multi" && (
-        <div className="grid gap-2 sm:grid-cols-2">
+        <div className="grid gap-3 sm:grid-cols-2">
           {options.map((option) => {
             const values = Array.isArray(selected) ? selected : [];
+            const active = values.includes(option);
+            const Icon = OptionIcon(option);
             return (
               <label
                 key={option}
-                className="flex min-h-12 cursor-pointer items-center gap-3 rounded-xl border border-[#dce5df] bg-white/75 px-4 py-3 text-sm text-[#344d54] transition-colors hover:border-[#8fb3a7] hover:bg-[#f8fbf8] focus-within:ring-2 focus-within:ring-[#287568] focus-within:ring-offset-2"
+                className={`group flex min-h-[76px] cursor-pointer items-center gap-3 rounded-2xl border px-4 py-3 text-sm transition-[transform,border-color,background-color,box-shadow] duration-200 hover:-translate-y-0.5 focus-within:ring-2 focus-within:ring-[#287568] focus-within:ring-offset-2 ${active ? "border-[#287568] bg-[#eaf4ef] text-[#174e46] shadow-[0_8px_22px_rgba(40,117,104,.10)]" : "border-[#dce5df] bg-white/75 text-[#344d54] hover:border-[#8fb3a7] hover:bg-[#f8fbf8]"}`}
               >
                 <input
                   className="h-4 w-4 accent-[#287568]"
                   type="checkbox"
-                  checked={values.includes(option)}
+                  checked={active}
                   onChange={(event) =>
                     setAnswer(
                       question.id,
@@ -110,6 +130,9 @@ function Field({
                   }
                   data-testid={`answer-${question.id}-${option}`}
                 />
+                <span aria-hidden="true" className={`grid h-10 w-10 shrink-0 place-items-center rounded-xl transition-colors ${active ? "bg-[#287568] text-white" : "bg-[#eff3eb] text-[#55796e] group-hover:bg-[#e4eee5]"}`}>
+                  <Icon size={19} strokeWidth={1.7} />
+                </span>
                 <span>{getToolkitOptionLabel(KIND, question, option)}</span>
               </label>
             );
@@ -196,7 +219,7 @@ export default function PersonalToolkitAd() {
   } = useAuth();
   const createSubmission = useCreateToolkitSubmission();
   const steps = useMemo(() => getToolkitSteps(KIND), []);
-  const [flow, setFlow] = useState<Flow>("welcome");
+  const [flow, setFlow] = useState<Flow>("questions");
   const [stepIndex, setStepIndex] = useState(0);
   const [answers, setAnswers] = useState<ToolkitAnswers>({});
   const [error, setError] = useState("");
@@ -230,6 +253,7 @@ export default function PersonalToolkitAd() {
 
   const currentStep = steps[stepIndex];
   const progress = flow === "questions" ? ((stepIndex + 1) / steps.length) * 100 : 0;
+  const StepIllustration = [UsersRound, BriefcaseBusiness, House, ShieldCheck, HeartHandshake, CalendarDays][stepIndex] ?? ShieldCheck;
   const isClient = user?.role === "client" && !adminUser;
   const roleConflict = Boolean(adminUser || (user && user.role !== "client"));
 
@@ -381,7 +405,7 @@ export default function PersonalToolkitAd() {
   };
 
   const restart = () => {
-    setFlow("welcome");
+    setFlow("questions");
     setStepIndex(0);
     setAnswers({});
     setValidatedAnswers(null);
@@ -393,88 +417,13 @@ export default function PersonalToolkitAd() {
   const report = submission && validatedAnswers ? calculateToolkit(KIND, validatedAnswers) : null;
 
   return (
-    <main className="min-h-[100dvh] overflow-hidden bg-[#f5f4eb] text-[#223b4a]">
+    <main className="min-h-[100dvh] overflow-hidden bg-[#f5f4eb] px-4 py-5 text-[#223b4a] sm:px-6 sm:py-10">
       <div className="pointer-events-none fixed inset-0 opacity-[0.16]" aria-hidden="true" style={{ backgroundImage: "radial-gradient(#668579 0.65px, transparent 0.65px)", backgroundSize: "17px 17px" }} />
-      <header className="relative z-10 mx-auto flex max-w-7xl items-center justify-between px-5 py-5 sm:px-8">
-        <Link href="/" aria-label="MyIFA home" data-testid="link-myifa-home" className="inline-flex items-center gap-3">
-          <span className="grid h-10 w-10 place-items-center rounded-[14px] bg-[#244b4a] text-[#f3c873]">
-            <ShieldCheck size={21} strokeWidth={1.8} />
-          </span>
-          <span className="flex flex-col">
-            <Logo variant="light" className="text-[17px] leading-none" />
-            <span className="mt-1 text-[9px] font-semibold uppercase tracking-[.2em] text-[#668079]">Financial Services</span>
-          </span>
-        </Link>
-        <div className="hidden items-center gap-2 text-xs font-medium text-[#657a77] sm:flex">
-          <LockKeyhole size={14} />
-          Private by design
-        </div>
-      </header>
-
-      <div className="relative mx-auto grid max-w-7xl gap-10 px-5 pb-16 pt-4 sm:px-8 lg:grid-cols-[.88fr_1.12fr] lg:gap-16 lg:pt-12">
-        <aside className="relative lg:sticky lg:top-10 lg:h-fit">
-          <div className="absolute -left-10 top-28 hidden h-64 w-64 rounded-full border border-[#d6dfd2] lg:block" />
-          <div className="relative max-w-xl">
-            <p className="inline-flex items-center gap-2 rounded-full border border-[#d8dfd4] bg-[#e9eee4] px-3 py-1.5 text-[11px] font-bold uppercase tracking-[.15em] text-[#567169]">
-              <Sparkles size={13} /> A clearer kind of money chat
-            </p>
-            <h1 className="mt-6 max-w-[620px] font-serif text-[clamp(2.8rem,6vw,5.2rem)] leading-[.98] tracking-[-.045em] text-[#203e49]">
-              Feel more sure about your <em className="font-normal text-[#c75e43]">what ifs.</em>
-            </h1>
-            <p className="mt-6 max-w-lg text-base leading-7 text-[#5c7171] sm:text-lg sm:leading-8">
-              A few thoughtful questions can make personal protection feel a lot less like a guessing game. Get a useful snapshot of what matters to you and where to start.
-            </p>
-            <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-[#385754]">
-              <span className="inline-flex items-center gap-2"><Check size={16} className="text-[#287568]" /> No jargon, just a starting point</span>
-              <span className="inline-flex items-center gap-2"><Check size={16} className="text-[#287568]" /> About 5 minutes</span>
-            </div>
-
-            <div className="relative mt-10 max-w-[430px] overflow-hidden rounded-[2rem] bg-[#dce9dc] p-6 sm:p-8">
-              <div className="absolute -right-12 -top-14 h-44 w-44 rounded-full border-[24px] border-[#f4c978]/70" />
-              <div className="absolute -bottom-16 -left-10 h-44 w-44 rounded-full bg-[#b6d2c4]" />
-              <div className="relative flex min-h-[180px] flex-col justify-between">
-                <span className="w-fit rounded-full bg-[#244b4a] px-3 py-1.5 text-[10px] font-bold uppercase tracking-[.17em] text-[#f8e3b2]">Small steps, big clarity</span>
-                <div>
-                  <p className="max-w-[290px] font-serif text-[29px] leading-[1.07] text-[#244b4a]">Protection should feel like a plan, not a puzzle.</p>
-                  <p className="mt-3 text-xs font-medium text-[#567169]">MyIFA Personal Toolkit</p>
-                </div>
-              </div>
-              <ArrowDown className="absolute bottom-7 right-7 text-[#c75e43]" size={19} />
-            </div>
-          </div>
-        </aside>
-
-        <section className="relative min-w-0">
-          <div className="absolute -right-28 -top-20 h-72 w-72 rounded-full bg-[#ecd8bd]/55 blur-3xl" />
-          <div className="relative rounded-[2rem] border border-[#e1e4d8] bg-[#fbfbf5]/95 p-5 shadow-[0_25px_75px_rgba(48,79,72,.09)] sm:p-8 lg:p-10">
-            {flow === "welcome" && (
-              <div className="py-2" data-testid="panel-toolkit-welcome">
-                <p className="text-xs font-bold uppercase tracking-[.18em] text-[#b45b43]">Your personal protection check-in</p>
-                <h2 className="mt-4 font-serif text-3xl leading-tight tracking-[-.025em] sm:text-[2.55rem]">Let’s make the important stuff easier to see.</h2>
-                <p className="mt-4 max-w-xl leading-7 text-[#657775]">
-                  We’ll look at the people who count on you, your income and existing cover, then help you spot priorities to discuss with an adviser. Your answers stay in this browser until you choose to create or sign in to a verified client account.
-                </p>
-                <div className="mt-7 grid gap-3 sm:grid-cols-2">
-                  <div className="rounded-2xl bg-[#eef3eb] p-4">
-                    <span className="text-[10px] font-bold uppercase tracking-[.14em] text-[#688177]">01 / Reflect</span>
-                    <p className="mt-2 font-semibold">Think through your real-life picture</p>
-                  </div>
-                  <div className="rounded-2xl bg-[#f6eee2] p-4">
-                    <span className="text-[10px] font-bold uppercase tracking-[.14em] text-[#a76c4d]">02 / Understand</span>
-                    <p className="mt-2 font-semibold">See a personal, practical summary</p>
-                  </div>
-                </div>
-                <div className="mt-8 flex flex-col gap-4 border-t border-[#e4e8df] pt-6 sm:flex-row sm:items-center sm:justify-between">
-                  <p className="text-xs leading-5 text-[#71817d]">Not financial advice. Just a helpful first conversation.</p>
-                  <ActionButton onClick={() => { setFlow("questions"); setError(""); }} testId="button-start-toolkit">
-                    Start my check-in <ArrowRight size={17} />
-                  </ActionButton>
-                </div>
-              </div>
-            )}
-
+      <section className="relative mx-auto w-full max-w-3xl">
+        <div className="absolute -right-20 -top-16 h-60 w-60 rounded-full bg-[#ecd8bd]/55 blur-3xl" aria-hidden="true" />
+        <div className="relative rounded-[1.75rem] border border-[#e1e4d8] bg-[#fbfbf5]/95 p-5 shadow-[0_25px_75px_rgba(48,79,72,.09)] sm:rounded-[2rem] sm:p-8 lg:p-10">
             {flow === "questions" && currentStep && (
-              <div data-testid={`panel-toolkit-step-${stepIndex + 1}`}>
+              <div className="animate-in fade-in slide-in-from-bottom-2 duration-300" data-testid={`panel-toolkit-step-${stepIndex + 1}`}>
                 <div className="flex items-start justify-between gap-4">
                   <div>
                     <p className="text-xs font-bold uppercase tracking-[.16em] text-[#b45b43]">{getToolkitName(KIND)}</p>
@@ -485,10 +434,20 @@ export default function PersonalToolkitAd() {
                 <div className="mt-4 h-2 overflow-hidden rounded-full bg-[#e4e9df]" role="progressbar" aria-label="Toolkit progress" aria-valuenow={Math.round(progress)} aria-valuemin={0} aria-valuemax={100} data-testid="progress-toolkit">
                   <div className="h-full rounded-full bg-[#287568] transition-[width] duration-300" style={{ width: `${progress}%` }} />
                 </div>
-                <div className="mt-8 border-b border-[#e5e9df] pb-5">
-                  <p className="text-[11px] font-bold uppercase tracking-[.17em] text-[#a67357]">A little context</p>
-                  <h2 className="mt-2 font-serif text-3xl leading-tight tracking-[-.025em]" data-testid="text-step-title">{currentStep.title}</h2>
-                  <p className="mt-2 text-sm leading-6 text-[#687a77]" data-testid="text-step-intro">{currentStep.intro}</p>
+                <div className="mt-6 grid grid-cols-[82px_1fr] items-center gap-4 border-b border-[#e5e9df] pb-6 sm:mt-8 sm:grid-cols-[124px_1fr] sm:gap-6">
+                  <div aria-hidden="true" className="relative grid aspect-square place-items-center overflow-hidden rounded-[1.4rem] bg-[#e6eee4] sm:rounded-[1.8rem]">
+                    <span className="absolute -right-4 -top-5 h-16 w-16 rounded-full border-[10px] border-[#f1d18f]/80 sm:h-24 sm:w-24 sm:border-[14px]" />
+                    <span className="absolute -bottom-7 -left-6 h-20 w-20 rounded-full bg-[#c5d9ca] sm:h-28 sm:w-28" />
+                    <span className="relative grid h-12 w-12 place-items-center rounded-2xl bg-[#244b4a] text-[#f2d18c] shadow-[0_8px_20px_rgba(36,75,74,.18)] sm:h-[68px] sm:w-[68px] sm:rounded-[22px]">
+                      <StepIllustration size={31} strokeWidth={1.55} className="sm:hidden" />
+                      <StepIllustration size={39} strokeWidth={1.55} className="hidden sm:block" />
+                    </span>
+                  </div>
+                  <div>
+                    <p className="text-[11px] font-bold uppercase tracking-[.17em] text-[#a67357]">A little context</p>
+                    <h2 className="mt-1.5 font-serif text-[1.7rem] leading-tight tracking-[-.025em] sm:text-3xl" data-testid="text-step-title">{currentStep.title}</h2>
+                    <p className="mt-2 text-sm leading-6 text-[#687a77]" data-testid="text-step-intro">{currentStep.intro}</p>
+                  </div>
                 </div>
                 <div className="mt-6 space-y-7">
                   {currentStep.fields.map((question) => (
@@ -640,15 +599,8 @@ export default function PersonalToolkitAd() {
                 {downloadError && <p role="alert" className="mt-4 rounded-xl bg-[#f9e9e2] p-3 text-sm leading-5 text-[#9f4937]" data-testid="status-download-error">{downloadError}</p>}
               </div>
             )}
-          </div>
-          <p className="relative mt-5 px-2 text-center text-[11px] leading-5 text-[#798783]" data-testid="text-privacy-note">
-            MyIFA Financial Services · Your answers are handled securely and only submitted when you choose to continue from a verified client account.
-          </p>
-        </section>
-      </div>
-      <footer className="relative border-t border-[#e2e5db] px-5 py-5 text-center text-xs text-[#72817b]">
-        Personal Toolkit · For education and discussion, not financial advice.
-      </footer>
+        </div>
+      </section>
     </main>
   );
 }
