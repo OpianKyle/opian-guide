@@ -31,6 +31,10 @@ SMTP_HOST = "smtp.myifa.co.za"
 SMTP_PORT = "465"
 SMTP_USER = "admin@myifa.co.za"
 
+[[ports]]
+localPort = 25580
+externalPort = 3002
+
 [[workflows.workflow]]
 name = "Project"
 mode = "parallel"
