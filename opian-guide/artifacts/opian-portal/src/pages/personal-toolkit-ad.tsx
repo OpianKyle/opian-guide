@@ -420,7 +420,7 @@ export default function PersonalToolkitAd() {
     <main
       className="relative min-h-[100dvh] overflow-hidden bg-[#f8f3e8] bg-cover bg-center px-4 py-5 text-[#263b4b] sm:px-6 sm:py-10"
       style={{
-        backgroundImage: `linear-gradient(rgba(248, 243, 232, 0.18), rgba(248, 243, 232, 0.3)), url("${import.meta.env.BASE_URL}personal-toolkit-background.jpg")`,
+        backgroundImage: `linear-gradient(rgba(248, 243, 232, 0.08), rgba(248, 243, 232, 0.16)), url("${import.meta.env.BASE_URL}personal-toolkit-people-background.jpg")`,
       }}
     >
       <div className="pointer-events-none fixed inset-0 opacity-[0.18]" aria-hidden="true" style={{ backgroundImage: "radial-gradient(#b98a5c 0.7px, transparent 0.7px)", backgroundSize: "20px 20px" }} />
@@ -428,7 +428,7 @@ export default function PersonalToolkitAd() {
       <div className="pointer-events-none absolute -right-24 bottom-[10%] h-72 w-72 rounded-full bg-[#cce8dd]/55 blur-3xl" aria-hidden="true" />
       <section className="relative mx-auto w-full max-w-3xl">
         <div className="absolute -right-20 -top-16 h-60 w-60 rounded-full bg-[#f5c995]/55 blur-3xl" aria-hidden="true" />
-        <div className="relative rounded-[1.75rem] border border-[#e8dfce] bg-[#fffdf7]/95 p-5 shadow-[0_25px_75px_rgba(79,72,53,.12)] sm:rounded-[2rem] sm:p-8 lg:p-10">
+        <div className="relative rounded-[1.75rem] border border-[#e8dfce] bg-[#fffdf7]/90 p-5 backdrop-blur-sm shadow-[0_25px_75px_rgba(79,72,53,.12)] sm:rounded-[2rem] sm:p-8 lg:p-10">
             {flow === "questions" && currentStep && (
               <div className="animate-in fade-in slide-in-from-bottom-2 duration-300" data-testid={`panel-toolkit-step-${stepIndex + 1}`}>
                 <div className="flex items-start justify-between gap-4">
