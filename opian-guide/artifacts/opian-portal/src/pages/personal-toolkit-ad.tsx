@@ -33,18 +33,19 @@ import {
   UsersRound,
   Wallet,
 } from "lucide-react";
+import { Link } from "wouter";
 import { useAuth } from "@/contexts/auth";
 import { downloadToolkitPdf } from "@/lib/toolkit-pdf";
 
 type Flow = "questions" | "account" | "signup" | "verify" | "signin" | "report";
 
-const KIND: ToolkitKind = "personal";
-
 function Field({
+  toolkitKind,
   question,
   answers,
   setAnswer,
 }: {
+  toolkitKind: ToolkitKind;
   question: ToolkitQuestion;
   answers: ToolkitAnswers;
   setAnswer: (id: string, value: ToolkitAnswer) => void;
@@ -99,7 +100,7 @@ function Field({
                 <span aria-hidden="true" className={`grid h-10 w-10 shrink-0 place-items-center rounded-[.9rem] transition-[transform,background-color,color] duration-200 ${active ? "scale-105 bg-[#168477] text-white" : "bg-[#f7e8d6] text-[#a75538] group-hover:bg-[#f5d9b9] group-hover:text-[#88442f]"}`}>
                   <Icon size={19} strokeWidth={1.7} />
                 </span>
-                <span>{getToolkitOptionLabel(KIND, question, option)}</span>
+                <span>{getToolkitOptionLabel(toolkitKind, question, option)}</span>
               </label>
             );
           })}
@@ -133,7 +134,7 @@ function Field({
                 <span aria-hidden="true" className={`grid h-10 w-10 shrink-0 place-items-center rounded-[.9rem] transition-[transform,background-color,color] duration-200 ${active ? "scale-105 bg-[#168477] text-white" : "bg-[#f7e8d6] text-[#a75538] group-hover:bg-[#f5d9b9] group-hover:text-[#88442f]"}`}>
                   <Icon size={19} strokeWidth={1.7} />
                 </span>
-                <span>{getToolkitOptionLabel(KIND, question, option)}</span>
+                <span>{getToolkitOptionLabel(toolkitKind, question, option)}</span>
               </label>
             );
           })}
@@ -205,7 +206,7 @@ function ActionButton({
   );
 }
 
-export default function PersonalToolkitAd() {
+export function ToolkitAd({ kind }: { kind: ToolkitKind }) {
   const {
     user,
     adminUser,
@@ -218,7 +219,7 @@ export default function PersonalToolkitAd() {
     adminLogout,
   } = useAuth();
   const createSubmission = useCreateToolkitSubmission();
-  const steps = useMemo(() => getToolkitSteps(KIND), []);
+  const steps = useMemo(() => getToolkitSteps(kind), [kind]);
   const [flow, setFlow] = useState<Flow>("questions");
   const [stepIndex, setStepIndex] = useState(0);
   const [answers, setAnswers] = useState<ToolkitAnswers>({});
@@ -233,15 +234,18 @@ export default function PersonalToolkitAd() {
   const [downloadBusy, setDownloadBusy] = useState(false);
   const [downloadError, setDownloadError] = useState("");
   const [notice, setNotice] = useState("");
+  const isBusiness = kind === "business";
+  const toolkitAudience = isBusiness ? "business" : "personal";
 
   useEffect(() => {
     const previousTitle = document.title;
     const descriptionTag = document.querySelector<HTMLMetaElement>('meta[name="description"]');
     const previousDescription = descriptionTag?.content;
-    document.title = "MyIFA Personal Toolkit | Your financial protection check-in";
+    document.title = `MyIFA ${getToolkitName(kind)} | Your financial protection check-in`;
     if (descriptionTag) {
-      descriptionTag.content =
-        "Answer a few questions about your family, income and protection, then create a secure MyIFA client account to unlock your personal financial toolkit report.";
+      descriptionTag.content = isBusiness
+        ? "Review your business structure, key people, debt and protection needs, then create a secure MyIFA client account to unlock your business toolkit report."
+        : "Answer a few questions about your family, income and protection, then create a secure MyIFA client account to unlock your personal financial toolkit report.";
     }
     return () => {
       document.title = previousTitle;
@@ -249,11 +253,13 @@ export default function PersonalToolkitAd() {
         descriptionTag.content = previousDescription;
       }
     };
-  }, []);
+  }, [isBusiness, kind]);
 
   const currentStep = steps[stepIndex];
   const progress = flow === "questions" ? ((stepIndex + 1) / steps.length) * 100 : 0;
-  const StepIllustration = [UsersRound, BriefcaseBusiness, House, ShieldCheck, HeartHandshake, CalendarDays][stepIndex] ?? ShieldCheck;
+  const personalStepIcons = [UsersRound, BriefcaseBusiness, House, ShieldCheck, HeartHandshake, CalendarDays];
+  const businessStepIcons = [BriefcaseBusiness, UsersRound, Wallet, HeartHandshake, ShieldCheck, CalendarDays];
+  const StepIllustration = (isBusiness ? businessStepIcons : personalStepIcons)[stepIndex] ?? ShieldCheck;
   const isClient = user?.role === "client" && !adminUser;
   const roleConflict = Boolean(adminUser || (user && user.role !== "client"));
 
@@ -289,7 +295,7 @@ export default function PersonalToolkitAd() {
       return;
     }
     try {
-      const validated = validateToolkitAnswers(KIND, answers);
+      const validated = validateToolkitAnswers(kind, answers);
       setValidatedAnswers(validated);
       setFlow("account");
     } catch (validationError) {
@@ -306,7 +312,7 @@ export default function PersonalToolkitAd() {
     setError("");
     try {
       const result = await createSubmission.mutateAsync({
-        data: { toolkit: KIND, answers: validatedAnswers },
+        data: { toolkit: kind, answers: validatedAnswers },
       });
       setSubmission(result);
       setFlow("report");
@@ -414,26 +420,48 @@ export default function PersonalToolkitAd() {
     setDownloadError("");
   };
 
-  const report = submission && validatedAnswers ? calculateToolkit(KIND, validatedAnswers) : null;
+  const report = submission && validatedAnswers ? calculateToolkit(kind, validatedAnswers) : null;
 
   return (
     <main
       className="relative min-h-[100dvh] overflow-hidden bg-[#f8f3e8] bg-cover bg-center px-4 py-5 text-[#263b4b] sm:px-6 sm:py-10"
       style={{
-        backgroundImage: `linear-gradient(rgba(248, 243, 232, 0.08), rgba(248, 243, 232, 0.16)), url("${import.meta.env.BASE_URL}personal-toolkit-people-background.jpg")`,
+        backgroundImage: isBusiness
+          ? "radial-gradient(circle at 18% 18%, rgba(244, 214, 170, .42), transparent 32%), radial-gradient(circle at 88% 78%, rgba(204, 232, 221, .58), transparent 34%)"
+          : `linear-gradient(rgba(248, 243, 232, 0.08), rgba(248, 243, 232, 0.16)), url("${import.meta.env.BASE_URL}personal-toolkit-people-background.jpg")`,
       }}
     >
       <div className="pointer-events-none fixed inset-0 opacity-[0.18]" aria-hidden="true" style={{ backgroundImage: "radial-gradient(#b98a5c 0.7px, transparent 0.7px)", backgroundSize: "20px 20px" }} />
       <div className="pointer-events-none absolute -left-24 top-[18%] h-56 w-56 rounded-full bg-[#f4d6aa]/50 blur-3xl" aria-hidden="true" />
       <div className="pointer-events-none absolute -right-24 bottom-[10%] h-72 w-72 rounded-full bg-[#cce8dd]/55 blur-3xl" aria-hidden="true" />
       <section className="relative mx-auto w-full max-w-3xl">
+        <nav className="mb-4 flex justify-center" aria-label="Choose a financial toolkit">
+          <div className="inline-flex rounded-full border border-[#e8dfce] bg-[#fffdf7]/90 p-1 shadow-sm backdrop-blur-sm">
+            <Link
+              href="/personal-toolkit"
+              aria-current={!isBusiness ? "page" : undefined}
+              className={`rounded-full px-4 py-2 text-sm font-semibold transition-colors ${!isBusiness ? "bg-[#216f68] text-white" : "text-[#526866] hover:bg-[#e8f5ef]"}`}
+              data-testid="link-personal-toolkit"
+            >
+              Personal toolkit
+            </Link>
+            <Link
+              href="/business-toolkit"
+              aria-current={isBusiness ? "page" : undefined}
+              className={`rounded-full px-4 py-2 text-sm font-semibold transition-colors ${isBusiness ? "bg-[#216f68] text-white" : "text-[#526866] hover:bg-[#e8f5ef]"}`}
+              data-testid="link-business-toolkit"
+            >
+              Business toolkit
+            </Link>
+          </div>
+        </nav>
         <div className="absolute -right-20 -top-16 h-60 w-60 rounded-full bg-[#f5c995]/55 blur-3xl" aria-hidden="true" />
         <div className="relative rounded-[1.75rem] border border-[#e8dfce] bg-[#fffdf7]/90 p-5 backdrop-blur-sm shadow-[0_25px_75px_rgba(79,72,53,.12)] sm:rounded-[2rem] sm:p-8 lg:p-10">
             {flow === "questions" && currentStep && (
               <div className="animate-in fade-in slide-in-from-bottom-2 duration-300" data-testid={`panel-toolkit-step-${stepIndex + 1}`}>
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <p className="inline-flex items-center gap-2 rounded-full bg-[#fff0dc] px-3 py-1 text-[11px] font-extrabold uppercase tracking-[.14em] text-[#a94f37]">{getToolkitName(KIND)} <span className="h-1.5 w-1.5 rounded-full bg-[#df8153]" aria-hidden="true" /></p>
+                    <p className="inline-flex items-center gap-2 rounded-full bg-[#fff0dc] px-3 py-1 text-[11px] font-extrabold uppercase tracking-[.14em] text-[#a94f37]">{getToolkitName(kind)} <span className="h-1.5 w-1.5 rounded-full bg-[#df8153]" aria-hidden="true" /></p>
                     <p className="mt-2 text-xs font-semibold text-[#677a78]" data-testid="text-step-progress">Step {stepIndex + 1} of {steps.length}</p>
                   </div>
                   <span className="rounded-full bg-[#e6f3eb] px-3 py-1.5 text-xs font-extrabold text-[#267365]" data-testid="text-progress-percent">{Math.round(progress)}%</span>
@@ -459,7 +487,7 @@ export default function PersonalToolkitAd() {
                 </div>
                 <div className="mt-6 space-y-7">
                   {currentStep.fields.map((question) => (
-                    <Field key={question.id} question={question} answers={answers} setAnswer={setAnswer} />
+                    <Field key={question.id} toolkitKind={kind} question={question} answers={answers} setAnswer={setAnswer} />
                   ))}
                 </div>
                 {error && <p role="alert" className="mt-6 flex gap-2 rounded-2xl border border-[#f0c7b5] bg-[#fff0e8] p-3 text-sm leading-5 text-[#9f4937]" data-testid="status-form-error"><TriangleAlert size={17} className="mt-0.5 shrink-0" />{error}</p>}
@@ -480,7 +508,7 @@ export default function PersonalToolkitAd() {
                 {flow === "account" && (
                   <>
                     <h2 className="mt-3 font-serif text-3xl leading-tight tracking-[-.025em]">One secure step before your report.</h2>
-                    <p className="mt-3 leading-7 text-[#687a77]">We’ll only prepare and save your personal summary after you’re signed in to a verified MyIFA client account.</p>
+                    <p className="mt-3 leading-7 text-[#687a77]">We’ll only prepare and save your {toolkitAudience} summary after you’re signed in to a verified MyIFA client account.</p>
                     {authLoading ? (
                       <div className="mt-7 animate-pulse space-y-3" aria-label="Checking account status" data-testid="status-auth-loading">
                         <div className="h-12 rounded-xl bg-[#e8ede5]" /><div className="h-12 w-2/3 rounded-xl bg-[#e8ede5]" />
@@ -500,7 +528,7 @@ export default function PersonalToolkitAd() {
                         <p className="flex items-center gap-2 font-semibold text-[#285d4f]"><ShieldCheck size={18} /> Client account verified</p>
                         <p className="mt-2 text-sm text-[#5b766d]">Signed in as {user.name} · {user.email}</p>
                         <ActionButton onClick={() => void submitVerifiedAnswers()} disabled={busy} testId="button-submit-toolkit" >
-                          {busy ? "Preparing your report…" : "Get my personal summary"} {!busy && <ArrowRight size={16} />}
+                          {busy ? "Preparing your report…" : `Get my ${toolkitAudience} summary`} {!busy && <ArrowRight size={16} />}
                         </ActionButton>
                       </div>
                     ) : (
@@ -572,7 +600,7 @@ export default function PersonalToolkitAd() {
               <div data-testid="panel-toolkit-report">
                 <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#e1f2e7] text-[#168477]"><CheckCircle2 size={25} /></div>
                 <p className="mt-5 text-xs font-extrabold uppercase tracking-[.17em] text-[#168477]">Your snapshot is ready</p>
-                <h2 className="mt-2 font-serif text-3xl leading-tight tracking-[-.025em]" data-testid="text-report-title">A starting point, made personal.</h2>
+                <h2 className="mt-2 font-serif text-3xl leading-tight tracking-[-.025em]" data-testid="text-report-title">{isBusiness ? "A stronger starting point for your business." : "A starting point, made personal."}</h2>
                 <p className="mt-3 text-sm leading-6 text-[#687a77]">This is an indicative guide based on what you shared, not a recommendation or financial advice. An adviser can help you refine it.</p>
                 {report.figures.length > 0 && (
                   <section className="mt-7 rounded-[1.5rem] bg-[#21645e] p-5 text-[#fbf8ed] shadow-[0_16px_34px_rgba(33,100,94,.18)] sm:p-6" aria-labelledby="figures-title" data-testid="section-report-figures">
@@ -611,4 +639,8 @@ export default function PersonalToolkitAd() {
       </section>
     </main>
   );
+}
+
+export default function PersonalToolkitAd() {
+  return <ToolkitAd kind="personal" />;
 }

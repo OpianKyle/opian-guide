@@ -16,7 +16,7 @@ import Appointments from '@/pages/appointments';
 import Documents from '@/pages/documents';
 import Toolkits from '@/pages/toolkits';
 import ToolkitSubmissions from '@/pages/toolkit-submissions';
-import PersonalToolkitAd from '@/pages/personal-toolkit-ad';
+import PersonalToolkitAd, { ToolkitAd } from '@/pages/personal-toolkit-ad';
 import Contact from '@/pages/contact';
 import Settings from '@/pages/settings';
 import NotFound from '@/pages/not-found';
@@ -124,6 +124,7 @@ function Router() {
       <Route path="/auth" component={Auth} />
       <Route path="/fna" component={FnaForm} />
       <Route path="/personal-toolkit" component={PersonalToolkitAd} />
+      <Route path="/business-toolkit">{() => <ToolkitAd kind="business" />}</Route>
       {/* Admin */}
       <Route path="/admin/:rest*">{() => <AdminProtectedApp />}</Route>
       {/* Advisor / client */}
