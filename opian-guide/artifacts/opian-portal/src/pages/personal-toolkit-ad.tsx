@@ -33,7 +33,6 @@ import {
   UsersRound,
   Wallet,
 } from "lucide-react";
-import { Link } from "wouter";
 import { useAuth } from "@/contexts/auth";
 import { downloadToolkitPdf } from "@/lib/toolkit-pdf";
 
@@ -206,7 +205,7 @@ function ActionButton({
   );
 }
 
-export function ToolkitAd({ kind }: { kind: ToolkitKind }) {
+export function ToolkitAdFlow({ kind }: { kind: ToolkitKind }) {
   const {
     user,
     adminUser,
@@ -435,26 +434,6 @@ export function ToolkitAd({ kind }: { kind: ToolkitKind }) {
       <div className="pointer-events-none absolute -left-24 top-[18%] h-56 w-56 rounded-full bg-[#f4d6aa]/50 blur-3xl" aria-hidden="true" />
       <div className="pointer-events-none absolute -right-24 bottom-[10%] h-72 w-72 rounded-full bg-[#cce8dd]/55 blur-3xl" aria-hidden="true" />
       <section className="relative mx-auto w-full max-w-3xl">
-        <nav className="mb-4 flex justify-center" aria-label="Choose a financial toolkit">
-          <div className="inline-flex rounded-full border border-[#e8dfce] bg-[#fffdf7]/90 p-1 shadow-sm backdrop-blur-sm">
-            <Link
-              href="/personal-toolkit"
-              aria-current={!isBusiness ? "page" : undefined}
-              className={`rounded-full px-4 py-2 text-sm font-semibold transition-colors ${!isBusiness ? "bg-[#216f68] text-white" : "text-[#526866] hover:bg-[#e8f5ef]"}`}
-              data-testid="link-personal-toolkit"
-            >
-              Personal toolkit
-            </Link>
-            <Link
-              href="/business-toolkit"
-              aria-current={isBusiness ? "page" : undefined}
-              className={`rounded-full px-4 py-2 text-sm font-semibold transition-colors ${isBusiness ? "bg-[#216f68] text-white" : "text-[#526866] hover:bg-[#e8f5ef]"}`}
-              data-testid="link-business-toolkit"
-            >
-              Business toolkit
-            </Link>
-          </div>
-        </nav>
         <div className="absolute -right-20 -top-16 h-60 w-60 rounded-full bg-[#f5c995]/55 blur-3xl" aria-hidden="true" />
         <div className="relative rounded-[1.75rem] border border-[#e8dfce] bg-[#fffdf7]/90 p-5 backdrop-blur-sm shadow-[0_25px_75px_rgba(79,72,53,.12)] sm:rounded-[2rem] sm:p-8 lg:p-10">
             {flow === "questions" && currentStep && (
@@ -642,5 +621,5 @@ export function ToolkitAd({ kind }: { kind: ToolkitKind }) {
 }
 
 export default function PersonalToolkitAd() {
-  return <ToolkitAd kind="personal" />;
+  return <ToolkitAdFlow kind="personal" />;
 }
