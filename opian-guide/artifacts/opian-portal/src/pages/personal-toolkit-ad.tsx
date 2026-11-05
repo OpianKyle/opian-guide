@@ -417,7 +417,12 @@ export default function PersonalToolkitAd() {
   const report = submission && validatedAnswers ? calculateToolkit(KIND, validatedAnswers) : null;
 
   return (
-    <main className="relative min-h-[100dvh] overflow-hidden bg-[#f8f3e8] px-4 py-5 text-[#263b4b] sm:px-6 sm:py-10">
+    <main
+      className="relative min-h-[100dvh] overflow-hidden bg-[#f8f3e8] bg-cover bg-center px-4 py-5 text-[#263b4b] sm:px-6 sm:py-10"
+      style={{
+        backgroundImage: `linear-gradient(rgba(248, 243, 232, 0.18), rgba(248, 243, 232, 0.3)), url("${import.meta.env.BASE_URL}personal-toolkit-background.jpg")`,
+      }}
+    >
       <div className="pointer-events-none fixed inset-0 opacity-[0.18]" aria-hidden="true" style={{ backgroundImage: "radial-gradient(#b98a5c 0.7px, transparent 0.7px)", backgroundSize: "20px 20px" }} />
       <div className="pointer-events-none absolute -left-24 top-[18%] h-56 w-56 rounded-full bg-[#f4d6aa]/50 blur-3xl" aria-hidden="true" />
       <div className="pointer-events-none absolute -right-24 bottom-[10%] h-72 w-72 rounded-full bg-[#cce8dd]/55 blur-3xl" aria-hidden="true" />
