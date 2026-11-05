@@ -26,7 +26,7 @@ channel = "stable-25_05"
 [userenv.shared]
 NODE_ENV = "development"
 SMTP_FROM_EMAIL = "admin@myifa.co.za"
-SMTP_FROM_NAME = "Moventum"
+SMTP_FROM_NAME = "MyIFA"
 SMTP_HOST = "smtp.myifa.co.za"
 SMTP_PORT = "465"
 SMTP_USER = "admin@myifa.co.za"
@@ -42,10 +42,10 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "Opian portal preview"
+args = "MyIFA portal preview"
 
 [[workflows.workflow]]
-name = "Opian portal preview"
+name = "MyIFA portal preview"
 author = "agent"
 
 [[workflows.workflow.tasks]]

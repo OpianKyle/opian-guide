@@ -22,7 +22,7 @@ function wrap(content: string): string {
   <div style="${baseStyle}">
     <!-- Header -->
     <div style="background:#1a3a5c;padding:24px 32px;border-radius:8px 8px 0 0;">
-      <div style="color:#c9a84c;font-size:22px;font-weight:700;letter-spacing:-0.5px;">OPIAN</div>
+      <div style="color:#c9a84c;font-size:22px;font-weight:700;letter-spacing:-0.5px;">MyIFA</div>
       <div style="color:#8ab0cc;font-size:12px;margin-top:2px;">Financial Services</div>
     </div>
     <!-- Body -->
@@ -31,8 +31,8 @@ function wrap(content: string): string {
     </div>
     <!-- Footer -->
     <div style="padding:20px 32px;background:#f9f9f9;border:1px solid #e8e8e8;border-top:none;border-radius:0 0 8px 8px;text-align:center;">
-      <p style="margin:0 0 8px;color:#888;font-size:12px;">OPIAN Financial Services &bull; info@opianfinancialservices.co.za</p>
-      <p style="margin:0;color:#aaa;font-size:11px;">You're receiving this because you requested information from OPIAN. <a href="#" style="color:#1a3a5c;">Unsubscribe</a></p>
+      <p style="margin:0 0 8px;color:#888;font-size:12px;">MyIFA Financial Services</p>
+      <p style="margin:0;color:#aaa;font-size:11px;">You're receiving this because you requested information from MyIFA. <a href="#" style="color:#1a3a5c;">Unsubscribe</a></p>
     </div>
   </div>
 </body>
@@ -49,8 +49,12 @@ function p(text: string): string {
 }
 
 function cta(text: string): string {
+  const contactEmail = process.env["SMTP_FROM_EMAIL"];
+  const action = contactEmail
+    ? `<a href="mailto:${encodeURIComponent(contactEmail)}" style="display:inline-block;background:#c9a84c;color:#ffffff;font-weight:600;font-size:15px;padding:14px 32px;border-radius:6px;text-decoration:none;">${text}</a>`
+    : `<span style="display:inline-block;background:#c9a84c;color:#ffffff;font-weight:600;font-size:15px;padding:14px 32px;border-radius:6px;">${text}</span><p style="color:#666;font-size:12px;">Reply to this email to get in touch.</p>`;
   return `<div style="text-align:center;margin:28px 0;">
-    <a href="mailto:info@opianfinancialservices.co.za" style="display:inline-block;background:#c9a84c;color:#ffffff;font-weight:600;font-size:15px;padding:14px 32px;border-radius:6px;text-decoration:none;">${text}</a>
+    ${action}
   </div>`;
 }
 
@@ -60,11 +64,11 @@ function divider(): string {
 
 export const campaignTemplates: Record<number, EmailTemplate> = {
   0: {
-    subject: "Welcome to OPIAN – Your Financial Journey Starts Here",
+    subject: "Welcome to MyIFA – Your Financial Journey Starts Here",
     html: (n) => wrap(`
       ${h1(`Welcome, ${n}!`)}
-      ${p("Thank you for your interest in OPIAN Financial Services. We're excited to be part of your financial journey.")}
-      ${p("At OPIAN, we believe every South African deserves expert, personalised financial guidance — whether you're planning for retirement, protecting your family, or growing your wealth.")}
+      ${p("Thank you for your interest in MyIFA Financial Services. We're excited to be part of your financial journey.")}
+      ${p("At MyIFA, we believe every South African deserves expert, personalised financial guidance — whether you're planning for retirement, protecting your family, or growing your wealth.")}
       ${p("Over the next 30 days, we'll share valuable insights, tips, and strategies to help you make informed financial decisions. No jargon, no pressure — just honest advice.")}
       ${divider()}
       ${p("<strong>What to expect:</strong><br>✅ Expert insights on life cover, retirement, and investment<br>✅ Real-world strategies tailored for South Africans<br>✅ A free, no-obligation consultation when you're ready")}
@@ -79,7 +83,7 @@ export const campaignTemplates: Record<number, EmailTemplate> = {
       ${p("Life cover isn't about dying — it's about protecting the people you love while you're still here to make a difference.")}
       ${p("<strong>A simple rule of thumb:</strong> Your life cover should be at least 10–12 times your annual income to adequately protect your family's lifestyle.")}
       ${divider()}
-      ${p("At OPIAN, we help you calculate exactly how much cover you need, compare the best products on the market, and put a plan in place that fits your budget.")}
+      ${p("At MyIFA, we help you calculate exactly how much cover you need, compare the best products on the market, and put a plan in place that fits your budget.")}
       ${cta("Get My Free Cover Assessment")}
     `)
   },
@@ -119,7 +123,7 @@ export const campaignTemplates: Record<number, EmailTemplate> = {
       ${h1(`Put your money to work, ${n}`)}
       ${p("Most South Africans keep their savings in a bank account earning 5–7% per year. Meanwhile, inflation sits at 5–6%, meaning their money barely keeps pace.")}
       ${p("Smart investing means your money grows <em>faster</em> than inflation, building real wealth over time. But with so many options — unit trusts, ETFs, endowments, RAs — where do you start?")}
-      ${p("<strong>The OPIAN approach:</strong> We match you with the right investment vehicle based on your goals, timeline, tax situation, and risk appetite. No one-size-fits-all.")}
+      ${p("<strong>The MyIFA approach:</strong> We match you with the right investment vehicle based on your goals, timeline, tax situation, and risk appetite. No one-size-fits-all.")}
       ${cta("Start My Investment Journey")}
     `)
   },
@@ -140,7 +144,7 @@ export const campaignTemplates: Record<number, EmailTemplate> = {
       ${p("We've covered some important topics over the past week: life cover, income protection, dread disease, investing, and retirement. Hopefully some of these have sparked useful thinking about your own financial situation.")}
       ${p("Remember: <strong>you don't have to tackle everything at once.</strong> A good financial plan starts with a conversation — understanding where you are today and where you want to be tomorrow.")}
       ${p("Our advisors are available for a no-obligation chat at any time. There's no pressure, no hard sell — just honest, expert guidance.")}
-      ${cta("Chat to an OPIAN Advisor")}
+      ${cta("Chat to a MyIFA Advisor")}
     `)
   },
   8: {
@@ -149,7 +153,7 @@ export const campaignTemplates: Record<number, EmailTemplate> = {
       ${h1(`Your will — is it up to date?`)}
       ${p(`${n}, more than <strong>70% of South Africans</strong> die without a valid will. The consequences for your loved ones can be severe: delayed estates, legal disputes, and assets distributed in ways you never intended.`)}
       ${p("Estate planning goes beyond a will. It includes appointing guardians for minor children, planning for estate duty, and ensuring your assets transfer efficiently to the right people.")}
-      ${p("At OPIAN, we guide you through the entire estate planning process to protect your legacy.")}
+      ${p("At MyIFA, we guide you through the entire estate planning process to protect your legacy.")}
       ${cta("Protect My Estate")}
     `)
   },
@@ -189,7 +193,7 @@ export const campaignTemplates: Record<number, EmailTemplate> = {
       ${h1(`Aggressive, moderate, or conservative — which are you?`)}
       ${p(`${n}, your investment risk profile determines how your money is invested. Choose too aggressively and you may panic when markets dip. Too conservatively, and inflation erodes your purchasing power.`)}
       ${p("Your ideal risk profile depends on: your investment timeline (how long until you need the money), your financial goals, your income stability, and your emotional response to market volatility.")}
-      ${p("Getting this right is crucial. An OPIAN advisor will assess your profile and recommend the right investment strategy for your unique situation.")}
+      ${p("Getting this right is crucial. A MyIFA advisor will assess your profile and recommend the right investment strategy for your unique situation.")}
       ${cta("Discover My Risk Profile")}
     `)
   },
@@ -206,7 +210,7 @@ export const campaignTemplates: Record<number, EmailTemplate> = {
   14: {
     subject: "Two Weeks In — A Special Offer Just for You",
     html: (n) => wrap(`
-      ${h1(`${n}, thank you for your interest in OPIAN`)}
+      ${h1(`${n}, thank you for your interest in MyIFA`)}
       ${p("You've been following our financial education series for two weeks now, and we want to show our appreciation.")}
       ${p("<strong>For a limited time, we're offering a comprehensive financial needs analysis (FNA) at no charge.</strong> This is a R2,500 value, completely free.")}
       ${p("Our FNA covers: your complete insurance needs, retirement projections, investment strategy, tax optimisation, and estate planning requirements — all in one 60-minute session.")}
@@ -239,7 +243,7 @@ export const campaignTemplates: Record<number, EmailTemplate> = {
       ${h1(`Your business is an asset — treat it like one`)}
       ${p(`${n}, if you own a business, your financial planning needs are more complex — and more important — than the average employee.`)}
       ${p("Business cover considerations include: key man insurance (protecting the business if you die or become disabled), buy-and-sell agreements (ensuring business continuity), and business overhead protection (covering operating costs during illness).")}
-      ${p("Many business owners pour everything into their business while neglecting their personal financial security. An OPIAN advisor can help you balance both.")}
+      ${p("Many business owners pour everything into their business while neglecting their personal financial security. A MyIFA advisor can help you balance both.")}
       ${cta("Business Owner Financial Review")}
     `)
   },
@@ -264,12 +268,12 @@ export const campaignTemplates: Record<number, EmailTemplate> = {
     `)
   },
   20: {
-    subject: "Real Results: How OPIAN Helped the Nkosi Family",
+    subject: "Real Results: How MyIFA Helped the Nkosi Family",
     html: (n) => wrap(`
       ${h1(`From financial stress to financial freedom`)}
-      ${p(`${n}, meet the Nkosi family (details changed for privacy). When they first came to OPIAN, they had R450,000 in debt, no life cover, and minimal retirement savings.`)}
+      ${p(`${n}, meet the Nkosi family (details changed for privacy). When they first came to MyIFA, they had R450,000 in debt, no life cover, and minimal retirement savings.`)}
       ${p("Three years later: their high-interest debt is cleared, they have comprehensive life and disability cover in place, R180,000 in their emergency fund, and R320,000 growing in a retirement annuity.")}
-      ${p("<em>\"OPIAN didn't just give us a plan — they gave us hope. We finally feel in control of our money.\"</em> — The Nkosi Family")}
+      ${p("<em>\"MyIFA didn't just give us a plan — they gave us hope. We finally feel in control of our money.\"</em> — The Nkosi Family")}
       ${p("Your story can have the same outcome. It starts with a single conversation.")}
       ${cta("Begin My Financial Transformation")}
     `)
@@ -295,13 +299,13 @@ export const campaignTemplates: Record<number, EmailTemplate> = {
     `)
   },
   23: {
-    subject: "Why OPIAN Clients Stay with Us for Life",
+    subject: "Why MyIFA Clients Stay with Us for Life",
     html: (n) => wrap(`
       ${h1(`Our commitment to you goes beyond a policy`)}
-      ${p(`${n}, at OPIAN, we believe financial planning is a relationship, not a transaction. Our advisors don't just sell products — they build long-term plans that evolve with your life.`)}
+      ${p(`${n}, at MyIFA, we believe financial planning is a relationship, not a transaction. Our advisors don't just sell products — they build long-term plans that evolve with your life.`)}
       ${p("Annual reviews ensure your cover and investments stay aligned with your changing circumstances — new job, new baby, new home, divorce, inheritance. Life changes and your financial plan should too.")}
       ${p("We're independent advisors, which means we have no obligation to recommend any specific product. Our only obligation is to you.")}
-      ${cta("Experience the OPIAN Difference")}
+      ${cta("Experience the MyIFA Difference")}
     `)
   },
   24: {
@@ -310,7 +314,7 @@ export const campaignTemplates: Record<number, EmailTemplate> = {
       ${h1(`People with written plans accumulate 3x more wealth`)}
       ${p(`${n}, research consistently shows that people with a written financial plan save more, invest more consistently, and retire more comfortably than those without one.`)}
       ${p("A written plan creates accountability, clarity, and direction. It turns vague intentions like 'save more' into concrete, measurable goals with deadlines.")}
-      ${p("An OPIAN financial plan covers every aspect of your financial life in a single, integrated document — updated regularly as your life evolves.")}
+      ${p("A MyIFA financial plan covers every aspect of your financial life in a single, integrated document — updated regularly as your life evolves.")}
       ${cta("Get My Written Financial Plan")}
     `)
   },
@@ -337,10 +341,10 @@ export const campaignTemplates: Record<number, EmailTemplate> = {
     `)
   },
   27: {
-    subject: "What to Expect When You Meet with OPIAN",
+    subject: "What to Expect When You Meet with MyIFA",
     html: (n) => wrap(`
       ${h1(`No surprises — here's exactly how it works`)}
-      ${p(`${n}, we know meeting with a financial advisor can feel daunting. Here's exactly what you can expect from your first OPIAN consultation:`)}
+      ${p(`${n}, we know meeting with a financial advisor can feel daunting. Here's exactly what you can expect from your first MyIFA consultation:`)}
       ${p("📋 <strong>Step 1 – Discovery (20 min):</strong> We listen. What are your goals? What keeps you up at night? What does financial security look like for you?")}
       ${p("📊 <strong>Step 2 – Analysis (20 min):</strong> We review your current situation — income, expenses, existing cover, savings, and debt.")}
       ${p("💡 <strong>Step 3 – Recommendations (20 min):</strong> We present clear, prioritised recommendations. No jargon, no pressure.")}
@@ -363,7 +367,7 @@ export const campaignTemplates: Record<number, EmailTemplate> = {
     html: (n) => wrap(`
       ${h1(`One last chance to connect, ${n}`)}
       ${p("This is our second-to-last email in this series, and we want to be direct: we believe you deserve a better financial future, and we'd genuinely love to help you achieve it.")}
-      ${p("Whether you're worried about protecting your family, building wealth, or retiring comfortably — OPIAN has the expertise and the products to help you get there.")}
+      ${p("Whether you're worried about protecting your family, building wealth, or retiring comfortably — MyIFA has the expertise and the products to help you get there.")}
       ${p("Tomorrow's email will be our last in this series. We hope you'll take us up on our free consultation offer before then.")}
       ${cta("Yes, I'd Like My Free Consultation")}
     `)
@@ -374,11 +378,11 @@ export const campaignTemplates: Record<number, EmailTemplate> = {
       ${h1(`Thank you, ${n} — this is goodbye (for now)`)}
       ${p("This is the final email in our 30-day financial insights series. We hope the information has been valuable and has given you a clearer picture of what's possible for your financial future.")}
       ${p("If you've been on the fence about booking a consultation, this is your last nudge: <strong>our first session is always free, always no-pressure, and always personalised to you.</strong>")}
-      ${p("Even if you're not ready today, please know that our door is always open. When the time is right — whether it's next week or next year — OPIAN will be here.")}
+      ${p("Even if you're not ready today, please know that our door is always open. When the time is right — whether it's next week or next year — MyIFA will be here.")}
       ${p("Thank you for trusting us with your inbox. We wish you and your family a financially secure future.")}
       ${cta("Book When You're Ready")}
       ${divider()}
-      ${p("With warm regards,<br><strong>The OPIAN Team</strong><br>info@opianfinancialservices.co.za")}
+      ${p("With warm regards,<br><strong>The MyIFA Team</strong>")}
     `)
   },
 };
@@ -389,9 +393,9 @@ export function getTemplate(day: number): EmailTemplate {
 
   // Generic follow-up for any unlisted day
   return {
-    subject: `OPIAN Financial Services – Your Financial Future Matters`,
+    subject: `MyIFA Financial Services – Your Financial Future Matters`,
     html: (n) => wrap(`
-      ${h1(`Hi ${n} — a quick note from OPIAN`)}
+      ${h1(`Hi ${n} — a quick note from MyIFA`)}
       ${p("We're on a mission to help every South African achieve financial security, and we'd love to help you do the same.")}
       ${p("Whether you need life cover, a retirement strategy, investment advice, or a comprehensive financial plan — our team of expert advisors is ready to help.")}
       ${p("Our initial consultation is free, personalised, and carries zero obligation. We simply have a conversation about your goals and how we might help.")}

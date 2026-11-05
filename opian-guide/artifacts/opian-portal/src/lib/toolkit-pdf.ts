@@ -31,7 +31,7 @@ export async function downloadToolkitPdf(submission: ToolkitSubmission): Promise
     doc.setFont("helvetica", "bold");
     doc.setFontSize(8);
     doc.setTextColor(...NAVY);
-    doc.text("OPIAN LIFE  |  FINANCIAL TOOLKIT REPORT", margin, 12);
+    doc.text("MyIFA  |  FINANCIAL TOOLKIT REPORT", margin, 12);
     doc.setDrawColor(...ORANGE);
     doc.setLineWidth(0.5);
     doc.line(margin, 15, pageWidth - margin, 15);
@@ -137,10 +137,9 @@ export async function downloadToolkitPdf(submission: ToolkitSubmission): Promise
     { size: 8, gap: 2 },
   );
   writeBlock(
-    "OPIAN Life will use the submitted personal information to review these objectives and contact the client as consented to, in accordance with applicable privacy requirements.",
+    "MyIFA will use the submitted personal information to review these objectives and contact the client as consented to, in accordance with applicable privacy requirements.",
     { size: 8, gap: 2 },
   );
-  writeBlock("OPIAN Life  |  FSP No. 50974", { bold: true, size: 8, color: NAVY });
 
   const pages = doc.getNumberOfPages();
   for (let page = 1; page <= pages; page += 1) {
@@ -158,5 +157,5 @@ export async function downloadToolkitPdf(submission: ToolkitSubmission): Promise
 
   const safeName = submission.clientName.trim().replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "");
   const date = new Date(submission.createdAt).toISOString().slice(0, 10);
-  doc.save(`OPIAN-${kind}-toolkit-${safeName || "client"}-${date}.pdf`);
+  doc.save(`MyIFA-${kind}-toolkit-${safeName || "client"}-${date}.pdf`);
 }

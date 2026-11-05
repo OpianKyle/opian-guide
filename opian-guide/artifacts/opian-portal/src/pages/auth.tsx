@@ -120,7 +120,7 @@ export default function Auth() {
           </div>
 
           <div className="flex items-end justify-between gap-4 border-t border-white/20 pt-5 text-xs text-white/65">
-            <p>MyIFA Financial Services · OPIAN Advisor Portal</p>
+            <p>MyIFA Financial Services · Client Portal</p>
             <Link href="/fna" className="auth-link inline-flex shrink-0 items-center gap-1.5 font-medium text-white/85 transition-colors hover:text-white" data-testid="link-financial-assessment">
               Financial needs assessment <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
             </Link>
@@ -137,7 +137,7 @@ export default function Auth() {
             <div className="mb-7 flex items-center justify-between">
               <div>
                 <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#8b7746]">Client &amp; advisor access</p>
-                <p className="mt-1 text-xs text-[#777365]">OPIAN secure sign-in</p>
+                <p className="mt-1 text-xs text-[#777365]">MyIFA secure sign-in</p>
               </div>
               <div className="flex h-10 w-10 items-center justify-center rounded-full border border-[#e5dcc8] bg-[#f5f0e4] text-[#8b7746]" aria-hidden="true">
                 {verificationPending ? <MailCheck className="h-5 w-5" /> : <LockKeyhole className="h-5 w-5" />}

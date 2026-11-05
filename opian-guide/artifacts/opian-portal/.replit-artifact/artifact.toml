@@ -1,6 +1,6 @@
 kind = "web"
 previewPath = "/"
-title = "OPIAN Advisor Portal"
+title = "MyIFA Advisor Portal"
 version = "1.0.0"
 id = "artifacts/opian-portal"
 router = "path"

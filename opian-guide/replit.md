@@ -1,11 +1,11 @@
-# OPIAN Advisor Portal — Project Overview
+# MyIFA Financial Services — Project Overview
 
 A pnpm monorepo for a financial advisory management platform. Three services run together:
 
 | Service | Preview Path | Description |
 |---|---|---|
-| **OPIAN Advisor Portal** | `/` | Public-facing advisor portal (landing page + FNA, appointments, documents) |
-| **OPIAN Admin Portal** | `/admin/` | Internal Command Centre for staff |
+| **MyIFA Advisor Portal** | `/` | Public-facing advisor portal (landing page + FNA, appointments, documents) |
+| **MyIFA Admin Portal** | `/admin/` | Internal Command Centre for staff |
 | **API Server** | `/api/` | Express 5 REST API backing both portals |
 
 ## Stack
@@ -49,4 +49,5 @@ All set as Replit Secrets: `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSW
 
 ## User preferences
 
+- Keep the MyIFA customer-facing branding; retain imported package and artifact identifiers to preserve existing routes and workflows.
 - Keep existing project structure and stack (do not migrate or restructure)

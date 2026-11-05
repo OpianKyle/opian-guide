@@ -228,7 +228,7 @@ export default function Toolkits() {
               <div>
                 <h2 className="font-semibold text-foreground">Toolkit submitted</h2>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  Your answers have been shared with the OPIAN team. Your report download should start automatically.
+                  Your answers have been shared with the MyIFA team. Your report download should start automatically.
                 </p>
                 {formError && <p role="alert" className="mt-2 text-sm text-destructive">{formError}</p>}
               </div>
@@ -297,7 +297,7 @@ export default function Toolkits() {
       <section className="space-y-4">
         <div>
           <h2 className="text-xl font-serif font-bold">Your submitted reports</h2>
-          <p className="text-sm text-muted-foreground">Only you and authorised OPIAN staff can see these submissions.</p>
+          <p className="text-sm text-muted-foreground">Only you and authorised MyIFA staff can see these submissions.</p>
         </div>
         {isLoading ? (
           <p className="text-sm text-muted-foreground">Loading your submissions…</p>

@@ -205,22 +205,22 @@ const BUSINESS_STEPS: ToolkitStep[] = [
 
 const CONTACT_STEP_PERSONAL: ToolkitStep = {
   title: "Your contact details",
-  intro: "Your account name and email will be shared with OPIAN Life so an advisor can follow up.",
+  intro: "Your account name and email will be shared with MyIFA so an advisor can follow up.",
   fields: [
     { id: "phone", label: "South African cellphone number", kind: "text", required: true, help: "For example, 082 123 4567." },
     choice("contactTime", "Best time to contact you", ["Morning (08:00-12:00)", "Afternoon (12:00-17:00)", "Any time"]),
-    { id: "consent", label: "I agree that OPIAN Life may receive and use my toolkit answers to contact me about my financial objectives, in line with POPIA.", kind: "consent", required: true },
+    { id: "consent", label: "I agree that MyIFA may receive and use my toolkit answers to contact me about my financial objectives, in line with POPIA.", kind: "consent", required: true },
   ],
 };
 
 const CONTACT_STEP_BUSINESS: ToolkitStep = {
   title: "Your contact details",
-  intro: "Your account name and email will be shared with OPIAN Life so an advisor can follow up.",
+  intro: "Your account name and email will be shared with MyIFA so an advisor can follow up.",
   fields: [
     { id: "businessName", label: "Business name", kind: "text", required: true },
     { id: "phone", label: "South African cellphone number", kind: "text", required: true, help: "For example, 082 123 4567." },
     choice("contactTime", "Best time to contact you", ["Morning (08:00-12:00)", "Afternoon (12:00-17:00)", "Any time"]),
-    { id: "consent", label: "I agree that OPIAN Life may receive and use my toolkit answers to contact me about my financial objectives, in line with POPIA.", kind: "consent", required: true },
+    { id: "consent", label: "I agree that MyIFA may receive and use my toolkit answers to contact me about my financial objectives, in line with POPIA.", kind: "consent", required: true },
   ],
 };
 

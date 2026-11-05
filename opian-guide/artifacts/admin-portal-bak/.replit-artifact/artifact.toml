@@ -1,6 +1,6 @@
 kind = "web"
 previewPath = "/admin/"
-title = "OPIAN Admin Portal"
+title = "MyIFA Admin Portal"
 version = "1.0.0"
 id = "artifacts/admin-portal"
 router = "path"

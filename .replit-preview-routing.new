@@ -38,10 +38,10 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "Opian portal preview"
+args = "MyIFA portal preview"
 
 [[workflows.workflow]]
-name = "Opian portal preview"
+name = "MyIFA portal preview"
 author = "agent"
 
 [[workflows.workflow.tasks]]

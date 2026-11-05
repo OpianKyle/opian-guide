@@ -67,7 +67,7 @@ function verificationEmailHtml(name: string, code: string): string {
 <html lang="en">
   <body style="margin:0;background:#f5f7fb;font-family:Arial,sans-serif;color:#172033">
     <div style="max-width:560px;margin:32px auto;padding:32px;background:#fff;border-radius:12px">
-      <h1 style="font-size:22px;margin:0 0 16px">Verify your OPIAN account</h1>
+      <h1 style="font-size:22px;margin:0 0 16px">Verify your MyIFA account</h1>
       <p style="font-size:15px;line-height:1.6">Hi ${escapeHtml(name)}, enter this code to finish creating your client account:</p>
       <p style="font-size:32px;font-weight:700;letter-spacing:8px;text-align:center;padding:16px;background:#f5f7fb;border-radius:8px">${code}</p>
       <p style="font-size:14px;line-height:1.6;color:#596579">This code expires in 10 minutes. If you did not request an account, you can ignore this email.</p>
@@ -341,7 +341,7 @@ router.post("/auth/signup", async (req, res): Promise<void> => {
     try {
       await sendMail({
         to: email,
-        subject: "Verify your OPIAN account",
+        subject: "Verify your MyIFA account",
         html: verificationEmailHtml(name, code),
       });
     } catch (err) {
@@ -487,7 +487,7 @@ router.post("/auth/resend-verification", async (req, res): Promise<void> => {
 
     await sendMail({
       to: email,
-      subject: "Your OPIAN verification code",
+      subject: "Your MyIFA verification code",
       html: verificationEmailHtml(pendingSignup.name, code),
     });
     res.json(ResendClientVerificationResponse.parse({ message }));

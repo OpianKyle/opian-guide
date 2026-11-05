@@ -1,6 +1,6 @@
 ---
 name: FNA review access
-description: Role boundary for viewing submitted Financial Needs Analyses in the OPIAN portal.
+description: Role boundary for viewing submitted Financial Needs Analyses in the MyIFA portal.
 ---
 
 Clients can open and submit the FNA without signing in. Full saved FNA answers must be viewable by advisors and administrators, but saved records must not be publicly readable.

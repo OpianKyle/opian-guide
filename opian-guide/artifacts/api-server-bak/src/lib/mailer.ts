@@ -4,7 +4,7 @@ const host = process.env["SMTP_HOST"];
 const port = Number(process.env["SMTP_PORT"] || 465);
 const user = process.env["SMTP_USER"];
 const pass = process.env["SMTP_PASS"];
-const fromName = process.env["SMTP_FROM_NAME"] || "Opian";
+const fromName = process.env["SMTP_FROM_NAME"] || "MyIFA";
 const fromEmail = process.env["SMTP_FROM_EMAIL"] || user;
 
 // Transporter is created lazily so that missing SMTP env vars don't crash the
