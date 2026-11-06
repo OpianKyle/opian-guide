@@ -3,3 +3,4 @@
 - [drizzle-kit push needs a TTY](drizzle-kit-push-tty.md) — push/push-force can hang non-interactively; check schema directly first and skip push if it already matches.
 - [Workspace install recovery](workspace-install-recovery.md) — use frozen-lockfile workspace filters when an unrelated package blocks the full monorepo install.
 - [Git import history](git-import-history.md) — connect unrelated local and GitHub histories with a backed-up, current-tree-preserving merge.
+- [Nested Replit configuration](nested-replit-configuration.md) — the Replit dotfile validator replaces the workspace-root `.replit`, even when its temp file comes from a nested app.
