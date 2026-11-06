@@ -15,6 +15,7 @@ import {
   VerifyClientEmailResponse,
 } from "@workspace/api-zod";
 import { sendMail } from "../lib/mailer";
+import { getCampaignTemplate } from "../lib/campaign";
 
 const router: IRouter = Router();
 
@@ -425,6 +426,20 @@ router.post("/auth/verify-email", async (req, res): Promise<void> => {
     if (!newUser) {
       res.status(500).json({ error: "Email verified, but the account could not be loaded." });
       return;
+    }
+
+    try {
+      const welcomeTemplate = await getCampaignTemplate(0);
+      const firstName = newUser.name.trim().split(/\s+/)[0] || "there";
+      await sendMail({
+        to: newUser.email,
+        subject: welcomeTemplate.subject,
+        html: welcomeTemplate.html(escapeHtml(firstName)),
+      });
+      req.log.info({ userId: newUser.id }, "New client welcome campaign email sent");
+    } catch (err) {
+      // Account creation should succeed even if campaign delivery is temporarily unavailable.
+      req.log.error({ err, userId: newUser.id }, "New client welcome campaign email failed");
     }
 
     const session = req.session as unknown as Record<string, unknown>;
