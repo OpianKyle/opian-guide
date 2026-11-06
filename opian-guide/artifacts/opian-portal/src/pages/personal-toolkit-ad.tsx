@@ -33,6 +33,7 @@ import {
   UsersRound,
   Wallet,
 } from "lucide-react";
+import businessToolkitBackground from "@assets/generated_images/myifa-business-toolkit-background.jpg";
 import { useAuth } from "@/contexts/auth";
 import { downloadToolkitPdf } from "@/lib/toolkit-pdf";
 
@@ -426,7 +427,7 @@ export function ToolkitAdFlow({ kind }: { kind: ToolkitKind }) {
       className="relative min-h-[100dvh] overflow-hidden bg-[#f8f3e8] bg-cover bg-center px-4 py-5 text-[#263b4b] sm:px-6 sm:py-10"
       style={{
         backgroundImage: isBusiness
-          ? "radial-gradient(circle at 18% 18%, rgba(244, 214, 170, .42), transparent 32%), radial-gradient(circle at 88% 78%, rgba(204, 232, 221, .58), transparent 34%)"
+          ? `linear-gradient(rgba(248, 243, 232, .36), rgba(248, 243, 232, .48)), url("${businessToolkitBackground}")`
           : `linear-gradient(rgba(248, 243, 232, 0.08), rgba(248, 243, 232, 0.16)), url("${import.meta.env.BASE_URL}personal-toolkit-people-background.jpg")`,
       }}
     >
