@@ -24,6 +24,8 @@ import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { useAuth } from "@/contexts/auth";
 import { downloadToolkitPdf } from "@/lib/toolkit-pdf";
+import familyPhoto from "@assets/generated_images/myifa-protection-family.jpg";
+import businessPhoto from "@assets/generated_images/myifa-business-planning.jpg";
 
 const answerText = (answers: ToolkitAnswers, id: string) => {
   const value = answers[id];
@@ -202,7 +204,16 @@ export default function Toolkits() {
       {!kind ? (
         <div className="grid gap-5 md:grid-cols-2">
           {(["personal", "business"] as const).map((toolkit) => (
-            <Card key={toolkit} className="border-border shadow-sm">
+            <Card key={toolkit} className="group overflow-hidden border-[#e4ddce] bg-[#fffdf8] shadow-sm transition-shadow hover:shadow-md">
+              <div className="h-44 overflow-hidden bg-[#e8e5dc]">
+                <img
+                  src={toolkit === "personal" ? familyPhoto : businessPhoto}
+                  alt={toolkit === "personal"
+                    ? "A South African family discussing financial protection with an adviser."
+                    : "South African business owners planning with an adviser around a table."}
+                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.025]"
+                />
+              </div>
               <CardHeader>
                 <div className="mb-2 flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
                   <FileText className="h-5 w-5" />

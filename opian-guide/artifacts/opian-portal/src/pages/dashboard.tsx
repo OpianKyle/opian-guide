@@ -12,6 +12,7 @@ import { motion } from "framer-motion";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/contexts/auth";
 import ToolkitDashboardPanel from "@/components/toolkit-dashboard-panel";
+import ClientPhotoHero from "@/components/client-photo-hero";
 
 const currency = new Intl.NumberFormat("en-ZA", { style: "currency", currency: "ZAR", maximumFractionDigits: 0 });
 
@@ -92,6 +93,13 @@ function ClientDashboard({
           Secure personal account
         </div>
       </motion.div>
+
+      <ClientPhotoHero
+        image="family"
+        eyebrow="Protection, made personal"
+        title="Cover that supports the people who count on you."
+        description="Your policy information is here when you need it. If your circumstances change, your MyIFA adviser can help you review what matters."
+      />
 
       <section aria-label="Policy overview" className="grid gap-3 sm:grid-cols-3">
         {isLoading ? (

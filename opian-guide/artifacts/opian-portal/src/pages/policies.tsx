@@ -7,8 +7,12 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { motion } from "framer-motion";
+import { useAuth } from "@/contexts/auth";
+import ClientPhotoHero from "@/components/client-photo-hero";
 
 export default function Policies() {
+  const { user } = useAuth();
+  const isClient = user?.role === "client";
   const { data: policies, isLoading } = useListPolicies();
 
   const getStatusColor = (status: string) => {
@@ -32,6 +36,15 @@ export default function Policies() {
           <Input placeholder="Search policies..." className="pl-9 bg-white" />
         </div>
       </div>
+
+      {isClient && (
+        <ClientPhotoHero
+          image="family"
+          eyebrow="Your protection, in view"
+          title="Understand the cover you have in place."
+          description="Review policy details and key dates here. Your policy documents remain the source for full terms, conditions and benefits."
+        />
+      )}
 
       <Card className="shadow-sm">
         <CardContent className="p-0">

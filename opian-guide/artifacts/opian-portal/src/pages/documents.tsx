@@ -13,6 +13,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/auth";
+import ClientPhotoHero from "@/components/client-photo-hero";
 
 function formatBytes(bytes: number): string {
   if (bytes === 0) return "0 B";
@@ -208,6 +209,15 @@ export default function Documents() {
           </Dialog>
         </div>
       </div>
+
+      {user?.role === "client" && (
+        <ClientPhotoHero
+          image="business"
+          eyebrow="A secure place for important records"
+          title="Keep the details that protect your plans together."
+          description="Your uploaded documents are listed below. Use the secure vault to keep relevant policy and financial records close at hand."
+        />
+      )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {isLoading ? (

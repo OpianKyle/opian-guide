@@ -13,6 +13,7 @@ import {
   type FnaData,
 } from "@/lib/fna-pdf";
 import "./fna.css";
+import ClientPhotoHero from "@/components/client-photo-hero";
 
 const DEFAULTS: FnaData = {
   firstName: "", lastName: "", email: "", phone: "",
@@ -355,6 +356,13 @@ export default function FnaForm() {
 
       {/* Form body */}
       <div className="fna-content max-w-3xl mx-auto px-4 py-6">
+        <ClientPhotoHero
+          image="family"
+          className="mb-5"
+          eyebrow="Plan around the people who matter"
+          title="A clearer picture of your financial needs."
+          description="This guided review helps bring your income, commitments and existing cover into one conversation with your adviser."
+        />
         <section className="fna-document-tools mb-5 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm" aria-label="Print and download FNA forms">
           <div className="mb-3">
             <h2 className="font-bold text-[#1B2A4A]">Print or download this FNA</h2>

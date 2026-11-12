@@ -6,8 +6,11 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/auth";
+import ClientPhotoHero from "@/components/client-photo-hero";
 
 export default function Contact() {
+  const { user } = useAuth();
   const { data: advisors, isLoading } = useListAdvisors();
   const { toast } = useToast();
 
@@ -27,6 +30,15 @@ export default function Contact() {
         <h1 className="text-3xl font-serif font-bold text-foreground">Contact Adviser</h1>
         <p className="text-muted-foreground mt-1">Get in touch with your dedicated financial expert</p>
       </div>
+
+      {user?.role === "client" && (
+        <ClientPhotoHero
+          image="family"
+          eyebrow="Real people. Straight answers."
+          title="Your adviser is here for the decisions ahead."
+          description="Whether you are reviewing your cover or planning for a new chapter, start the conversation here."
+        />
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-1 space-y-6">
