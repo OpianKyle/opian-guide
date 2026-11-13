@@ -6,6 +6,7 @@ import { Route, Switch, Router as WouterRouter, Redirect } from 'wouter';
 import { AuthProvider, useAuth } from '@/contexts/auth';
 import { AppLayout } from '@/components/layout';
 import Auth from '@/pages/auth';
+import HomePage from '@/pages/home';
 import Dashboard from '@/pages/dashboard';
 import Leads from '@/pages/leads';
 import EmailCampaigns from '@/pages/email-campaigns';
@@ -121,7 +122,7 @@ function Router() {
   return (
     <Switch>
       {/* Public */}
-      <Route path="/" component={Auth} />
+      <Route path="/" component={HomePage} />
       <Route path="/auth" component={Auth} />
       <Route path="/fna" component={FnaForm} />
       <Route path="/personal-toolkit" component={PersonalToolkitAd} />

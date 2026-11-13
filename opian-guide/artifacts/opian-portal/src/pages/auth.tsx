@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useLocation } from "wouter";
+import { Link, useLocation, useSearch } from "wouter";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, Eye, EyeOff, LockKeyhole, MailCheck, ShieldCheck } from "lucide-react";
 import { Logo } from "@/components/logo";
@@ -13,8 +13,11 @@ type Mode = "login" | "signup";
 export default function Auth() {
   const { user, adminUser, unifiedLogin, signup, verifyEmail, resendVerification, isLoading: authLoading } = useAuth();
   const [, setLocation] = useLocation();
+  const search = useSearch();
 
-  const [mode, setMode] = useState<Mode>("login");
+  const [mode, setMode] = useState<Mode>(() =>
+    new URLSearchParams(search).get("mode") === "signup" ? "signup" : "login",
+  );
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
