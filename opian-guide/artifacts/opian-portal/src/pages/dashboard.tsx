@@ -72,7 +72,7 @@ function ClientDashboard({
     .sort((a, b) => new Date(a.renewalDate!).getTime() - new Date(b.renewalDate!).getTime())[0];
 
   return (
-    <div className="mx-auto max-w-6xl space-y-7 pb-12">
+    <div className="client-dashboard mx-auto max-w-6xl space-y-7 pb-12">
       <motion.div
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}

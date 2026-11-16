@@ -192,7 +192,7 @@ export default function Toolkits() {
   };
 
   return (
-    <div className="mx-auto max-w-5xl space-y-8 pb-12">
+    <div className="client-toolkits mx-auto max-w-5xl space-y-8 pb-12">
       <div>
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">Planning tools</p>
         <h1 className="mt-2 text-3xl font-serif font-bold">Financial toolkits</h1>

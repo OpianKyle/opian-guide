@@ -17,7 +17,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/auth";
-import ClientPhotoHero from "@/components/client-photo-hero";
 
 const formSchema = z.object({
   clientName: z.string().min(2, "Client name is required"),
@@ -78,7 +77,7 @@ export default function Appointments() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6">
+    <div className={`${isClient ? "client-appointments " : ""}max-w-6xl mx-auto space-y-6`}>
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-serif font-bold text-foreground">Appointments</h1>
@@ -175,15 +174,6 @@ export default function Appointments() {
           </DialogContent>
         </Dialog>
       </div>
-
-      {isClient && (
-        <ClientPhotoHero
-          image="family"
-          eyebrow="A conversation with your adviser"
-          title="Make time to talk through what matters."
-          description="Book a meeting to review your cover, ask a question or plan for a change in your life."
-        />
-      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {isLoading ? (

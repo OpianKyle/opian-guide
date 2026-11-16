@@ -8,7 +8,6 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/auth";
-import ClientPhotoHero from "@/components/client-photo-hero";
 
 export default function Policies() {
   const { user } = useAuth();
@@ -25,7 +24,7 @@ export default function Policies() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6">
+    <div className={`${isClient ? "client-policies " : ""}max-w-6xl mx-auto space-y-6`}>
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-serif font-bold text-foreground">My Policies</h1>
@@ -36,15 +35,6 @@ export default function Policies() {
           <Input placeholder="Search policies..." className="pl-9 bg-white" />
         </div>
       </div>
-
-      {isClient && (
-        <ClientPhotoHero
-          image="family"
-          eyebrow="Your protection, in view"
-          title="Understand the cover you have in place."
-          description="Review policy details and key dates here. Your policy documents remain the source for full terms, conditions and benefits."
-        />
-      )}
 
       <Card className="shadow-sm">
         <CardContent className="p-0">
