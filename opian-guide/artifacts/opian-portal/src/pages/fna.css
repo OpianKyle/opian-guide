@@ -18,6 +18,45 @@
   font-family: var(--app-font-sans), sans-serif;
 }
 
+.fna-page--embedded {
+  min-height: auto !important;
+}
+
+.fna-page--embedded .fna-topbar {
+  position: static !important;
+  padding: 0.8rem 1.25rem !important;
+}
+
+.fna-heading {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 16px;
+}
+
+.fna-back-link {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 3px;
+  border-radius: 8px;
+  padding: 7px 9px;
+  color: var(--fna-navy);
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.fna-back-link:hover {
+  background: #f3f1e9;
+}
+
+.fna-back-link svg {
+  width: 16px;
+  height: 16px;
+}
+
 .fna-page *,
 .fna-page *::before,
 .fna-page *::after {
@@ -550,6 +589,18 @@
     gap: 8px;
   }
 
+  .fna-heading {
+    gap: 4px;
+  }
+
+  .fna-back-link {
+    padding: 6px;
+  }
+
+  .fna-back-link span {
+    display: none;
+  }
+
   .fna-brand-mark {
     width: 29px;
     height: 29px;
@@ -633,6 +684,12 @@
 
   .fna-page .fna-navigation {
     margin-top: 18px;
+  }
+}
+
+@media (max-width: 380px) {
+  .fna-page .fna-step-count {
+    display: none;
   }
 }
 

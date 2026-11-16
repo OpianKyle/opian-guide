@@ -90,6 +90,20 @@ function ProtectedApp() {
   );
 }
 
+/** Keep FNA submissions public while showing the portal shell to signed-in users. */
+function FnaRoute() {
+  const { user, isLoading } = useAuth();
+
+  if (isLoading) return <LoadingScreen />;
+  if (!user) return <FnaForm />;
+
+  return (
+    <AppLayout>
+      <FnaForm />
+    </AppLayout>
+  );
+}
+
 /** Admin protected routes */
 function AdminProtectedApp() {
   const { adminUser, isLoading } = useAuth();
@@ -124,7 +138,7 @@ function Router() {
       {/* Public */}
       <Route path="/" component={HomePage} />
       <Route path="/auth" component={Auth} />
-      <Route path="/fna" component={FnaForm} />
+      <Route path="/fna" component={FnaRoute} />
       <Route path="/personal-toolkit" component={PersonalToolkitAd} />
       <Route path="/business-toolkit" component={BusinessToolkitAd} />
       {/* Admin */}

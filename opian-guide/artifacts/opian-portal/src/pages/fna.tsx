@@ -1,7 +1,9 @@
 import { useState, useCallback, type ReactNode } from "react";
+import { Link } from "wouter";
 import { useCreateFnaSubmission, getListFnaSubmissionsQueryKey } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/auth";
 import {
   Check, ChevronRight, ChevronLeft, Download, Printer, UserRound,
   BriefcaseBusiness, BarChart3, Landmark, CalendarClock,
@@ -194,6 +196,7 @@ function validateStep(step: number, d: FnaData): string[] {
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 export default function FnaForm() {
+  const { user } = useAuth();
   const { toast } = useToast();
   const createMutation = useCreateFnaSubmission();
   const queryClient = useQueryClient();
@@ -318,12 +321,22 @@ export default function FnaForm() {
   };
 
   return (
-    <div className="fna-page min-h-screen bg-[#f0f4f8]">
+    <div className={`fna-page min-h-screen bg-[#f0f4f8] ${user ? "fna-page--embedded" : ""}`}>
       {/* Top bar */}
       <div className="fna-topbar bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between sticky top-0 z-10">
-        <div className="fna-brand">
-          <span className="fna-brand-mark">O</span>
-          <span className="text-xs font-bold uppercase tracking-widest text-[#718096]">Financial Needs Analysis</span>
+        <div className="fna-heading">
+          <Link
+            href={user ? "/dashboard" : "/"}
+            className="fna-back-link"
+            aria-label={user ? "Back to dashboard" : "Back to MyIFA home"}
+          >
+            <ChevronLeft aria-hidden="true" />
+            <span>{user ? "Back to dashboard" : "Back to MyIFA"}</span>
+          </Link>
+          <div className="fna-brand">
+            <span className="fna-brand-mark">O</span>
+            <span className="text-xs font-bold uppercase tracking-widest text-[#718096]">Financial Needs Analysis</span>
+          </div>
         </div>
         <span className="fna-step-count text-sm font-bold text-[#1B2A4A]">Step {step + 1} of {STEPS.length}</span>
         <div className="fna-progress-copy text-right">
