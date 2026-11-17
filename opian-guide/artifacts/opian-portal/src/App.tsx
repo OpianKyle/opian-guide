@@ -1,7 +1,8 @@
+import { useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import { Route, Switch, Router as WouterRouter, Redirect } from 'wouter';
+import { Route, Switch, Router as WouterRouter, Redirect, useLocation } from 'wouter';
 
 import { AuthProvider, useAuth } from '@/contexts/auth';
 import { AppLayout } from '@/components/layout';
@@ -43,6 +44,45 @@ const queryClient = new QueryClient({
     },
   },
 });
+
+const homeTitle = 'Free Financial Planning Tools for South Africans | MyIFA';
+const homeDescription =
+  'Free financial planning tools and practical guides for South Africans. Understand your options, then explore an independent provider selected by MyIFA.';
+
+function RouteMetadata() {
+  const [location] = useLocation();
+
+  useEffect(() => {
+    const isLandingPage = location === '/';
+    document.title = isLandingPage ? homeTitle : 'MyIFA | Secure Portal';
+
+    document
+      .querySelector<HTMLMetaElement>('meta[name="description"]')
+      ?.setAttribute(
+        'content',
+        isLandingPage ? homeDescription : 'Secure sign-in and account pages for MyIFA users.',
+      );
+    document
+      .querySelector<HTMLMetaElement>('meta[name="robots"]')
+      ?.setAttribute('content', isLandingPage ? 'index, follow' : 'noindex, nofollow');
+
+    const canonical = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+    if (isLandingPage) {
+      canonical?.setAttribute('href', 'https://myifa.co.za/');
+    } else {
+      canonical?.remove();
+    }
+
+    const openGraphUrl = document.querySelector<HTMLMetaElement>('meta[property="og:url"]');
+    if (isLandingPage) {
+      openGraphUrl?.setAttribute('content', 'https://myifa.co.za/');
+    } else {
+      openGraphUrl?.remove();
+    }
+  }, [location]);
+
+  return null;
+}
 
 function LoadingScreen() {
   return (
@@ -155,6 +195,7 @@ function App() {
       <TooltipProvider>
         <AuthProvider>
           <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}>
+            <RouteMetadata />
             <Router />
           </WouterRouter>
         </AuthProvider>
