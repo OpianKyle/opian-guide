@@ -34,11 +34,15 @@ export async function sendMail(opts: {
   to: string;
   subject: string;
   html: string;
+  text?: string;
+  replyTo?: string;
 }): Promise<void> {
   await getTransporter().sendMail({
     from: FROM,
     to: opts.to,
     subject: opts.subject,
     html: opts.html,
+    ...(opts.text ? { text: opts.text } : {}),
+    ...(opts.replyTo ? { replyTo: opts.replyTo } : {}),
   });
 }

@@ -21,6 +21,7 @@ import ToolkitSubmissions from '@/pages/toolkit-submissions';
 import PersonalToolkitAd from '@/pages/personal-toolkit-ad';
 import BusinessToolkitAd from '@/pages/business-toolkit-ad';
 import Contact from '@/pages/contact';
+import ContactUs from '@/pages/contact-us';
 import Settings from '@/pages/settings';
 import NotFound from '@/pages/not-found';
 
@@ -48,37 +49,59 @@ const queryClient = new QueryClient({
 const homeTitle = 'Free Financial Planning Tools for South Africans | MyIFA';
 const homeDescription =
   'Free financial planning tools and practical guides for South Africans. Understand your options, then explore an independent provider selected by MyIFA.';
+const contactTitle = 'Contact MyIFA | Get in Touch';
+const contactDescription =
+  'Contact MyIFA with a general, financial planning, provider or website question. Send a message and our team will reply by email.';
 
 function RouteMetadata() {
   const [location] = useLocation();
 
   useEffect(() => {
     const isLandingPage = location === '/';
-    document.title = isLandingPage ? homeTitle : 'MyIFA | Secure Portal';
+    const isContactPage = location === '/contact-us';
+    const isPublicIndexablePage = isLandingPage || isContactPage;
+    const title = isLandingPage ? homeTitle : isContactPage ? contactTitle : 'MyIFA | Secure Portal';
+    const description = isLandingPage
+      ? homeDescription
+      : isContactPage
+        ? contactDescription
+        : 'Secure sign-in and account pages for MyIFA users.';
+    const canonicalUrl = isLandingPage
+      ? 'https://myifa.co.za/'
+      : isContactPage
+        ? 'https://myifa.co.za/contact-us'
+        : null;
+
+    document.title = title;
 
     document
       .querySelector<HTMLMetaElement>('meta[name="description"]')
-      ?.setAttribute(
-        'content',
-        isLandingPage ? homeDescription : 'Secure sign-in and account pages for MyIFA users.',
-      );
+      ?.setAttribute('content', description);
     document
       .querySelector<HTMLMetaElement>('meta[name="robots"]')
-      ?.setAttribute('content', isLandingPage ? 'index, follow' : 'noindex, nofollow');
+      ?.setAttribute('content', isPublicIndexablePage ? 'index, follow' : 'noindex, nofollow');
 
     const canonical = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
-    if (isLandingPage) {
-      canonical?.setAttribute('href', 'https://myifa.co.za/');
+    if (canonicalUrl) {
+      canonical?.setAttribute('href', canonicalUrl);
     } else {
       canonical?.remove();
     }
 
     const openGraphUrl = document.querySelector<HTMLMetaElement>('meta[property="og:url"]');
-    if (isLandingPage) {
-      openGraphUrl?.setAttribute('content', 'https://myifa.co.za/');
+    const openGraphTitle = document.querySelector<HTMLMetaElement>('meta[property="og:title"]');
+    const openGraphDescription = document.querySelector<HTMLMetaElement>('meta[property="og:description"]');
+    const twitterTitle = document.querySelector<HTMLMetaElement>('meta[name="twitter:title"]');
+    const twitterDescription = document.querySelector<HTMLMetaElement>('meta[name="twitter:description"]');
+    if (canonicalUrl) {
+      openGraphUrl?.setAttribute('content', canonicalUrl);
     } else {
       openGraphUrl?.remove();
     }
+    openGraphTitle?.setAttribute('content', title);
+    openGraphDescription?.setAttribute('content', description);
+    twitterTitle?.setAttribute('content', title);
+    twitterDescription?.setAttribute('content', description);
   }, [location]);
 
   return null;
@@ -181,6 +204,7 @@ function Router() {
       <Route path="/fna" component={FnaRoute} />
       <Route path="/personal-toolkit" component={PersonalToolkitAd} />
       <Route path="/business-toolkit" component={BusinessToolkitAd} />
+      <Route path="/contact-us" component={ContactUs} />
       {/* Admin */}
       <Route path="/admin/:rest*">{() => <AdminProtectedApp />}</Route>
       {/* Advisor / client */}

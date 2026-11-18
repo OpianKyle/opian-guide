@@ -10,6 +10,7 @@ import authRouter from "./auth";
 import leadsRouter from "./leads";
 import adminRouter from "./admin/index";
 import toolkitSubmissionsRouter from "./toolkit-submissions";
+import contactRouter from "./contact";
 
 const router: IRouter = Router();
 
@@ -23,6 +24,7 @@ router.use(appointmentsRouter);
 router.use(documentsRouter);
 router.use(leadsRouter);
 router.use(toolkitSubmissionsRouter);
+router.use(contactRouter);
 router.use(adminRouter);
 
 export default router;

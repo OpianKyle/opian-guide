@@ -9,9 +9,18 @@ export default function HomePage() {
     const document = frameRef.current?.contentDocument;
     const navigation = document?.querySelector<HTMLElement>(".navlinks");
 
-    if (!document || !navigation || navigation.querySelector(".auth-actions")) {
-      return;
+    if (!document || !navigation) return;
+
+    if (!navigation.querySelector(".contact-us-link")) {
+      const contactLink = document.createElement("a");
+      contactLink.href = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/contact-us`;
+      contactLink.target = "_top";
+      contactLink.className = "contact-us-link";
+      contactLink.textContent = "Contact Us";
+      navigation.append(contactLink);
     }
+
+    if (navigation.querySelector(".auth-actions")) return;
 
     const actions = document.createElement("div");
     actions.className = "auth-actions";

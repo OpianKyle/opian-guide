@@ -3,7 +3,11 @@ import { db } from "@workspace/db";
 import { campaignTemplatesTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
 import { requireCampaignEditor } from "./middleware";
-import { campaignTemplates, escapeCampaignText } from "../../lib/campaign";
+import {
+  campaignTemplates,
+  escapeCampaignText,
+  normalizeCampaignContactCtas,
+} from "../../lib/campaign";
 
 const router = Router();
 
@@ -50,7 +54,9 @@ router.get("/admin/campaigns/:day/preview", requireCampaignEditor, async (req, r
 
     let html: string;
     if (override) {
-      html = override.bodyHtml.replace(/\{\{firstName\}\}/g, escapeCampaignText(firstName));
+      html = normalizeCampaignContactCtas(
+        override.bodyHtml.replace(/\{\{firstName\}\}/g, escapeCampaignText(firstName)),
+      );
     } else {
       const hardcoded = campaignTemplates[day];
       if (!hardcoded) {
@@ -82,7 +88,12 @@ router.get("/admin/campaigns/:day", requireCampaignEditor, async (req, res): Pro
       .where(eq(campaignTemplatesTable.day, day));
 
     if (override) {
-      res.json({ day, subject: override.subject, bodyHtml: override.bodyHtml, isCustomized: true });
+      res.json({
+        day,
+        subject: override.subject,
+        bodyHtml: normalizeCampaignContactCtas(override.bodyHtml),
+        isCustomized: true,
+      });
       return;
     }
 

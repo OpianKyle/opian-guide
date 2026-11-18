@@ -5,6 +5,39 @@
  * MyIFAPortal Financial Advisor Sales Portal API
  * OpenAPI spec version: 0.1.0
  */
+export type ContactMessageInputTopic = typeof ContactMessageInputTopic[keyof typeof ContactMessageInputTopic];
+
+
+export const ContactMessageInputTopic = {
+  General_enquiry: 'General enquiry',
+  Financial_planning: 'Financial planning',
+  Provider_enquiry: 'Provider enquiry',
+  Website_support: 'Website support',
+  Other: 'Other',
+} as const;
+
+export interface ContactMessageInput {
+  /**
+     * @minLength 2
+     * @maxLength 120
+     */
+  fullName: string;
+  /** @maxLength 254 */
+  email: string;
+  topic: ContactMessageInputTopic;
+  /**
+     * @minLength 10
+     * @maxLength 5000
+     */
+  message: string;
+  /** @maxLength 200 */
+  website?: string;
+}
+
+export interface ContactMessageResponse {
+  message: string;
+}
+
 export interface HealthStatus {
   status: string;
 }

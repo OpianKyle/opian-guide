@@ -43,7 +43,34 @@ tags:
     description: Advisor lead management
   - name: admin-leads
     description: Admin lead management and email campaigns
+  - name: contact
+    description: Public contact messages
 paths:
+  /contact-us:
+    post:
+      operationId: submitContactMessage
+      tags: [contact]
+      summary: Send a public contact message to MyIFA
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContactMessageInput"
+      responses:
+        "200":
+          description: Message accepted for delivery
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContactMessageResponse"
+        "400":
+          description: Invalid contact details
+        "429":
+          description: Too many contact requests
+        "503":
+          description: Email delivery is unavailable
+
   /healthz:
     get:
       operationId: healthCheck
@@ -1017,6 +1044,46 @@ paths:
 
 components:
   schemas:
+    ContactMessageInput:
+      type: object
+      properties:
+        fullName:
+          type: string
+          minLength: 2
+          maxLength: 120
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        topic:
+          type: string
+          enum:
+            - General enquiry
+            - Financial planning
+            - Provider enquiry
+            - Website support
+            - Other
+        message:
+          type: string
+          minLength: 10
+          maxLength: 5000
+        website:
+          type: string
+          maxLength: 200
+      required:
+        - fullName
+        - email
+        - topic
+        - message
+
+    ContactMessageResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+        - message
+
     HealthStatus:
       type: object
       properties:

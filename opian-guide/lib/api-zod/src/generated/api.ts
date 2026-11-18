@@ -9,6 +9,34 @@ import * as zod from 'zod';
 
 
 /**
+ * @summary Send a public contact message to MyIFA
+ */
+export const submitContactMessageBodyFullNameMin = 2;
+export const submitContactMessageBodyFullNameMax = 120;
+
+export const submitContactMessageBodyEmailMax = 254;
+
+export const submitContactMessageBodyMessageMin = 10;
+export const submitContactMessageBodyMessageMax = 5000;
+
+export const submitContactMessageBodyWebsiteMax = 200;
+
+
+
+export const SubmitContactMessageBody = zod.object({
+  "fullName": zod.string().min(submitContactMessageBodyFullNameMin).max(submitContactMessageBodyFullNameMax),
+  "email": zod.string().email().max(submitContactMessageBodyEmailMax),
+  "topic": zod.enum(['General enquiry', 'Financial planning', 'Provider enquiry', 'Website support', 'Other']),
+  "message": zod.string().min(submitContactMessageBodyMessageMin).max(submitContactMessageBodyMessageMax),
+  "website": zod.string().max(submitContactMessageBodyWebsiteMax).optional()
+})
+
+export const SubmitContactMessageResponse = zod.object({
+  "message": zod.string()
+})
+
+
+/**
  * @summary Health check
  */
 export const HealthCheckResponse = zod.object({

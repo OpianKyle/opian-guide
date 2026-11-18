@@ -48,18 +48,33 @@ function p(text: string): string {
   return `<p style="margin:0 0 16px;color:#444;font-size:15px;line-height:1.7;">${text}</p>`;
 }
 
-function cta(text: string): string {
-  const contactEmail = process.env["SMTP_FROM_EMAIL"];
-  const action = contactEmail
-    ? `<a href="mailto:${encodeURIComponent(contactEmail)}" style="display:inline-block;background:#c9a84c;color:#ffffff;font-weight:600;font-size:15px;padding:14px 32px;border-radius:6px;text-decoration:none;">${text}</a>`
-    : `<span style="display:inline-block;background:#c9a84c;color:#ffffff;font-weight:600;font-size:15px;padding:14px 32px;border-radius:6px;">${text}</span><p style="color:#666;font-size:12px;">Reply to this email to get in touch.</p>`;
+const contactUsUrl = `${(process.env["PUBLIC_APP_URL"] || "https://myifa.co.za").replace(/\/+$/, "")}/contact-us`;
+
+function cta(_text: string): string {
   return `<div style="text-align:center;margin:28px 0;">
-    ${action}
+    <a href="${contactUsUrl}" style="display:inline-block;background:#c9a84c;color:#ffffff;font-weight:600;font-size:15px;padding:14px 32px;border-radius:6px;text-decoration:none;">Contact Us</a>
   </div>`;
 }
 
 function divider(): string {
   return `<hr style="border:none;border-top:1px solid #e8e8e8;margin:20px 0;">`;
+}
+
+/** Keeps older saved templates' primary CTA buttons pointed at the contact page. */
+export function normalizeCampaignContactCtas(html: string): string {
+  return html.replace(/<a\b([^>]*)>([\s\S]*?)<\/a>/gi, (anchor, attributes: string) => {
+    const style = attributes.match(/\bstyle\s*=\s*(["'])(.*?)\1/i)?.[2] ?? "";
+    if (!/display\s*:\s*inline-block/i.test(style) || !/padding\s*:/i.test(style)) {
+      return anchor;
+    }
+
+    const hrefPattern = /\bhref\s*=\s*(["'])[\s\S]*?\1/i;
+    const updatedAttributes = hrefPattern.test(attributes)
+      ? attributes.replace(hrefPattern, `href="${contactUsUrl}"`)
+      : `${attributes} href="${contactUsUrl}"`;
+
+    return `<a${updatedAttributes}>Contact Us</a>`;
+  });
 }
 
 export const campaignTemplates: Record<number, EmailTemplate> = {
@@ -428,7 +443,9 @@ export async function getCampaignTemplate(day: number): Promise<EmailTemplate> {
     return {
       subject: override.subject,
       html: (firstName) =>
-        override.bodyHtml.replace(/\{\{firstName\}\}/g, escapeCampaignText(firstName)),
+        normalizeCampaignContactCtas(
+          override.bodyHtml.replace(/\{\{firstName\}\}/g, escapeCampaignText(firstName)),
+        ),
     };
   }
 
