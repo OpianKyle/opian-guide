@@ -27,6 +27,7 @@ lib/
   api-spec/           → openapi.yaml (source of truth)
   api-client-react/   → Generated React Query hooks (via Orval)
   api-zod/            → Generated Zod schemas (via Orval)
+  toolkit-core/       → Shared financial-planning questionnaire logic
 ```
 
 ## Running the project
@@ -45,7 +46,7 @@ pnpm --filter @workspace/api-spec run codegen
 
 ## Required secrets
 
-All set as Replit Secrets: `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `SESSION_SECRET`, `SMTP_PASS`
+Configured as Replit Secrets: `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `SESSION_SECRET`, `SMTP_HOST`, `SMTP_USER`, `SMTP_PASS`
 
 ## User preferences
 

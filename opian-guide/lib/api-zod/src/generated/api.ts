@@ -16,6 +16,8 @@ export const submitContactMessageBodyFullNameMax = 120;
 
 export const submitContactMessageBodyEmailMax = 254;
 
+export const submitContactMessageBodyPrioritiesMax = 9;
+
 export const submitContactMessageBodyMessageMin = 10;
 export const submitContactMessageBodyMessageMax = 5000;
 
@@ -27,6 +29,7 @@ export const SubmitContactMessageBody = zod.object({
   "fullName": zod.string().min(submitContactMessageBodyFullNameMin).max(submitContactMessageBodyFullNameMax),
   "email": zod.string().email().max(submitContactMessageBodyEmailMax),
   "topic": zod.enum(['General enquiry', 'Financial planning', 'Provider enquiry', 'Website support', 'Other']),
+  "priorities": zod.array(zod.enum(['Provide for my family if I pass away', 'Cover funeral costs for me and my family', 'Keep an income if I can\'t work', 'Be covered if I get a serious illness', 'Make sure my debts are paid off', 'Save for my children\'s education', 'Build an emergency fund', 'Plan for retirement', 'Leave an inheritance and plan my estate'])).min(1).max(submitContactMessageBodyPrioritiesMax).optional(),
   "message": zod.string().min(submitContactMessageBodyMessageMin).max(submitContactMessageBodyMessageMax),
   "website": zod.string().max(submitContactMessageBodyWebsiteMax).optional()
 })

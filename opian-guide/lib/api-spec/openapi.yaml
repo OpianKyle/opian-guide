@@ -1063,6 +1063,22 @@ components:
             - Provider enquiry
             - Website support
             - Other
+        priorities:
+          type: array
+          minItems: 1
+          maxItems: 9
+          items:
+            type: string
+            enum:
+              - Provide for my family if I pass away
+              - Cover funeral costs for me and my family
+              - Keep an income if I can't work
+              - Be covered if I get a serious illness
+              - Make sure my debts are paid off
+              - Save for my children's education
+              - Build an emergency fund
+              - Plan for retirement
+              - Leave an inheritance and plan my estate
         message:
           type: string
           minLength: 10

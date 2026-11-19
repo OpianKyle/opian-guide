@@ -26,6 +26,7 @@ export * from './client';
 export * from './clientSignupInput';
 export * from './clientSignupInputRole';
 export * from './contactMessageInput';
+export * from './contactMessageInputPrioritiesItem';
 export * from './contactMessageInputTopic';
 export * from './contactMessageResponse';
 export * from './dashboardSummary';

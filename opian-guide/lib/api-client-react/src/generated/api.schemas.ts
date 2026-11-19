@@ -16,6 +16,21 @@ export const ContactMessageInputTopic = {
   Other: 'Other',
 } as const;
 
+export type ContactMessageInputPrioritiesItem = typeof ContactMessageInputPrioritiesItem[keyof typeof ContactMessageInputPrioritiesItem];
+
+
+export const ContactMessageInputPrioritiesItem = {
+  Provide_for_my_family_if_I_pass_away: 'Provide for my family if I pass away',
+  Cover_funeral_costs_for_me_and_my_family: 'Cover funeral costs for me and my family',
+  'Keep_an_income_if_I_can\'t_work': 'Keep an income if I can\'t work',
+  Be_covered_if_I_get_a_serious_illness: 'Be covered if I get a serious illness',
+  Make_sure_my_debts_are_paid_off: 'Make sure my debts are paid off',
+  'Save_for_my_children\'s_education': 'Save for my children\'s education',
+  Build_an_emergency_fund: 'Build an emergency fund',
+  Plan_for_retirement: 'Plan for retirement',
+  Leave_an_inheritance_and_plan_my_estate: 'Leave an inheritance and plan my estate',
+} as const;
+
 export interface ContactMessageInput {
   /**
      * @minLength 2
@@ -25,6 +40,11 @@ export interface ContactMessageInput {
   /** @maxLength 254 */
   email: string;
   topic: ContactMessageInputTopic;
+  /**
+     * @minItems 1
+     * @maxItems 9
+     */
+  priorities?: ContactMessageInputPrioritiesItem[];
   /**
      * @minLength 10
      * @maxLength 5000

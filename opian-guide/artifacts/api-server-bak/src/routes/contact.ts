@@ -59,6 +59,7 @@ router.post("/contact-us", async (req, res): Promise<void> => {
   const fullName = parsed.data.fullName.trim();
   const email = parsed.data.email.trim();
   const topic = parsed.data.topic;
+  const priorities = parsed.data.priorities ?? [];
   const message = parsed.data.message.trim();
   const website = parsed.data.website;
 
@@ -84,11 +85,16 @@ router.post("/contact-us", async (req, res): Promise<void> => {
 
   const safeName = escapeHtml(fullName);
   const safeEmail = escapeHtml(email);
+  const safePriorities = priorities.map(escapeHtml);
   const safeMessage = escapeHtml(message).replace(/\r?\n/g, "<br>");
   const text = [
     `Name: ${fullName}`,
     `Email: ${email}`,
     `Topic: ${topic}`,
+    "Important priorities:",
+    ...(priorities.length
+      ? priorities.map((priority) => `- ${priority}`)
+      : ["Not provided"]),
     "",
     message,
   ].join("\n");
@@ -105,6 +111,12 @@ router.post("/contact-us", async (req, res): Promise<void> => {
           <p><strong>Name:</strong> ${safeName}</p>
           <p><strong>Email:</strong> ${safeEmail}</p>
           <p><strong>Topic:</strong> ${escapeHtml(topic)}</p>
+          <p><strong>Important priorities:</strong></p>
+          ${
+            safePriorities.length
+              ? `<ul>${safePriorities.map((priority) => `<li>${priority}</li>`).join("")}</ul>`
+              : "<p>Not provided</p>"
+          }
           <hr style="border:0;border-top:1px solid #ddd;margin:24px 0">
           <p style="line-height:1.7">${safeMessage}</p>
         </div>

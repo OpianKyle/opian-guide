@@ -5,6 +5,7 @@
  * MyIFAPortal Financial Advisor Sales Portal API
  * OpenAPI spec version: 0.1.0
  */
+import type { ContactMessageInputPrioritiesItem } from './contactMessageInputPrioritiesItem';
 import type { ContactMessageInputTopic } from './contactMessageInputTopic';
 
 export interface ContactMessageInput {
@@ -16,6 +17,11 @@ export interface ContactMessageInput {
   /** @maxLength 254 */
   email: string;
   topic: ContactMessageInputTopic;
+  /**
+     * @minItems 1
+     * @maxItems 9
+     */
+  priorities?: ContactMessageInputPrioritiesItem[];
   /**
      * @minLength 10
      * @maxLength 5000
