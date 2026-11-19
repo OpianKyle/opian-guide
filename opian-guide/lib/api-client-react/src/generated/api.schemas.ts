@@ -29,6 +29,7 @@ export const ContactMessageInputPrioritiesItem = {
   Build_an_emergency_fund: 'Build an emergency fund',
   Plan_for_retirement: 'Plan for retirement',
   Leave_an_inheritance_and_plan_my_estate: 'Leave an inheritance and plan my estate',
+  Other: 'Other',
 } as const;
 
 export interface ContactMessageInput {
@@ -42,7 +43,7 @@ export interface ContactMessageInput {
   topic: ContactMessageInputTopic;
   /**
      * @minItems 1
-     * @maxItems 9
+     * @maxItems 10
      */
   priorities?: ContactMessageInputPrioritiesItem[];
   /**

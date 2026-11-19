@@ -6,7 +6,6 @@ import { requireCampaignEditor } from "./middleware";
 import {
   campaignTemplates,
   escapeCampaignText,
-  normalizeCampaignContactCtas,
 } from "../../lib/campaign";
 
 const router = Router();
@@ -54,9 +53,7 @@ router.get("/admin/campaigns/:day/preview", requireCampaignEditor, async (req, r
 
     let html: string;
     if (override) {
-      html = normalizeCampaignContactCtas(
-        override.bodyHtml.replace(/\{\{firstName\}\}/g, escapeCampaignText(firstName)),
-      );
+      html = override.bodyHtml.replace(/\{\{firstName\}\}/g, escapeCampaignText(firstName));
     } else {
       const hardcoded = campaignTemplates[day];
       if (!hardcoded) {
@@ -91,7 +88,7 @@ router.get("/admin/campaigns/:day", requireCampaignEditor, async (req, res): Pro
       res.json({
         day,
         subject: override.subject,
-        bodyHtml: normalizeCampaignContactCtas(override.bodyHtml),
+        bodyHtml: override.bodyHtml,
         isCustomized: true,
       });
       return;

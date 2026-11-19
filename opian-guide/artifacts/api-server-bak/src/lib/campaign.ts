@@ -60,23 +60,6 @@ function divider(): string {
   return `<hr style="border:none;border-top:1px solid #e8e8e8;margin:20px 0;">`;
 }
 
-/** Keeps older saved templates' primary CTA buttons pointed at the contact page. */
-export function normalizeCampaignContactCtas(html: string): string {
-  return html.replace(/<a\b([^>]*)>([\s\S]*?)<\/a>/gi, (anchor, attributes: string) => {
-    const style = attributes.match(/\bstyle\s*=\s*(["'])(.*?)\1/i)?.[2] ?? "";
-    if (!/display\s*:\s*inline-block/i.test(style) || !/padding\s*:/i.test(style)) {
-      return anchor;
-    }
-
-    const hrefPattern = /\bhref\s*=\s*(["'])[\s\S]*?\1/i;
-    const updatedAttributes = hrefPattern.test(attributes)
-      ? attributes.replace(hrefPattern, `href="${contactUsUrl}"`)
-      : `${attributes} href="${contactUsUrl}"`;
-
-    return `<a${updatedAttributes}>Contact Us</a>`;
-  });
-}
-
 export const campaignTemplates: Record<number, EmailTemplate> = {
   0: {
     subject: "Welcome to MyIFA – Your Financial Journey Starts Here",
@@ -442,10 +425,7 @@ export async function getCampaignTemplate(day: number): Promise<EmailTemplate> {
   if (override) {
     return {
       subject: override.subject,
-      html: (firstName) =>
-        normalizeCampaignContactCtas(
-          override.bodyHtml.replace(/\{\{firstName\}\}/g, escapeCampaignText(firstName)),
-        ),
+      html: (firstName) => override.bodyHtml.replace(/\{\{firstName\}\}/g, escapeCampaignText(firstName)),
     };
   }
 

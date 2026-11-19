@@ -18,6 +18,7 @@ const priorities = [
   "Build an emergency fund",
   "Plan for retirement",
   "Leave an inheritance and plan my estate",
+  "Other",
 ] as const;
 type Priority = (typeof priorities)[number];
 

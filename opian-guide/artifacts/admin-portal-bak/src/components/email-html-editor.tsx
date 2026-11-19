@@ -159,7 +159,7 @@ export const EmailHtmlEditor = memo(function EmailHtmlEditor({
           <Link2 className="h-4 w-4" />
         </Button>
         <span className="ml-auto hidden px-2 text-xs text-muted-foreground xl:block">
-          Select text to format · Keep {"{{firstName}}"} for personalization
+          Edit button text directly; select a button and use Insert link to change its destination · Keep {"{{firstName}}"} for personalization
         </span>
       </div>
       <iframe

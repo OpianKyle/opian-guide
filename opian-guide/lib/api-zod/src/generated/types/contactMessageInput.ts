@@ -19,7 +19,7 @@ export interface ContactMessageInput {
   topic: ContactMessageInputTopic;
   /**
      * @minItems 1
-     * @maxItems 9
+     * @maxItems 10
      */
   priorities?: ContactMessageInputPrioritiesItem[];
   /**
